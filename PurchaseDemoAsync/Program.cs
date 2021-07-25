@@ -163,14 +163,14 @@ namespace PurchaseDemo
         private static async Task Main(string[] args)
         {
             // POS identification provided by DataMesh
-            string saleID = "Clinton Pos";
-            string poiID = "PLB00002";
-            string kek = "44DACB2A22A4A752ADC1BBFFE6CEFB589451E0FFD83F8B21";
-            string certificationCode = "98cf9dfc-0db7-4a92-8b8cb66d4d2d7169";
+            string saleID = args[0]; // Replace with your test SaleId provided by DataMesh
+            string poiID = args[1]; // Replace with your test POIID provided by DataMesh
+            string kek = "44DACB2A22A4A752ADC1BBFFE6CEFB589451E0FFD83F8B21"; // test environment only - replace for production
+            string certificationCode = "98cf9dfc-0db7-4a92-8b8cb66d4d2d7169"; // test environment only - replace for production
             // POS identification provided by POS vendor
-            string providerIdentification = "Company A";
-            string applicationName = "POS Retail";
-            string softwareVersion = "01.00.00";
+            string providerIdentification = "Company A"; // test environment only - replace for production
+            string applicationName = "POS Retail"; // test environment only - replace for production
+            string softwareVersion = "01.00.00"; // test environment only - replace for production
 
             // Build logon request
             LoginRequest loginRequest = new LoginRequest(providerIdentification, applicationName, softwareVersion, certificationCode);
