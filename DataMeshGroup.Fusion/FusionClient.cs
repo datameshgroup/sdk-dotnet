@@ -222,11 +222,11 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException">Thrown if a login is required, yet LoginRequest is null</exception>
-        private async Task<bool> EnsureConnectedAndLoginComplete(System.Threading.CancellationToken cancellationToken)
+        private async Task<bool> EnsureConnectedAndLoginComplete(bool isLoginInProgress, System.Threading.CancellationToken cancellationToken)
         {
             _ = await ConnectAsync();
 
-            if (!loginRequired)
+            if (!loginRequired || isLoginInProgress)
             {
                 return false;
             }
@@ -310,7 +310,7 @@ namespace DataMeshGroup.Fusion
             }
 
             // Check if we need to connect and/or login
-            if (ensureConnectedAndLoginComplete && (await EnsureConnectedAndLoginComplete(cancellationToken)))
+            if (ensureConnectedAndLoginComplete && (await EnsureConnectedAndLoginComplete(requestMessage is LoginRequest, cancellationToken)))
             {
                 // EnsureConnectedAndLoginComplete() returned true, we need to park this 
                 // request and pick it up again when our login request is returned
@@ -370,7 +370,7 @@ namespace DataMeshGroup.Fusion
         {
             if (IsEventModeEnabled)
             {
-                throw new InvalidOperationException($"Unable to call {nameof(RecvAsync)} when {nameof(OnLoginResponse)}, {nameof(OnPaymentResponse)}, or {nameof(OnTransactionStatusResponse)} are assigned");
+                throw new InvalidOperationException($"Unable to call {nameof(RecvAsync)} when {nameof(OnLoginResponse)}, {nameof(OnPaymentResponse)}, {nameof(OnReconciliationResponse)}, {nameof(DisplayRequest)} or {nameof(OnTransactionStatusResponse)} are assigned");
             }
 
             // cts is fired when disconnect occurs (NetworkError)
@@ -614,13 +614,13 @@ namespace DataMeshGroup.Fusion
 
 
         /// <summary>
-        /// Indicates if event mode has been enabled. This is set when <see cref="OnLoginResponse"/> or 
-        /// <see cref="OnPaymentResponse"/> events have been subscribed to. When events mode is enabled, 
-        /// responses will be returned to the owner via <see cref="OnLoginResponse"/> and 
-        /// <see cref="OnPaymentResponse"/> events, and all requests to <see cref="RecvAsync"/> will 
-        /// throw an <see cref="InvalidOperationException"/>
+        /// Indicates if event mode has been enabled. This is set when <see cref="OnLoginResponse"/>, <see cref="OnPaymentResponse"/>, 
+        /// <see cref="OnReconciliationResponse"/>, <see cref="OnTransactionStatusResponse"/>, or <see cref="OnDisplayRequest"/> events 
+        /// have been subscribed to. When events mode is enabled, responses will be returned to the owner via <see cref="OnLoginResponse"/>, 
+        /// <see cref="OnPaymentResponse"/>, <see cref="OnReconciliationResponse"/> , <see cref="OnTransactionStatusResponse"/>, and 
+        /// <see cref="OnDisplayRequest"/> events, and all requests to <see cref="RecvAsync"/> will throw an <see cref="InvalidOperationException"/>
         /// </summary>
-        public bool IsEventModeEnabled => (OnLoginResponse != null) || (OnPaymentResponse != null) || (OnTransactionStatusResponse != null);
+        public bool IsEventModeEnabled => (OnLoginResponse != null) || (OnPaymentResponse != null) || (OnReconciliationResponse != null) || (OnDisplayRequest != null) || (OnTransactionStatusResponse != null);
         #endregion
 
         #region Events
@@ -653,6 +653,17 @@ namespace DataMeshGroup.Fusion
         /// Fired when a <see cref="PaymentResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
         /// </summary>
         public event EventHandler<MessagePayloadEventArgs<PaymentResponse>> OnPaymentResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="ReconciliationResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        public event EventHandler<MessagePayloadEventArgs<ReconciliationResponse>> OnReconciliationResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="DisplayRequest"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        public event EventHandler<MessagePayloadEventArgs<DisplayRequest>> OnDisplayRequest;
+
 
         /// <summary>
         /// Fired when a <see cref="TransactionStatusResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
@@ -713,8 +724,14 @@ namespace DataMeshGroup.Fusion
                 case PaymentResponse r:
                     OnPaymentResponse?.Invoke(this, new MessagePayloadEventArgs<PaymentResponse>(r));
                     break;
+                case ReconciliationResponse r:
+                    OnReconciliationResponse?.Invoke(this, new MessagePayloadEventArgs<ReconciliationResponse>(r));
+                    break;
                 case TransactionStatusResponse r:
                     OnTransactionStatusResponse?.Invoke(this, new MessagePayloadEventArgs<TransactionStatusResponse>(r));
+                    break;
+                case DisplayRequest r:
+                    OnDisplayRequest?.Invoke(this, new MessagePayloadEventArgs<DisplayRequest>(r));
                     break;
                 default:
                     Log(LogLevel.Error, $"Unknown response message {MessagePayload.GetMessageDescription()}");

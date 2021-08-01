@@ -239,6 +239,16 @@ namespace DataMeshGroup.Fusion
         event EventHandler<MessagePayloadEventArgs<PaymentResponse>> OnPaymentResponse;
 
         /// <summary>
+        /// Fired when a <see cref="ReconciliationResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        event EventHandler<MessagePayloadEventArgs<ReconciliationResponse>> OnReconciliationResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="DisplayRequest"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        event EventHandler<MessagePayloadEventArgs<DisplayRequest>> OnDisplayRequest;
+
+        /// <summary>
         /// Fired when a <see cref="TransactionStatusResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
         /// </summary>
         event EventHandler<MessagePayloadEventArgs<TransactionStatusResponse>> OnTransactionStatusResponse;

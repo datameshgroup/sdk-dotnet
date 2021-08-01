@@ -43,8 +43,55 @@ namespace DataMeshGroup.Fusion.Model
     [JsonConverter(typeof(StringEnumConverterWithDefault<TerminalEnvironment>))]
     public enum TerminalEnvironment { Unknown, Attended, SemiAttended, Unattended }
 
+
+    /// <summary>
+    /// Advises the POI System of the Sale System capabilities and willingness to receive/send event messages.
+    /// </summary>
     [JsonConverter(typeof(StringEnumConverterWithDefault<SaleCapability>))]
-    public enum SaleCapability { Unknown, CashierStatus, CashierError, CashierDisplay, POIReplication, CashierInput, CustomerAssistance, CustomerDisplay, CustomerError, CustomerInput, PrinterReceipt, PrinterDocument, PrinterVoucher, MagStripe, ICC, EMVContactless }
+    public enum SaleCapability 
+    {
+        /// <summary>
+        /// Unknown sale capability
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// POI Terminal changes of state are reported back to the Sale System. e.g. "Waiting for Card Presentment", "PIN Entry"
+        /// </summary>
+        CashierStatus,
+
+        /// <summary>
+        /// POI Terminal errors are reported back to the Sale System. e.g. "Out of paper", "Card Swipe Error"
+        /// </summary>
+        CashierError,
+
+        /// <summary>
+        /// Allows the cashier to provide input from the Sale System. e.g. "Signature OK?"
+        /// </summary>
+        CashierInput,
+
+        /// <summary>
+        ///  Allows the cashier to provide assistance to card holders by providing input at specific screens but card holders can still select on terminal. e.g. "Account Selection (Cheque, Savings or Credit)"
+        /// </summary>
+        CustomerAssistance,
+
+        /// <summary>
+        /// Redirects receipts to the Sale System instead of the POI Terminal.
+        /// </summary>
+        PrinterReceipt
+
+        //CashierDisplay,
+        //POIReplication,
+        //CustomerDisplay,
+        //CustomerError,
+        //CustomerInput,
+        //PrinterDocument, 
+        //PrinterVoucher, 
+        //MagStripe, 
+        //ICC, 
+        //EMVContactless 
+    }
+
 
     [JsonConverter(typeof(StringEnumConverterWithDefault<GenericProfile>))]
     public enum GenericProfile { Unknown, Basic, Standard, Extended, Custom };

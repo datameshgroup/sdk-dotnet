@@ -31,7 +31,7 @@ namespace DataMeshGroup.Fusion.Model
 
             if (saleCapabilities == null)
             {
-                saleCapabilities = new List<SaleCapability>() { SaleCapability.PrinterReceipt };
+                saleCapabilities = new List<SaleCapability>() { SaleCapability.PrinterReceipt, SaleCapability.CashierStatus, SaleCapability.CashierError };
             }
 
             SaleTerminalData = new SaleTerminalData() { SaleCapabilities = saleCapabilities };
