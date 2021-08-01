@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace DataMeshGroup.Fusion.Model
 {
-    public class OutputContent
+    public class DisplayOutputContent
     {
 
         /// <summary>
@@ -30,45 +30,6 @@ namespace DataMeshGroup.Fusion.Model
 
         // We don't support barcode yet
         //public OutputBarcode OutputBarcode { get; set; }
-
-        /// <summary>
-        /// Returns a plain text version of the content
-        /// </summary>
-        /// <exception cref="XmlException">Thrown if XHTML OutputFormat and XML format is invalid</exception>
-        public string GetContentAsPlainText()
-        {
-
-            switch (OutputFormat)
-            {
-                case OutputFormat.XHTML:
-                    if (string.IsNullOrWhiteSpace(OutputXHTML))
-                    {
-                        return "";
-                    }
-
-                    // Parse - this will throw XmlException if the format is invalid
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml($"<html>{OutputXHTML}</html>");
-                    StringBuilder receipt = new StringBuilder();
-                    ParseNode(doc.DocumentElement, receipt);
-                    return receipt.ToString();
-
-                case OutputFormat.Text:
-                    if (string.IsNullOrWhiteSpace(OutputText?.Text))
-                    {
-                        return "";
-                    }
-
-                    return OutputText?.Text ?? "";
-
-                // We can't handle any other cases
-                case OutputFormat.Barcode:
-                case OutputFormat.MessageRef:
-                case OutputFormat.Unknown:
-                default:
-                    return "";
-            }
-        }
 
         readonly string[] newLineTags = new string[] { "p", "br", "br/", "pre" };
         private void ParseNode(XmlNode rootNode, StringBuilder receipt)

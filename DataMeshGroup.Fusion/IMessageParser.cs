@@ -13,10 +13,10 @@
         bool UseTestKeyIdentifier { get; set; }
 
 
-        Model.SaleToPOIMessage BuildSaleToPOIRequest(string serviceID, string saleID, string poiID, string kek, Model.MessagePayload requestMessage);
+        Model.SaleToPOIMessage BuildSaleToPOIMessage(string serviceID, string saleID, string poiID, string kek, Model.MessagePayload requestMessage);
 
-        string SaleToPOIRequestToString(Model.SaleToPOIMessage saleToPOIRequest);
+        string SaleToPOIMessageToString(Model.SaleToPOIMessage saleToPOIMessage);
 
-        Model.MessagePayload ParseSaleToPOIResponse(string saleToPOIResponseString, string kek);
+        Model.MessagePayload ParseSaleToPOIMessage(string saleToPOIMessage, string kek);
     }
 }

@@ -11,7 +11,7 @@ namespace DataMeshGroup.Fusion.Model
         public TransactionIdentification SaleTransactionID { get; set; }
         public string SaleReferenceID { get; set; }
         public SaleTerminalData SaleTerminalData { get; set; }
-        public string TokenRequestedType { get; set; }
+        public TokenRequestedType? TokenRequestedType { get; set; }
         public string CustomerOrderID { get; set; }
         public List<CustomerOrderReq> CustomerOrderReq { get; set; }
         public string SaleToPOIData { get; set; }

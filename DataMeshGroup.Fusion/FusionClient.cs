@@ -299,8 +299,8 @@ namespace DataMeshGroup.Fusion
             string s;
             try
             {
-                saleToPOIRequest = MessageParser.BuildSaleToPOIRequest(serviceID, SaleID, POIID, KEK, requestMessage);
-                s = MessageParser.SaleToPOIRequestToString(saleToPOIRequest);
+                saleToPOIRequest = MessageParser.BuildSaleToPOIMessage(serviceID, SaleID, POIID, KEK, requestMessage);
+                s = MessageParser.SaleToPOIMessageToString(saleToPOIRequest);
             }
             catch (Exception e)
             {
@@ -459,7 +459,7 @@ namespace DataMeshGroup.Fusion
                     // Attempt to parse the response json
                     try
                     {
-                        var MessagePayload = MessageParser.ParseSaleToPOIResponse(stringResult, KEK);
+                        var MessagePayload = MessageParser.ParseSaleToPOIMessage(stringResult, KEK);
 
                         if (MessagePayload is LoginResponse)
                         {

@@ -24,10 +24,10 @@ namespace DataMeshGroup.Fusion
         {
         }
 
-        public MessagePayload ParseSaleToPOIResponse(string saleToPOIResponseString, string kek)
+        public MessagePayload ParseSaleToPOIMessage(string saleToPOIMessageString, string kek)
         {
             // Parse JSON to JObject - important to disable DateParseHandling so we get an exact json match with the request
-            var rootJObject = JsonConvert.DeserializeObject<JObject>(saleToPOIResponseString, new JsonSerializerSettings { DateParseHandling = DateParseHandling.None });
+            var rootJObject = JsonConvert.DeserializeObject<JObject>(saleToPOIMessageString, new JsonSerializerSettings { DateParseHandling = DateParseHandling.None });
 
 
             // Message from Unify could be SaleToPOIResponse or SaleToPOIRequest
@@ -73,7 +73,7 @@ namespace DataMeshGroup.Fusion
             return payload as MessagePayload;
         }
 
-        public SaleToPOIMessage BuildSaleToPOIRequest(string serviceID, string saleID, string poiID, string kek, MessagePayload requestMessage)
+        public SaleToPOIMessage BuildSaleToPOIMessage(string serviceID, string saleID, string poiID, string kek, MessagePayload requestMessage)
         {
             if (string.IsNullOrEmpty(saleID) || string.IsNullOrEmpty(poiID) || string.IsNullOrEmpty(kek))
             {
@@ -103,9 +103,10 @@ namespace DataMeshGroup.Fusion
             };
         }
 
-        public string SaleToPOIRequestToString(Model.SaleToPOIMessage saleToPOIRequest)
+        public string SaleToPOIMessageToString(Model.SaleToPOIMessage saleToPOIRequest)
         {
-            // Build SaleToPOIRequest
+            // TODO: this could actually be a SaleToPOIRequest or SaleToPOIResponse. Need to check the message payload as that will give us 
+            // a better idea. However... at this point only SaleToPOIRequest is supported
             var root = new JObject
             {
                 { "SaleToPOIRequest", new JObject
