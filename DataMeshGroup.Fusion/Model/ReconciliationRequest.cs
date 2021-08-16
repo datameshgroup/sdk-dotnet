@@ -29,5 +29,19 @@ namespace DataMeshGroup.Fusion.Model
         /// Identification of the reconciliation period between Sale and POI. Required when <see cref="ReconciliationType"/> is PreviousReconciliation, otherwise null
         /// </summary>
         public string POIReconciliationID { get; set; }
+
+        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        {
+            return new ReconciliationResponse
+            {
+                Response = response ?? new Response()
+                {
+                    Result = Result.Failure,
+                    ErrorCondition = ErrorCondition.Aborted,
+                    AdditionalResponse = ""
+                },
+                ReconciliationType = ReconciliationType
+            };
+        }
     }
 }

@@ -48,5 +48,18 @@ namespace DataMeshGroup.Fusion.Model
         public string TokenRequestedType { get; set; }
         public string CustomerOrderReq { get; set; }
         public string POISerialNumber { get; set; }
+
+        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        {
+            return new LoginResponse
+            {
+                Response = response ?? new Response()
+                {
+                    Result = Result.Failure,
+                    ErrorCondition = ErrorCondition.Aborted,
+                    AdditionalResponse = ""
+                }
+            };
+        }
     }
 }

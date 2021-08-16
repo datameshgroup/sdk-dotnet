@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace DataMeshGroup.Fusion.Model
 {
@@ -25,5 +26,7 @@ namespace DataMeshGroup.Fusion.Model
         }
 
         public string GetMessageDescription() => MessageCategory.ToString() + MessageType.ToString();
+
+        internal abstract MessagePayload CreateDefaultResponseMessagePayload(Response response);
     }
 }

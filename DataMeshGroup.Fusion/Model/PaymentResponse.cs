@@ -36,5 +36,10 @@ namespace DataMeshGroup.Fusion.Model
         {
             return PaymentReceipt?.FirstOrDefault(r => r.DocumentQualifier == documentQualifier)?.OutputContent?.GetContentAsPlainText();
         }
+
+        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

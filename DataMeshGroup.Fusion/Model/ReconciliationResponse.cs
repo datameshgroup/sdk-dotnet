@@ -49,18 +49,18 @@ namespace DataMeshGroup.Fusion.Model
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine("Datamesh Terminal");
-            sb.AppendLine(GetEnumDescription(ReconciliationType).ToUpper());
-            sb.AppendLine();
-            sb.AppendLine(DateTime.Now.ToString("G"));
-            sb.AppendLine($"Merchant ID\t\t{MID}");
-            sb.AppendLine($"Terminal ID\t\t{TID}");
-            sb.AppendLine();
+            _ = sb.AppendLine("Datamesh Terminal");
+            _ = sb.AppendLine(GetEnumDescription(ReconciliationType).ToUpper());
+            _ = sb.AppendLine();
+            _ = sb.AppendLine(DateTime.Now.ToString("G"));
+            _ = sb.AppendLine($"Merchant ID\t\t{MID}");
+            _ = sb.AppendLine($"Terminal ID\t\t{TID}");
+            _ = sb.AppendLine();
             if (LastShiftTotalTime != null)
             {
-                sb.AppendLine("Previous Reset");
-                sb.AppendLine(LastShiftTotalTime?.ToString("G"));
-                sb.AppendLine();
+                _ = sb.AppendLine("Previous Reset");
+                _ = sb.AppendLine(LastShiftTotalTime?.ToString("G"));
+                _ = sb.AppendLine();
             }
             
             // TODO: populate receipt based on TransactionTotals
@@ -80,6 +80,11 @@ namespace DataMeshGroup.Fusion.Model
             }
 
             return value.ToString();
+        }
+
+        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        {
+            throw new NotImplementedException();
         }
     }
 }

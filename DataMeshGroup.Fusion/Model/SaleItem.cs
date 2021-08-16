@@ -9,34 +9,40 @@ namespace DataMeshGroup.Fusion.Model
     {
         public SaleItem()
         {
-            Quantity = 1;
+            Quantity = 1M;
             UnitOfMeasure = UnitOfMeasure.Other;
         }
 
         /// <summary>
-        /// The Sale Item identification inside the transaction
+        /// A unique identifier for the sale item within the context of this payment. e.g. a 0..n integer which increments by one for each sale item.
         /// </summary>
-        public string ItemID { get; set; }
+        public int ItemID { get; set; }
 
         /// <summary>
-        /// Merchant assigned product code of the item
+        /// If this SaleItem is a modifier, ParentItemID indicates the parent SaleItem. Otherwise set as null.
+        /// </summary>
+        public int? ParentItemID { get; set; }
+
+        /// <summary>
+        /// A unique identifier for the product within the merchant. For example if two customers purchase the same product at two different stores owned by the merchant, both purchases should contain the same ProductCode.
         /// </summary>
         public string ProductCode { get; set; }
 
         /// <summary>
-        /// A standard unique identifier for the product. Either the UPC, EAN, or ISBN.
+        /// A standard unique identifier for the product. Either the UPC, EAN, or ISBN. Required for products with a UPC, EAN, or ISBN
         /// </summary>
         public string EanUpc { get; set; }
 
         /// <summary>
-        /// Unit of measure of the Quantity
+        /// Unit of measure of the Quantity. If this item has no unit of measure, set to "Other"
         /// </summary>
         public UnitOfMeasure UnitOfMeasure { get; set; }
 
         /// <summary>
-        /// Item unit quantity
+        /// Sale item unit quantity.
         /// </summary>
-        public int Quantity { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
+        public decimal Quantity { get; set; }
 
         /// <summary>
         /// Price per item unit. Present if Quantity is included.
@@ -61,7 +67,7 @@ namespace DataMeshGroup.Fusion.Model
         public string SaleChannel { get; set; }
 
         /// <summary>
-        /// Product name of the item.
+        /// Product name of the item. Should contain a short, human readable, descriptive name of the product. 
         /// </summary>
         public string ProductLabel { get; set; }
 
@@ -74,13 +80,13 @@ namespace DataMeshGroup.Fusion.Model
         /// Cost of the product to the merchant
         /// </summary>
         [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
-        public decimal CostBase { get; set; }
+        public decimal? CostBase { get; set; }
 
         /// <summary>
         /// If applied, the amount this sale item was discounted by
         /// </summary>
         [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
-        public decimal Decimal { get; set; }
+        public decimal? Discount { get; set; }
 
         /// <summary>
         /// Product item category
@@ -98,9 +104,9 @@ namespace DataMeshGroup.Fusion.Model
         public string Brand { get; set; }
 
         /// <summary>
-        /// Remaining number of this item in stock
+        /// Remaining number of this item in stock, using UnitOfMeasure as the unit of measure
         /// </summary>
-        public string QuantityInStock { get; set; }
+        public decimal? QuantityInStock { get; set; }
 
 
         /// <summary>

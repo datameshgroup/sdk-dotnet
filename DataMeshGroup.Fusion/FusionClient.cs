@@ -233,7 +233,7 @@ namespace DataMeshGroup.Fusion
 
             if (LoginRequest is null)
             {
-                throw new ArgumentException($"Login required, but {nameof(LoginRequest)} is null", nameof(LoginRequest));
+                throw new InvalidOperationException($"Login required, but {nameof(LoginRequest)} is null");
             }
 
             _ = await SendAsync(LoginRequest, UpdateServiceId(), false, cancellationToken);
@@ -457,41 +457,79 @@ namespace DataMeshGroup.Fusion
                     Log(LogLevel.Debug, $"RX {stringResult}");
 
                     // Attempt to parse the response json
+                    MessagePayload messagePayload = null;
                     try
                     {
-                        var MessagePayload = MessageParser.ParseSaleToPOIMessage(stringResult, KEK);
-
-                        if (MessagePayload is LoginResponse)
-                        {
-                            if (loginRequired)
-                            {
-                                loginRequired = false;
-                                LoginResponse = MessagePayload as LoginResponse;
-
-                                // Check if we have a parked request waiting for this login response
-                                if (parkedRequestMessage != null)
-                                {
-                                    _ = await SendAsync(parkedRequestMessage, parkedServiceID, false, parkedCancellationToken);
-                                    parkedRequestMessage = null;
-                                    parkedServiceID = null;
-                                }
-                            }
-                        }
-
-                        // Either fire an event or push to our queue for next request to RecvAsync
-                        if (IsEventModeEnabled)
-                        {
-                            FireResponseEvent(MessagePayload);
-                        }
-                        else
-                        {
-                            recvQueue.Enqueue(MessagePayload);
-                            _ = recvQueueSemaphore.Release();
-                        }
+                        messagePayload = MessageParser.ParseSaleToPOIMessage(stringResult, KEK);
                     }
                     catch (Exception e)
                     {
                         Log(LogLevel.Error, "Error occured parsing the json response", e);
+                    }
+
+                    // Try to processes the next message if we couldn't unpack
+                    if (messagePayload == null)
+                    {
+                        continue;
+                    }
+
+                    if (messagePayload is LoginResponse)
+                    {
+                        LoginResponse = messagePayload as LoginResponse;
+                    }
+
+                    // Either fire an event or push to our queue for next request to RecvAsync
+                    if (IsEventModeEnabled)
+                    {
+                        FireResponseEvent(messagePayload);
+                    }
+                    else
+                    {
+                        recvQueue.Enqueue(messagePayload);
+                        _ = recvQueueSemaphore.Release();
+                    }
+
+                    // Special handling for logins
+                    if (messagePayload is LoginResponse)
+                    {
+                        LoginResponse = messagePayload as LoginResponse;
+
+                        if (loginRequired)
+                        {
+                            loginRequired = !LoginResponse.Response.Success;
+
+                            // Check if we have a parked request waiting for this login response
+                            if (parkedRequestMessage != null)
+                            {
+                                // If our login was successful, we can send the parked request that triggered this auto-login
+                                if (LoginResponse.Response.Success)
+                                {
+                                    _ = await SendAsync(parkedRequestMessage, parkedServiceID, false, parkedCancellationToken);
+                                }
+                                // Otherwise, we need to respond to the initial request
+                                else
+                                {
+                                    MessagePayload response = parkedRequestMessage.CreateDefaultResponseMessagePayload(LoginResponse.Response);
+
+                                    if (response != null)
+                                    {
+
+                                        // Either fire an event or push to our queue for next request to RecvAsync
+                                        if (IsEventModeEnabled)
+                                        {
+                                            FireResponseEvent(response);
+                                        }
+                                        else
+                                        {
+                                            recvQueue.Enqueue(response);
+                                            _ = recvQueueSemaphore.Release();
+                                        }
+                                    }
+                                }
+                                parkedRequestMessage = null;
+                                parkedServiceID = null;
+                            }
+                        }
                     }
                 }
             }

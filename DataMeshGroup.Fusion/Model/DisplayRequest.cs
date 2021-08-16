@@ -33,6 +33,11 @@ namespace DataMeshGroup.Fusion.Model
             return result;
         }
 
+        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        {
+            throw new NotImplementedException();
+        }
+
         public DisplayOutput DisplayOutput { get; set; }
     }
 }

@@ -16,6 +16,12 @@ namespace DataMeshGroup.Fusion.Model
 
         public MessageReference MessageReference { get; set; }
         public string AbortReason { get; set; }
+
+        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        {
+            return null;
+        }
+
         //public DisplayOutput DisplayOutput { get; set; }
     }
 }
