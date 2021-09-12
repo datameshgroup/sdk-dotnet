@@ -41,6 +41,40 @@ namespace DataMeshGroup.Fusion.Model
         public PaymentData PaymentData { get; set; }
         //public LoyaltyData LoyaltyData { get; set; }
 
+
+        /// <summary>
+        /// Helper function to create <see cref="SaleItem"/> objects add sale items and modifiers to the payment, this function will attempt to create values where possible.
+        /// </summary>
+        /// <param name="productCode"></param>
+        /// <param name="productLabel"></param>
+        /// <param name="itemAmount"></param>
+        /// <param name="quantity"></param>
+        /// <param name="unitOfMeasure"></param>
+        /// <param name="itemID"></param>
+        /// <param name="parentItemID"></param>
+        /// <param name="eanUpc"></param>
+        /// <param name="additionalProductInfo"></param>
+        /// <param name="unitPrice"></param>
+        /// <param name="taxCode"></param>
+        /// <param name="saleChannel"></param>
+        /// <param name="costBase"></param>
+        /// <param name="discount"></param>
+        /// <param name="discountReason"></param>
+        /// <param name="category"></param>
+        /// <param name="subCategory"></param>
+        /// <param name="categories"></param>
+        /// <param name="brand"></param>
+        /// <param name="quantityInStock"></param>
+        /// <param name="restricted"></param>
+        /// <param name="pageURL"></param>
+        /// <param name="imageURLs"></param>
+        /// <param name="style"></param>
+        /// <param name="size"></param>
+        /// <param name="colour"></param>
+        /// <param name="weight"></param>
+        /// <param name="weightUnitOfMeasure"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
         public SaleItem AddSaleItem(
                 string productCode,
                 string productLabel,
@@ -56,10 +90,21 @@ namespace DataMeshGroup.Fusion.Model
                 string saleChannel = null,
                 decimal? costBase = null,
                 decimal? discount = null,
+                string discountReason = null,
                 string category = null,
                 string subCategory = null,
+                List<string> categories = null,
                 string brand = null,
-                int? quantityInStock = null
+                decimal? quantityInStock = null,
+                bool? restricted = null,
+                string pageURL = null,
+                List<string> imageURLs = null,
+                string style = null,
+                string size = null,
+                string colour = null,
+                decimal? weight = null,
+                WeightUnitOfMeasure? weightUnitOfMeasure = null,
+                List<string> tags = null
             )
         {
             if (PaymentTransaction == null)
@@ -98,11 +143,30 @@ namespace DataMeshGroup.Fusion.Model
                 SaleChannel = saleChannel,
                 CostBase = costBase,
                 Discount = discount,
-                Category = category,
-                SubCategory = subCategory,
+                DiscountReason = discountReason,
                 Brand = brand,
-                QuantityInStock = quantityInStock
+                QuantityInStock = quantityInStock,
+                Restricted = restricted,
+                PageURL = pageURL,
+                ImageURLs = imageURLs,
+                Style = style,
+                Size = size,
+                Colour = colour,
+                Weight = weight,
+                WeightUnitOfMeasure = weightUnitOfMeasure,
+                Tags = tags
             };
+
+            if(category != null || subCategory != null)
+            {
+                saleItem.Category = category;
+                saleItem.SubCategory = subCategory;
+            }
+            else
+            {
+                saleItem.Categories = categories;
+            }
+
 
             PaymentTransaction.SaleItem.Add(saleItem);
             return saleItem;

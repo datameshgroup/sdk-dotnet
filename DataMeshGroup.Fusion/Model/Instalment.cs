@@ -5,11 +5,11 @@ namespace DataMeshGroup.Fusion.Model
 {
     public class Instalment
     {
-        public List<string> InstalmentType { get; set; }
+        public List<InstalmentType> InstalmentType { get; set; }
         public string SequenceNumber { get; set; }
         public string PlanID { get; set; }
         public string Period { get; set; }
-        public string PeriodUnit { get; set; }
+        public PeriodUnit PeriodUnit { get; set; }
         public string FirstPaymentDate { get; set; }
         public string TotalNbOfPayments { get; set; }
         [JsonConverter(typeof(DecimalJsonConverter))]

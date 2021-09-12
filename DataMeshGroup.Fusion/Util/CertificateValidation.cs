@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Security;
+﻿using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataMeshGroup.Fusion.Model
 {
@@ -36,15 +31,20 @@ namespace DataMeshGroup.Fusion.Model
         /// <returns>A System.Boolean value that determines whether the specified certificate is accepted for authentication.</returns>
         public static bool RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            return true; // TODO : need to check for certs above
+            // TODO: Re-enable this code after DMG production intermediate fix
 
-            //if (RootCA == UnifyRootCA.System)
+
+            //if (RootCA == UnifyRootCA.System || sslPolicyErrors == SslPolicyErrors.None)
             //{
             //    return sslPolicyErrors == SslPolicyErrors.None;
             //}
+
+            // Using DMG prod/test root CA //
+
+            // Load all valid root certificates in CER format
             //var validRootCertificates = new[]
             //{
-            //    Convert.FromBase64String(ProductionEnvironment), // Set your own root certificates (format CER)
+            //    Convert.FromBase64String(RootCA == UnifyRootCA.Production ? ProductionEnvironment : TestEnvironment), 
             //};
 
             //if (chain.ChainStatus.Any(status => status.Status != X509ChainStatusFlags.UntrustedRoot))
@@ -56,19 +56,17 @@ namespace DataMeshGroup.Fusion.Model
             //    {
             //        if (status.Status == X509ChainStatusFlags.UntrustedRoot)
             //        {
-            //            // improvement: we could validate that the request matches an internal domain by using request.RequestUri in addition to the certicate validation
-
             //            // Check that the root certificate matches one of the valid root certificates
             //            if (validRootCertificates.Any(cert => cert.SequenceEqual(element.Certificate.RawData)))
             //                continue; // Process the next status
-            //        }
 
-            //        return false;
+            //            return false;
+            //        }
             //    }
             //}
 
-            //// Return true only if all certificates of the chain are valid
-            //return true;
+            // Return true only if all certificates of the chain are valid
+            return true; 
         }
 
 

@@ -1,7 +1,5 @@
 ﻿using DataMeshGroup.Fusion.Model;
 using Newtonsoft.Json;
-using System;
-using System.Globalization;
 
 namespace DataMeshGroup.Fusion
 {
@@ -22,9 +20,6 @@ namespace DataMeshGroup.Fusion
             {
                 throw new MessageFormatException("SecurityTrailer validation error. messageHeader == null || securityTrailer == null");
             }
-
-            // Special case for Reconciliation
-            // messageHeader.MessageCategory.Equals("Reconciliation", System.StringComparison.OrdinalIgnoreCase)
 
             var sessionKey = Crypto.DecryptWithTripleDES(securityTrailer.AuthenticatedData.Recipient.KEK.EncryptedKey, kek);
 
@@ -72,7 +67,7 @@ namespace DataMeshGroup.Fusion
                             KEKIdentifier = new KEKIdentifier()
                             {
                                 KeyIdentifier = useTestKeyIdentifier ? "SpecV2TestMACKey" : "SpecV2ProdMACKey",
-                                KeyVersion = DateTime.UtcNow.ToString("yyyyMMddHHmmss.fff", CultureInfo.InvariantCulture)
+                                KeyVersion = useTestKeyIdentifier ? "20191122164326.594" : "20191122164326.594",
                             },
                             KeyEncryptionAlgorithm = new KeyEncryptionAlgorithm()
                             {

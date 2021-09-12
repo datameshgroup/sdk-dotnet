@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
-using System;
 
 namespace DataMeshGroup.Fusion.Model
 {
+    /// <summary>
+    /// Defines the base model for requests/responses
+    /// </summary>
     public abstract class MessagePayload
     {
         [JsonIgnore]
@@ -25,8 +27,16 @@ namespace DataMeshGroup.Fusion.Model
             MessageType = messageType;
         }
 
-        public string GetMessageDescription() => MessageCategory.ToString() + MessageType.ToString();
+        public string GetMessageDescription()
+        {
+            return MessageCategory.ToString() + MessageType.ToString();
+        }
 
+        /// <summary>
+        /// If this is a request, this function will define the default paired response payload 
+        /// message. Used for error handling.
+        /// </summary>
+        /// <param name="response">The <see cref="Response"/> object to be included in the response payload</param>
         internal abstract MessagePayload CreateDefaultResponseMessagePayload(Response response);
     }
 }

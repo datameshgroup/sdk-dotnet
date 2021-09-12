@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DataMeshGroup.Fusion.Model
+﻿namespace DataMeshGroup.Fusion.Model
 {
     public class ReconciliationRequest : MessagePayload
     {

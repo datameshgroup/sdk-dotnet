@@ -1,8 +1,5 @@
 ﻿using DataMeshGroup.Fusion.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataMeshGroup.Fusion
@@ -232,6 +229,16 @@ namespace DataMeshGroup.Fusion
         /// Fired when a <see cref="LoginResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
         /// </summary>
         event EventHandler<MessagePayloadEventArgs<LoginResponse>> OnLoginResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="LogoutResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        event EventHandler<MessagePayloadEventArgs<LogoutResponse>> OnLogoutResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="CardAcquisitionResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        event EventHandler<MessagePayloadEventArgs<CardAcquisitionResponse>> OnCardAcquisitionResponse;
 
         /// <summary>
         /// Fired when a <see cref="PaymentResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>

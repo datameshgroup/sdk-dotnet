@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
@@ -32,16 +31,64 @@ namespace DataMeshGroup.Fusion.Model
 
     [JsonConverter(typeof(StringEnumConverterWithDefault<MessageCategory>))]
     public enum MessageCategory 
-    { Unknown, Abort, Admin, BalanceInquiry, Batch, CardAcquisition, CardReaderAPDU, CardReaderInit, CardReaderPowerOff, Diagnosis, Display, EnableService, Event, GetTotals, Input, InputUpdate, Login, Logout, Loyalty, Payment, PIN, Print, Reconciliation, Reversal, Sound, StoredValue, TransactionReport, TransactionStatus, Transmit };
+    { 
+        Unknown, 
+        Abort, 
+        Admin, 
+        BalanceInquiry, 
+        Batch, 
+        CardAcquisition, 
+        CardReaderAPDU, 
+        CardReaderInit, 
+        CardReaderPowerOff, 
+        Diagnosis, 
+        Display, 
+        EnableService, 
+        Event, 
+        GetTotals, 
+        Input, 
+        InputUpdate, 
+        Login, 
+        Logout, 
+        Loyalty, 
+        Payment, 
+        PIN, 
+        Print, 
+        Reconciliation, 
+        Reversal, 
+        Sound, 
+        StoredValue, 
+        TransactionReport, 
+        TransactionStatus, 
+        Transmit 
+    };
 
     [JsonConverter(typeof(StringEnumConverterWithDefault<MessageType>))]
-    public enum MessageType { Unknown, Request, Response, Notification };
+    public enum MessageType 
+    { 
+        Unknown, 
+        Request, 
+        Response, 
+        Notification 
+    };
 
     [JsonConverter(typeof(StringEnumConverterWithDefault<Result>))]
-    public enum Result { Unknown, Success, Failure, Partial };
+    public enum Result 
+    { 
+        Unknown, 
+        Success, 
+        Failure, 
+        Partial 
+    };
 
     [JsonConverter(typeof(StringEnumConverterWithDefault<TerminalEnvironment>))]
-    public enum TerminalEnvironment { Unknown, Attended, SemiAttended, Unattended }
+    public enum TerminalEnvironment 
+    { 
+        Unknown, 
+        Attended, 
+        SemiAttended, 
+        Unattended 
+    }
 
 
     /// <summary>
@@ -104,6 +151,9 @@ namespace DataMeshGroup.Fusion.Model
 
     [JsonConverter(typeof(StringEnumConverterWithDefault<UnitOfMeasure>))]
     public enum UnitOfMeasure { Unknown, Case, Foot, UKGallon, USGallon, Gram, Kilogram, Pound, Meter, Centimetre, Litre, Centilitre, Ounce, Quart, Pint, Mile, Kilometre, Yard, Other, Unit };
+
+    [JsonConverter(typeof(StringEnumConverterWithDefault<WeightUnitOfMeasure>))]
+    public enum WeightUnitOfMeasure { Unknown, Gram, Kilogram, Pound, Ounce, Other };
 
     /// <summary>
     /// Type of payment instrument
@@ -217,8 +267,69 @@ namespace DataMeshGroup.Fusion.Model
     };
 
 
+    /// <summary>
+    /// Payment instrument entry mode requested by the Sale System.
+    /// </summary>
     [JsonConverter(typeof(StringEnumConverterWithDefault<EntryMode>))]
-    public enum EntryMode { Unknown, RFID, Keyed, Manual, File, Scanned, MagStripe, ICC, SynchronousICC, Tapped, Contactless, Mobile }
+    public enum EntryMode
+    {
+        Unknown,
+
+        /// <summary>
+        /// Payment instrument information are taken from RFID
+        /// </summary>
+        RFID,
+
+        /// <summary>
+        /// Manual key entry
+        /// </summary>
+        Keyed,
+
+        /// <summary>
+        /// Reading of embossing or OCR of printed data either at time of transaction or after the event.
+        /// </summary>
+        Manual,
+
+        /// <summary>
+        /// Account data on file
+        /// </summary>
+        File,
+
+        /// <summary>
+        /// Scanned by a bar code reader
+        /// </summary>
+        Scanned,
+
+        /// <summary>
+        /// Magnetic stripe 
+        /// </summary>
+        MagStripe,
+
+        /// <summary>
+        /// Contact ICC (asynchronous)
+        /// </summary>
+        ICC,
+
+        /// <summary>
+        /// Contact ICC (synchronous)
+        /// </summary>
+        SynchronousICC,
+
+        /// <summary>
+        /// Contactless card reader Magnetic Stripe
+        /// </summary>
+        Tapped,
+
+        /// <summary>
+        /// Contactless card reader conform to ISO 14443
+        /// </summary>
+        Contactless,
+
+        /// <summary>
+        /// Check Reader
+        /// </summary>
+        Mobile
+    }
 
 
     [JsonConverter(typeof(StringEnumConverterWithDefault<AuthenticationMethod>))]
@@ -768,118 +879,320 @@ namespace DataMeshGroup.Fusion.Model
         ReverseRebate
     }
 
-    //public static class ComponentType
-    //{
-    //    public const string SERV = "SERV";
-    //    public const string MDWR = "MDWR";
-    //    public const string OPST = "OPST";
-    //    public const string APPL = "APPL";
-    //    public const string SECM = "SECM";
-    //}
+    /// <summary>
+    /// Sent in the Login Request to describe the type of component
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<ComponentType>))]
+    public enum ComponentType
+    {
+        Unknown,
 
-    //public static class AllowedPaymentBrand
-    //{
-    //    public const string Visa = "Visa";
-    //    public const string MasterCard = "MasterCard";
-    //    public const string AmericanExpress = "American Express";
-    //}
+        /// <summary>
+        /// Server
+        /// </summary>
+        SERV,
 
-    //public static class GlobalStatus
-    //{
-    //    public const string OK = "OK";
-    //    public const string Busy = "Busy";
-    //    public const string Maintenance = "Maintenance";
-    //    public const string Unreachable = "Unreachable";
-    //}
+        /// <summary>
+        /// MiddleWare
+        /// </summary>
+        MDWR,
 
-    //public static class PrinterStatus
-    //{
-    //    public const string OK = "OK";
-    //    public const string PaperLow = "PaperLow";
-    //    public const string NoPaper = "NoPaper";
-    //    public const string PaperJam = "PaperJam";
-    //    public const string OutOfOrder = "OutOfOrder";
-    //}
+        /// <summary>
+        /// Operating System
+        /// </summary>
+        OPST,
 
-    //public static class IdentificationType
-    //{
-    //    public const string PAN = "PAN";
-    //    public const string ISOTrack2 = "ISOTrack2";
-    //    public const string BarCode = "BarCode";
-    //    public const string AccountNumber = "AccountNumber";
-    //    public const string PhoneNumber = "PhoneNumber";
-    //}
+        /// <summary>
+        /// Sale Application
+        /// </summary>
+        APPL,
 
-    //public static class IdentificationSupport
-    //{
-    //    public const string NoCard = "NoCard";
-    //    public const string LoyaltyCard = "LoyaltyCard";
-    //    public const string HybridCard = "HybridCard";
-    //    public const string LinkedCard = "LinkedCard";
-    //}
+        /// <summary>
+        /// Security Module
+        /// </summary>
+        SECM
+    }
 
-    //public static class LoyaltyUnit
-    //{
-    //    public const string Point = "Point";
-    //    public const string Monetary = "Monetary";
-    //}
+    /// <summary>
+    /// Global status of a POI Server and POI Terminal
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<GlobalStatus>))]
+    public enum GlobalStatus
+    {
+        Unknown,
 
-    //public static class TrackFormat
-    //{
-    //    public const string ISO = "ISO";
-    //    public const string JISI = "JIS-I";
-    //    public const string JISII = "JIS-II";
-    //    public const string AAMVA = "AAMVA";
-    //    public const string CMC7 = "CMC-7";
-    //    public const string E13B = "E-13B";
-    //}
+        /// <summary>
+        /// The POI is ready to receive and process a request
+        /// </summary>
+        OK,
 
-    //public static class LoyaltyHandling
-    //{
-    //    public const string Forbidden = "Forbidden";
-    //    public const string Processed = "Processed";
-    //    public const string Allowed = "Allowed";
-    //    public const string Proposed = "Proposed";
-    //    public const string Required = "Required";
-    //}
+        /// <summary>
+        /// The POI Terminal cannot process a request because another processing is in  progress
+        /// </summary>
+        Busy,
 
-    //public static class ForceEntryMode
-    //{
-    //    public const string RFID = "RFID";
-    //    public const string Keyed = "Keyed";
-    //    public const string Manual = "Manual";
-    //    public const string File = "File";
-    //    public const string Scanned = "Scanned";
-    //    public const string MagStripe = "MagStripe";
-    //    public const string ICC = "ICC";
-    //    public const string SynchronousICC = "SynchronousICC";
-    //    public const string Tapped = "Tapped";
-    //    public const string Contactless = "Contactless";
-    //    public const string CheckReader = "CheckReader";
-    //}
+        /// <summary>
+        /// The POI is in maintenance processing
+        /// </summary>
+        Maintenance,
 
-    //public static class InstalmentType
-    //{
-    //    public const string DeferredInstalments = "DeferredInstalments";
-    //    public const string EqualInstalments = "EqualInstalments";
-    //    public const string InequalInstalments = "InequalInstalments";
-    //}
+        /// <summary>
+        /// The POI is unreachable or not responding
+        /// </summary>
+        Unreachable
+    }
 
-    //public static class PeriodUnit
-    //{
-    //    public const string Daily = "Daily";
-    //    public const string Weekly = "Weekly";
-    //    public const string Monthly = "Monthly";
-    //    public const string Annual = "Annual";
-    //}
+    /// <summary>
+    /// Indicates if the printer is working and usable.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<PrinterStatus>))]
+    public enum PrinterStatus
+    {
+        Unknown,
+
+        /// <summary>
+        /// The printer is operational.
+        /// </summary>
+        OK,
+
+        /// <summary>
+        /// The printer is operational but paper roll is almost empty.
+        /// </summary>
+        PaperLow,
+
+        /// <summary>
+        /// Paper roll is empty, an operator must insert a new paper roll.
+        /// </summary>
+        NoPaper,
+
+        /// <summary>
+        /// An operator must remove the paper jam manually
+        /// </summary>
+        PaperJam,
+        
+        /// <summary>
+        /// The printer is out of order
+        /// </summary>
+        OutOfOrder
+    }
+
+
+
+
+    /// <summary>
+    /// Type of account identification
+    /// In a request message, it informs the POI System the type of the account or card identification, when provided by the Sale Terminal.
+    /// (e.g.because the card information are a bar-code read by the Cashier on a scanner device). In a response message, it informs the
+    /// Sale System the type of the account or card identification.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<IdentificationType>))]
+    public enum IdentificationType
+    {
+        Unknown,
+
+        /// <summary>
+        /// Standard card identification (card number)
+        /// </summary>
+        PAN,
+
+        /// <summary>
+        /// ISO Track 2 including identification
+        /// </summary>
+        ISOTrack2,
+
+        /// <summary>
+        /// Bar-code with a specific form of identification
+        /// </summary>
+        BarCode,
+
+        /// <summary>
+        /// Account number
+        /// </summary>
+        AccountNumber,
+
+        /// <summary>
+        /// A phone number identifies the account on which the phone card is assigned.
+        /// </summary>
+        PhoneNumber
+    }
+
+    /// <summary>
+    /// Support of the loyalty account identification. Allows knowing where and how you have found the loyalty account identification.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<IdentificationSupport>))]
+    public enum IdentificationSupport
+    {
+        Unknown,
+
+        /// <summary>
+        /// The identification is not found on a card
+        /// </summary>
+        NoCard,
+
+        /// <summary>
+        /// The identification is on a card dedicated to this loyalty brand.
+        /// </summary>
+        LoyaltyCard,
+
+        /// <summary>
+        /// The identification is on a card which might be used both for the loyalty and the payment.
+        /// </summary>
+        HybridCard,
+
+        /// <summary>
+        /// The loyalty account is implicitly attached to the payment card. This is usually detected by the loyalty Acquirer.
+        /// </summary>
+        LinkedCard
+    }
+
+    /// <summary>
+    /// Card track format
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<TrackFormat>))]
+    public enum TrackFormat
+    {
+        Unknown,
+
+        /// <summary>
+        /// ISO card track format - ISO 7813 - ISO 4909
+        /// </summary>
+        ISO,
+
+        /// <summary>
+        /// Japenese track format I
+        /// </summary>
+        JISI,
+
+        /// <summary>
+        /// Japenese track format II
+        /// </summary>
+        JISII,
+
+        /// <summary>
+        /// American driver license
+        /// </summary>
+        AAMVA,
+
+        /// <summary>
+        /// ((Magnetic Ink Character Recognition, using the CMC-7 font - ISO 1004) Line at  the bottom of a check containing the bank account and the check number.
+        /// </summary>
+        CMC7,
+
+        /// <summary>
+        /// (Magnetic Ink Character Recognition, using the E-13B font) Line at the bottom of a check containing the bank account and the check number
+        /// </summary>
+        E13B
+    }
+
+
+
+    /// <summary>
+    /// Payment instrument entry mode requested by the Sale System.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<ForceEntryMode>))]
+    public enum ForceEntryMode
+    {
+        Unknown,
+
+        /// <summary>
+        /// Payment instrument information are taken from RFID
+        /// </summary>
+        RFID,
+
+        /// <summary>
+        /// Manual key entry
+        /// </summary>
+        Keyed,
+
+        /// <summary>
+        /// Reading of embossing or OCR of printed data either at time of transaction or after the event.
+        /// </summary>
+        Manual,
+
+        /// <summary>
+        /// Account data on file
+        /// </summary>
+        File,
+
+        /// <summary>
+        /// Scanned by a bar code reader
+        /// </summary>
+        Scanned,
+
+        /// <summary>
+        /// Magnetic stripe 
+        /// </summary>
+        MagStripe,
+
+        /// <summary>
+        /// Contact ICC (asynchronous)
+        /// </summary>
+        ICC,
+
+        /// <summary>
+        /// Contact ICC (synchronous)
+        /// </summary>
+        SynchronousICC,
+
+        /// <summary>
+        /// Contactless card reader Magnetic Stripe
+        /// </summary>
+        Tapped,
+
+        /// <summary>
+        /// Contactless card reader conform to ISO 14443
+        /// </summary>
+        Contactless,
+
+        /// <summary>
+        /// Check Reader
+        /// </summary>
+        Mobile
+    }
+
+
+    /// <summary>
+    /// Type of instalment transaction.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<InstalmentType>))]
+    public enum InstalmentType
+    {
+        Unknown,
+
+        /// <summary>
+        ///  The payment of the service or goods is deferred.
+        /// </summary>
+        DeferredInstalments,
+
+        /// <summary>
+        /// The payment is split in several instalments of equal amounts.
+        /// </summary>
+        EqualInstalments,
+
+        /// <summary>
+        /// The payment is split in several instalments of different amounts.
+        /// </summary>
+        InequalInstalments
+    }
+
+    /// <summary>
+    /// Type of instalment transaction.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<PeriodUnit>))]
+    public enum PeriodUnit
+    {
+        Unknown,
+        Daily,
+        Weekly,
+        Monthly,
+        Annual
+    }
 
     //public static class CheckTypeCode
     //{
     //    public const string Personal = "Personal";
     //    public const string Company = "Company";
     //}
-
-
 
     //public static class Color
     //{
@@ -968,7 +1281,26 @@ namespace DataMeshGroup.Fusion.Model
     //    public const string Unable2Compl = "Unable2Compl";
     //}
 
+    //public static class LoyaltyUnit
+    //{
+    //    public const string Point = "Point";
+    //    public const string Monetary = "Monetary";
+    //}
 
+    //public static class LoyaltyHandling
+    //{
+    //    public const string Forbidden = "Forbidden";
+    //    public const string Processed = "Processed";
+    //    public const string Allowed = "Allowed";
+    //    public const string Proposed = "Proposed";
+    //    public const string Required = "Required";
+    //}
 
+    //public static class AllowedPaymentBrand
+    //{
+    //    public const string Visa = "Visa";
+    //    public const string MasterCard = "MasterCard";
+    //    public const string AmericanExpress = "American Express";
+    //}
 
 }

@@ -2,9 +2,9 @@
 {
     public class LoyaltyAccountID
     {
-        public string EntryMode { get; set; }
-        public string IdentificationType { get; set; }
-        public string IdentificationSupport { get; set; }
+        public EntryMode EntryMode { get; set; }
+        public IdentificationType IdentificationType { get; set; }
+        public IdentificationSupport IdentificationSupport { get; set; }
         public string LoyaltyID { get; set; }
     }
 }

@@ -70,7 +70,7 @@ namespace DataMeshGroup.Fusion.Model
             }
         }
 
-        readonly string[] newLineTags = new string[] { "p", "br", "br/", "pre" };
+        private readonly string[] newLineTags = new string[] { "p", "br", "br/", "pre" };
         private void ParseNode(XmlNode rootNode, StringBuilder receipt)
         {
             foreach (XmlNode node in rootNode.ChildNodes)

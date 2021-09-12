@@ -39,10 +39,14 @@ namespace DataMeshGroup.Fusion.Model
 
 
         public string DateTime { get; set; } = System.DateTime.Now.Add(TimeSpan.Zero).ToString("yyyy-MM-ddThh:mm:ss.sszzzzzz", System.Globalization.CultureInfo.InvariantCulture);
-        public SaleSoftware SaleSoftware { get; set; }
-        public SaleTerminalData SaleTerminalData { get; set; }
+
+        /// <summary>
+        /// Information related to the software of the Sale System which manages the Sale to POI protocol.
+        /// </summary>
+        public SaleSoftware SaleSoftware { get; set; } // TODO: In standard Nexo v3.1 this is an array
+        public SaleTerminalData SaleTerminalData { get; set; } // TODO: In standard Nexo v3.1 this is an array
         public bool? TrainingModeFlag { get; set; } = false;
-        public string OperatorLanguage { get; set; } = "en";
+        public string OperatorLanguage { get; set; }
         public string OperatorID { get; set; }
         public string ShiftNumber { get; set; }
         public string TokenRequestedType { get; set; }

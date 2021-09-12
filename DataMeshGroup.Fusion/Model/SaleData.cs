@@ -5,9 +5,9 @@ namespace DataMeshGroup.Fusion.Model
     public class SaleData
     {
         public string OperatorID { get; set; }
-        public string OperatorLanguage { get; set; } = "en";
+        public string OperatorLanguage { get; set; }
         public string ShiftNumber { get; set; }
-        public string CustomerLanguage { get; set; } = "en";
+        public string CustomerLanguage { get; set; }
         public TransactionIdentification SaleTransactionID { get; set; }
         public string SaleReferenceID { get; set; }
         public SaleTerminalData SaleTerminalData { get; set; }

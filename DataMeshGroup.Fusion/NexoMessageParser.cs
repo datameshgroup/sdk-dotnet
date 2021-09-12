@@ -8,14 +8,20 @@ namespace DataMeshGroup.Fusion
     public class NexoMessageParser : IMessageParser
     {
         /// <summary>
-        /// ProtocolVersion implemented by this NexoMessageParser
+        /// ProtocolVersion implemented by this NexoMessageParser. 
         /// </summary>
         public string ProtocolVersion => "3.1-dmg";
 
         /// <summary>
         /// Defines if we should be using production or test keys
         /// </summary>
-        public bool UseTestKeyIdentifier { get; set; } = false;
+        public bool UseTestKeyIdentifier { get; set; }
+
+        /// <summary>
+        /// Defines if we should validate the MAC on responses messages. Should always be enabled in production. Default=true
+        /// </summary>
+        public bool EnableMACValidation { get; set; } = true;
+
 
 
         private readonly JsonSerializer jsonSerializer = new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore };
@@ -31,15 +37,15 @@ namespace DataMeshGroup.Fusion
 
 
             // Message from Unify could be SaleToPOIResponse or SaleToPOIRequest
-            var saleToPOIMessage = rootJObject.SelectToken("SaleToPOIResponse", false) ?? rootJObject.SelectToken("SaleToPOIRequest", false);
+            JToken saleToPOIMessage = rootJObject.SelectToken("SaleToPOIResponse", false) ?? rootJObject.SelectToken("SaleToPOIRequest", false);
 
             // Find MessageHeader and SecurityTrailer object
-            var messageHeaderJObject = saleToPOIMessage?.SelectToken("MessageHeader", false);
-            var securityTrailerJObject = saleToPOIMessage?.SelectToken("SecurityTrailer", false);
+            JToken messageHeaderJObject = saleToPOIMessage?.SelectToken("MessageHeader", false);
+            JToken securityTrailerJObject = saleToPOIMessage?.SelectToken("SecurityTrailer", false);
 
             // Parse JObject to MessageHeader 
-            var messageHeader = messageHeaderJObject?.ToObject<MessageHeader>();
-            var securityTrailer = securityTrailerJObject?.ToObject<SecurityTrailer>();
+            MessageHeader messageHeader = messageHeaderJObject?.ToObject<MessageHeader>();
+            SecurityTrailer securityTrailer = securityTrailerJObject?.ToObject<SecurityTrailer>();
 
             // Throw if we can't find/parse header + trailer
             if (messageHeaderJObject is null || securityTrailerJObject is null || messageHeader is null || securityTrailer is null)
@@ -49,7 +55,7 @@ namespace DataMeshGroup.Fusion
             }
 
             // Validate type
-            var type = Type.GetType($"DataMeshGroup.Fusion.Model.{messageHeader.MessageCategory}{messageHeader.MessageType}");
+            Type type = Type.GetType($"DataMeshGroup.Fusion.Model.{messageHeader.MessageCategory}{messageHeader.MessageType}");
             if (type is null || type.IsAssignableFrom(typeof(MessagePayload)))
             {
                 // to enable forwards-compatibility we need to just return null here instead of throwing an exception
@@ -57,8 +63,8 @@ namespace DataMeshGroup.Fusion
             }
 
             // Find Payload 
-            var payloadJObject = saleToPOIMessage.SelectToken(messageHeader.GetMessageDescription(), false);
-            var payload = payloadJObject?.ToObject(type);
+            JToken payloadJObject = saleToPOIMessage.SelectToken(messageHeader.GetMessageDescription(), false);
+            object payload = payloadJObject?.ToObject(type);
             // Throw if we can't find/parse payload
             if (payloadJObject is null || payload is null)
             {
@@ -67,7 +73,10 @@ namespace DataMeshGroup.Fusion
             }
 
             // Validate MAC. Throws MessageFormatException
-            SecurityTrailerHelper.ValidateSecurityTrailer(kek, messageHeader, securityTrailer, messageHeaderJObject.ToString(Formatting.None), payloadJObject.ToString(Formatting.None));
+            if(EnableMACValidation)
+            {
+                SecurityTrailerHelper.ValidateSecurityTrailer(kek, messageHeader, securityTrailer, messageHeaderJObject.ToString(Formatting.None), payloadJObject.ToString(Formatting.None));
+            }
 
             // Return
             return payload as MessagePayload;
@@ -81,7 +90,7 @@ namespace DataMeshGroup.Fusion
             }
 
             // Construct MessageHeader from RequestMessage
-            var messageHeader = new MessageHeader()
+            MessageHeader messageHeader = new MessageHeader()
             {
                 ProtocolVersion = ProtocolVersion,
                 MessageClass = requestMessage.MessageClass,
@@ -93,7 +102,7 @@ namespace DataMeshGroup.Fusion
             };
 
             // Create JObject for header and request
-            var securityTrailer = SecurityTrailerHelper.GenerateSecurityTrailer(kek, messageHeader, requestMessage, UseTestKeyIdentifier);
+            SecurityTrailer securityTrailer = SecurityTrailerHelper.GenerateSecurityTrailer(kek, messageHeader, requestMessage, UseTestKeyIdentifier);
 
             return new SaleToPOIMessage()
             {
@@ -107,7 +116,7 @@ namespace DataMeshGroup.Fusion
         {
             // TODO: this could actually be a SaleToPOIRequest or SaleToPOIResponse. Need to check the message payload as that will give us 
             // a better idea. However... at this point only SaleToPOIRequest is supported
-            var root = new JObject
+            JObject root = new JObject
             {
                 { "SaleToPOIRequest", new JObject
                     {

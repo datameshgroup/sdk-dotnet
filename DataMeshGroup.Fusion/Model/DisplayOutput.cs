@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DataMeshGroup.Fusion.Model
+﻿namespace DataMeshGroup.Fusion.Model
 {
     public class DisplayOutput
     {

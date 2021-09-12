@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Security;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -64,7 +63,7 @@ namespace DataMeshGroup.Fusion
         /// <param name="useTestEnvironment">True to default to test environment params, false for production.</param>
         public FusionClient(bool useTestEnvironment = false)
         {
-            MessageParser = new NexoMessageParser() { UseTestKeyIdentifier = useTestEnvironment };
+            MessageParser = new NexoMessageParser() { UseTestKeyIdentifier = useTestEnvironment, EnableMACValidation = true };
             URL = useTestEnvironment ? UnifyURL.Test : UnifyURL.Production;
             DefaultTimeout = TimeSpan.FromSeconds(60);
             DefaultHeartbeatTimeout = TimeSpan.FromSeconds(15);
@@ -144,7 +143,7 @@ namespace DataMeshGroup.Fusion
                 }
 
                 Log(LogLevel.Debug, $"Connecting to {url}...");
-                ws = await WebSocketFactory.ConnectAsync(url, cts.Token, DefaultHeartbeatTimeout);
+                ws = await WebSocketFactory.ConnectAsync(url, DefaultHeartbeatTimeout, cts.Token);
                 bool isConnected = ws.State == WebSocketState.Open;
 
                 if (isConnected)
@@ -370,7 +369,7 @@ namespace DataMeshGroup.Fusion
         {
             if (IsEventModeEnabled)
             {
-                throw new InvalidOperationException($"Unable to call {nameof(RecvAsync)} when {nameof(OnLoginResponse)}, {nameof(OnPaymentResponse)}, {nameof(OnReconciliationResponse)}, {nameof(DisplayRequest)} or {nameof(OnTransactionStatusResponse)} are assigned");
+                throw new InvalidOperationException($"Unable to call {nameof(RecvAsync)} when {nameof(OnLoginResponse)}, {nameof(OnLogoutResponse)}, {nameof(OnCardAcquisitionResponse)}, {nameof(OnPaymentResponse)}, {nameof(OnReconciliationResponse)}, {nameof(DisplayRequest)} or {nameof(OnTransactionStatusResponse)} are assigned");
             }
 
             // cts is fired when disconnect occurs (NetworkError)
@@ -489,7 +488,14 @@ namespace DataMeshGroup.Fusion
                         _ = recvQueueSemaphore.Release();
                     }
 
-                    // Special handling for logins
+                    // Special handling for login/logout
+                    if (messagePayload is LogoutResponse)
+                    {
+                        if((messagePayload as LogoutResponse)?.Response?.Success == true)
+                        {
+                            loginRequired = true;
+                        }
+                    }
                     if (messagePayload is LoginResponse)
                     {
                         LoginResponse = messagePayload as LoginResponse;
@@ -652,13 +658,13 @@ namespace DataMeshGroup.Fusion
 
 
         /// <summary>
-        /// Indicates if event mode has been enabled. This is set when <see cref="OnLoginResponse"/>, <see cref="OnPaymentResponse"/>, 
+        /// Indicates if event mode has been enabled. This is set when <see cref="OnLoginResponse"/>, <see cref="OnLogoutResponse"/>, <see cref="OnCardAcquisitionResponse"/>, <see cref="OnPaymentResponse"/>, 
         /// <see cref="OnReconciliationResponse"/>, <see cref="OnTransactionStatusResponse"/>, or <see cref="OnDisplayRequest"/> events 
         /// have been subscribed to. When events mode is enabled, responses will be returned to the owner via <see cref="OnLoginResponse"/>, 
         /// <see cref="OnPaymentResponse"/>, <see cref="OnReconciliationResponse"/> , <see cref="OnTransactionStatusResponse"/>, and 
         /// <see cref="OnDisplayRequest"/> events, and all requests to <see cref="RecvAsync"/> will throw an <see cref="InvalidOperationException"/>
         /// </summary>
-        public bool IsEventModeEnabled => (OnLoginResponse != null) || (OnPaymentResponse != null) || (OnReconciliationResponse != null) || (OnDisplayRequest != null) || (OnTransactionStatusResponse != null);
+        public bool IsEventModeEnabled => (OnLoginResponse != null) || (OnLogoutResponse != null) || (OnCardAcquisitionResponse != null) || (OnPaymentResponse != null) || (OnReconciliationResponse != null) || (OnDisplayRequest != null) || (OnTransactionStatusResponse != null);
         #endregion
 
         #region Events
@@ -686,6 +692,16 @@ namespace DataMeshGroup.Fusion
         /// Fired when a <see cref="LoginResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
         /// </summary>
         public event EventHandler<MessagePayloadEventArgs<LoginResponse>> OnLoginResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="LogoutResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        public event EventHandler<MessagePayloadEventArgs<LogoutResponse>> OnLogoutResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="CardAcquisitionResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        public event EventHandler<MessagePayloadEventArgs<CardAcquisitionResponse>> OnCardAcquisitionResponse;
 
         /// <summary>
         /// Fired when a <see cref="PaymentResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
@@ -758,6 +774,12 @@ namespace DataMeshGroup.Fusion
             {
                 case LoginResponse r:
                     OnLoginResponse?.Invoke(this, new MessagePayloadEventArgs<LoginResponse>(r));
+                    break;
+                case LogoutResponse r:
+                    OnLogoutResponse?.Invoke(this, new MessagePayloadEventArgs<LogoutResponse>(r));
+                    break;
+                case CardAcquisitionResponse r:
+                    OnCardAcquisitionResponse?.Invoke(this, new MessagePayloadEventArgs<CardAcquisitionResponse>(r));
                     break;
                 case PaymentResponse r:
                     OnPaymentResponse?.Invoke(this, new MessagePayloadEventArgs<PaymentResponse>(r));

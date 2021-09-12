@@ -1,7 +1,5 @@
 ﻿using DataMeshGroup.Fusion.Model;
 using System;
-using System.Net;
-using System.Net.Security;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,16 +11,11 @@ namespace DataMeshGroup.Fusion
         /// Creates and connects a ClientWebSocket that works for this platform. Uses System.Net.WebSockets.ClientWebSocket if supported or System.Net.WebSockets.Managed.ClientWebSocket if not.
         /// </summary>
         /// <param name="uri">URL to connect to</param>
-        /// <param name="cancellationToken">Token used to close socket during send/recv awaits</param>
         /// <param name="keepAliveInterval">How often to send ping/pong heartbeat messages</param>
+        /// <param name="cancellationToken">Token used to close socket during send/recv awaits</param>
         /// <returns>A connected web socket, otherwise throws exception</returns>
-        public async Task<System.Net.WebSockets.WebSocket> ConnectAsync(Uri uri, CancellationToken cancellationToken, TimeSpan keepAliveInterval)
+        public async Task<System.Net.WebSockets.WebSocket> ConnectAsync(Uri uri, TimeSpan keepAliveInterval, CancellationToken cancellationToken)
         {
-            //var clientWebSocket = new System.Net.WebSockets.Managed.ClientWebSocket();
-            //clientWebSocket.Options.KeepAliveInterval = keepAliveInterval;
-            //await clientWebSocket.ConnectAsync(uri, cancellationToken);
-            //return clientWebSocket;
-
             try
             {
                 var clientWebSocket = new System.Net.WebSockets.ClientWebSocket();
