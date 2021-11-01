@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMeshGroup.Fusion", "DataMeshGroup.Fusion\DataMeshGroup.Fusion.csproj", "{C9364407-8409-43ED-9A68-907BB543EBB3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C9364407-8409-43ED-9A68-907BB543EBB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9364407-8409-43ED-9A68-907BB543EBB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9364407-8409-43ED-9A68-907BB543EBB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -185,7 +185,7 @@ namespace DataMeshGroup.Fusion
 
                 if (ws.State == WebSocketState.Open)
                 {
-                    cts.CancelAfter(TimeSpan.FromSeconds(2));
+                    cts?.CancelAfter(TimeSpan.FromSeconds(2));
 
                     // this will send a socket close request for a clean socket disconnect it may 
                     // throw an exception if the transport stream is closed, but we still need to 
