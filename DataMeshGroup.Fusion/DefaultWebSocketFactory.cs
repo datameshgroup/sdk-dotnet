@@ -20,7 +20,6 @@ namespace DataMeshGroup.Fusion
             {
                 var clientWebSocket = new System.Net.WebSockets.ClientWebSocket();
                 clientWebSocket.Options.KeepAliveInterval = keepAliveInterval;
-
 #if (!NETFRAMEWORK && !NETSTANDARD2_0)
                 // .NET Core has built-in support for certificate validation, where .NET Framework 
                 // relies on the static ServicePointManager.ServerCertificateValidationCallback
@@ -37,6 +36,10 @@ namespace DataMeshGroup.Fusion
             {
                 var clientWebSocket = new System.Net.WebSockets.Managed.ClientWebSocket();
                 clientWebSocket.Options.KeepAliveInterval = keepAliveInterval;
+                clientWebSocket.Options.RemoteCertificateValidationCallback += (sender, cert, chain, error) =>
+                {
+                    return CertificateValidation.RemoteCertificateValidationCallback(sender, cert, chain, error);
+                };
                 await clientWebSocket.ConnectAsync(uri, cancellationToken);
                 return clientWebSocket;
             }

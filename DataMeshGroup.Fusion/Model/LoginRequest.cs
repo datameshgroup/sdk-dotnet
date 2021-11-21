@@ -41,7 +41,7 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Returns the current DateTime formatted as "yyyy-MM-ddThh:mm:ss.sszzzzzz"
         /// </summary>
-        public string DateTime => System.DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss.sszzzzzz", System.Globalization.CultureInfo.InvariantCulture);
+        public string DateTime => System.DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss.sszzzzzz", System.Globalization.CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Information related to the software of the Sale System which manages the Sale to POI protocol.

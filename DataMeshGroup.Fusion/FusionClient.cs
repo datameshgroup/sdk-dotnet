@@ -75,7 +75,9 @@ namespace DataMeshGroup.Fusion
             recvQueue = new Queue<MessagePayload>();
             RootCA = useTestEnvironment ? UnifyRootCA.Test : UnifyRootCA.Production;
 
-            ServicePointManager.ServerCertificateValidationCallback += CertificateValidation.RemoteCertificateValidationCallback; // unsubscribe in dispose
+            // ServicePointManager is used for .NET Framework
+            ServicePointManager.MaxServicePointIdleTime = 0;
+            ServicePointManager.ServerCertificateValidationCallback = CertificateValidation.RemoteCertificateValidationCallback; // unsubscribe in dispose
         }
 
         /// <summary>

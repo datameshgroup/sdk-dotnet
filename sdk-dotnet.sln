@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMeshGroup.Fusion", "DataMeshGroup.Fusion\DataMeshGroup.Fusion.csproj", "{C9364407-8409-43ED-9A68-907BB543EBB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
