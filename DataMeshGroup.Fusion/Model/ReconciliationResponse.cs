@@ -48,22 +48,72 @@ namespace DataMeshGroup.Fusion.Model
         {
             StringBuilder sb = new StringBuilder();
 
-            _ = sb.AppendLine("Datamesh Terminal");
+            _ = sb.AppendLine("DATAMESH TERMINAL");
             _ = sb.AppendLine(GetEnumDescription(ReconciliationType).ToUpper());
             _ = sb.AppendLine();
             _ = sb.AppendLine(DateTime.Now.ToString("G"));
-            _ = sb.AppendLine($"Merchant ID\t\t{MID}");
-            _ = sb.AppendLine($"Terminal ID\t\t{TID}");
+            _ = sb.AppendLine($"MERCHANT ID\t{MID}");
+            _ = sb.AppendLine($"TERMINAL ID\t{TID}");
             _ = sb.AppendLine();
-            if (LastShiftTotalTime != null)
-            {
-                _ = sb.AppendLine("Previous Reset");
-                _ = sb.AppendLine(LastShiftTotalTime?.ToString("G"));
-                _ = sb.AppendLine();
-            }
-            
-            // TODO: populate receipt based on TransactionTotals
 
+            try
+            {
+                if (LastShiftTotalTime != null)
+                {
+                    _ = sb.AppendLine("PREVIOUS RESET");
+                    _ = sb.AppendLine(LastShiftTotalTime.Value.ToString("G"));
+                    _ = sb.AppendLine();
+                }
+
+
+                if (TransactionTotals == null)
+                {
+                    sb.AppendLine($"");
+                    sb.AppendLine($"NO TOTALS");
+                    sb.AppendLine($"");
+                }
+                else
+                { 
+                    // Calculate totals
+                    var summedTotalsGrouped =
+                        from tt in TransactionTotals
+                        where tt.PaymentTotals != null
+                        from pt in tt.PaymentTotals
+                        where pt.TransactionType != TransactionType.Failed
+                        group new { tt.CardBrand, pt.TransactionType, pt.TransactionAmount, pt.TransactionCount } by new { tt.CardBrand, pt.TransactionType } into combinedTotals
+                        let summedTotals = new
+                        {
+                            CardBrand = combinedTotals.Key.CardBrand,
+                            TransactionType = combinedTotals.Key.TransactionType,
+                            TotalCount = combinedTotals.Sum(x => x.TransactionCount),
+                            TotalAmount = combinedTotals.Sum(x => x.TransactionAmount)
+                        }
+                        group summedTotals by summedTotals.CardBrand into tmpSummedTotalsGrouped
+                        select tmpSummedTotalsGrouped;
+
+                    // Print out totals
+                    _ = sb.AppendLine("CARD TOTALS");
+                    _ = sb.AppendLine();
+                    foreach (var summedTotals in summedTotalsGrouped)
+                    {
+                        _ = sb.AppendLine(summedTotals.Key.Equals("Card", StringComparison.InvariantCultureIgnoreCase) ? "DEBIT CARD" : summedTotals.Key);
+                        foreach (var summedTotal in summedTotals)
+                        {
+                            string s = $"{summedTotal.TransactionType} ({summedTotal.TotalCount})".PadRight(20) + summedTotal.TotalAmount.Value.ToString("C");
+                            _ = sb.AppendLine(s);
+                        }
+                        _ = sb.AppendLine();
+                    }
+
+                }
+            }
+            catch(Exception e)
+            {
+                sb.AppendLine($"");
+                sb.AppendLine($"ERROR");
+                sb.AppendLine($"{e.Message}");
+                sb.AppendLine($"");
+            }
             return sb.ToString();
         }
 

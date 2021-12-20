@@ -259,7 +259,12 @@ namespace DataMeshGroup.Fusion
         /// Fired when a <see cref="TransactionStatusResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
         /// </summary>
         event EventHandler<MessagePayloadEventArgs<TransactionStatusResponse>> OnTransactionStatusResponse;
-        
+
+        /// <summary>
+        /// Fired when a <see cref="EventNotification"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        event EventHandler<MessagePayloadEventArgs<EventNotification>> OnEventNotification;
+
         #endregion
     }
 }

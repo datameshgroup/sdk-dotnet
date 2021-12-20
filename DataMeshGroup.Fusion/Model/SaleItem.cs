@@ -212,5 +212,35 @@ namespace DataMeshGroup.Fusion.Model
         /// Unit of measure of the Weight
         /// </summary>
         public WeightUnitOfMeasure? WeightUnitOfMeasure { get; set; }
+
+        /// <summary>
+        /// Defines custom fields for this <see cref="SaleItem"/> which 
+        /// can't be fit into the existing object.
+        /// </summary>
+        /// <example>
+        /// "CustomFields": [
+        /// {
+        ///   "Name": "FuelProductCode",
+        ///   "Type": "Integer",
+        ///   "Value": "21"
+        /// },
+        /// {
+        ///   "Name": "SomethingElse",
+        ///   "Type": "String",
+        ///   "Value": "Blah blah"
+        /// },                
+        /// {
+        ///   "Name": "AnArray",
+        ///   "Type": "Array",
+        ///   "Value": "[\"1\",\"2\",\"3\"]"
+        /// },    
+        /// {
+        ///   "Name": "AnObject",
+        ///   "Type": "Object",
+        ///   "Value": "{\"FuelProductCodes\": [21,22]}"
+        /// }
+        ///]
+        /// </example>
+        public List<SaleItemCustomField> CustomFields { get; set; }
     }
 }

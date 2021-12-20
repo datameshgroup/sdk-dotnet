@@ -1,4 +1,7 @@
-﻿namespace DataMeshGroup.Fusion
+﻿using DataMeshGroup.Fusion.Model;
+using System;
+
+namespace DataMeshGroup.Fusion
 {
     public interface IMessageParser
     {
@@ -12,11 +15,18 @@
         /// </summary>
         bool UseTestKeyIdentifier { get; set; }
 
+        /// <summary>
+        /// Fired when a log event occurs which is at or above <see cref="LogLevel"/>
+        /// </summary>
+        event EventHandler<LogEventArgs> OnLog;
+
 
         Model.SaleToPOIMessage BuildSaleToPOIMessage(string serviceID, string saleID, string poiID, string kek, Model.MessagePayload requestMessage);
 
         string SaleToPOIMessageToString(Model.SaleToPOIMessage saleToPOIMessage);
 
-        Model.MessagePayload ParseSaleToPOIMessage(string saleToPOIMessage, string kek);
+        bool TryParseSaleToPOIMessage(string saleToPOIMessage, string kek, out MessageHeader messageHeader, out MessagePayload messagePayload, out SecurityTrailer securityTrailer);
+
+        Model.MessagePayload ParseSaleToPOIMessage(string saleToPOIMessageString, string kek);
     }
 }

@@ -6,38 +6,58 @@ namespace DataMeshGroup.Fusion
     public static class SecurityTrailerHelper
     {
         /// <summary>
-        /// Validate security trailer
+        /// Validates a security trailer has the correct MAC & EncryptedKey
         /// </summary>
-        /// <param name="kek"></param>
-        /// <param name="messageHeader"></param>
-        /// <param name="securityTrailer"></param>
-        /// <param name="messageHeaderJson"></param>
-        /// <param name="payloadJson"></param>
-        /// <exception cref="MessageFormatException">Thrown on MAC/EncryptedKey validation error</exception>
-        public static void ValidateSecurityTrailer(string kek, MessageHeader messageHeader, SecurityTrailer securityTrailer, string messageHeaderJson, string payloadJson)
+        /// <param name="kek">The KEK used to encrypt the session key</param>
+        /// <param name="messageHeaderJson">Message header JSON</param>
+        /// <param name="payloadDescription">Payload description. From messageHeader.GetMessageDescription()</param>
+        /// <param name="payloadJson">Payload JSON</param>
+        /// <param name="expectedMAC">The expected MAC. From securityTrailer.AuthenticatedData.Recipient.MAC</param>
+        /// <param name="expectedEncryptedKey">The expected encryptedKe. From securityTrailer.AuthenticatedData.Recipient.KEK.EncryptedKey</param>
+        public static void ValidateSecurityTrailer(string kek, string messageHeaderJson, string payloadDescription, string payloadJson, string expectedMAC, string expectedEncryptedKey)
         {
-            if (messageHeader == null || securityTrailer == null)
+            if (string.IsNullOrEmpty(kek))
             {
-                throw new MessageFormatException("SecurityTrailer validation error. messageHeader == null || securityTrailer == null");
+                throw new MessageFormatException($"SecurityTrailer validation error. {nameof(kek)} is null or empty");
+            }
+            if (string.IsNullOrEmpty(messageHeaderJson))
+            {
+                throw new MessageFormatException($"SecurityTrailer validation error. {nameof(messageHeaderJson)} is null or empty");
+            }
+            if (string.IsNullOrEmpty(payloadDescription))
+            {
+                throw new MessageFormatException($"SecurityTrailer validation error. {nameof(payloadDescription)} is null or empty");
+            }
+            if (string.IsNullOrEmpty(payloadJson))
+            {
+                throw new MessageFormatException($"SecurityTrailer validation error. {nameof(payloadJson)} is null or empty");
+            }
+            if (string.IsNullOrEmpty(expectedMAC))
+            {
+                throw new MessageFormatException($"SecurityTrailer validation error. {nameof(expectedMAC)} is null or empty");
+            }
+            if (string.IsNullOrEmpty(expectedEncryptedKey))
+            {
+                throw new MessageFormatException($"SecurityTrailer validation error. {nameof(expectedEncryptedKey)} is null or empty");
             }
 
-            var sessionKey = Crypto.DecryptWithTripleDES(securityTrailer.AuthenticatedData.Recipient.KEK.EncryptedKey, kek);
+            var sessionKey = Crypto.DecryptWithTripleDES(expectedEncryptedKey, kek);
 
-            string macBody = $"\"MessageHeader\":{messageHeaderJson},\"{messageHeader.GetMessageDescription()}\":{payloadJson}";
+            string macBody = $"\"MessageHeader\":{messageHeaderJson},\"{payloadDescription}\":{payloadJson}";
             string sha256 = Crypto.HashBySHA256(macBody);
             string buffer = sha256 + 8000000000000000;
             string encryptedSha256 = Crypto.EncryptWithTripleDES(buffer, sessionKey);
             string mac = encryptedSha256.Substring(encryptedSha256.Length - 16);
             string encryptedKey = Crypto.EncryptWithTripleDES(sessionKey, kek);
 
-            if (mac != securityTrailer.AuthenticatedData.Recipient.MAC)
+            if (mac != expectedMAC)
             {
-                throw new MessageFormatException($"SecurityTrailer validation error. MAC error. expected {securityTrailer.AuthenticatedData.Recipient.MAC}, got {mac}");
+                throw new MessageFormatException($"SecurityTrailer validation error. MAC error. expected {expectedMAC}, got {mac}");
             }
 
-            if (encryptedKey != securityTrailer.AuthenticatedData.Recipient.KEK.EncryptedKey)
+            if (encryptedKey != expectedEncryptedKey)
             {
-                throw new MessageFormatException($"SecurityTrailer validation error. EncryptedKey error. expected {securityTrailer.AuthenticatedData.Recipient.KEK.EncryptedKey}, got {encryptedKey}");
+                throw new MessageFormatException($"SecurityTrailer validation error. EncryptedKey error. expected {expectedEncryptedKey}, got {encryptedKey}");
             }
         }
 
@@ -87,6 +107,15 @@ namespace DataMeshGroup.Fusion
                     }
                 }
             };
+        }
+
+        /// <summary>
+        /// Validates that the kek passed in is a valid KEK
+        /// </summary>
+        /// <param name="kek"></param>
+        public static bool ValidateKEK(string kek)
+        {
+            return Crypto.ValidateKEK(kek);
         }
 
     }

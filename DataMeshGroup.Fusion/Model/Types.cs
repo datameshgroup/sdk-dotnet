@@ -1188,6 +1188,45 @@ namespace DataMeshGroup.Fusion.Model
         Annual
     }
 
+
+    /// <summary>
+    /// Defines the type of content in a <see cref="SaleItemCustomField"/> value
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<SaleItemCustomFieldType>))]
+    public enum SaleItemCustomFieldType
+    {
+        /// <summary>
+        /// Unknown type
+        /// </summary>
+        Unknown,
+        
+        /// <summary>
+        /// CustomField value will contain an integer
+        /// </summary>
+        Integer,
+
+        /// <summary>
+        /// CustomField value will contain a decimal
+        /// </summary>
+        Decimal,
+
+        /// <summary>
+        /// CustomField value will contain a string
+        /// </summary>        
+        String,
+
+        /// <summary>
+        /// CustomField value will contain a JSON array
+        /// </summary>        
+        Array,
+
+        /// <summary>
+        /// CustomField value will contain a JSON object
+        /// </summary>                
+        Object
+    }
+
+
     //public static class CheckTypeCode
     //{
     //    public const string Personal = "Personal";

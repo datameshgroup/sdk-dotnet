@@ -11,6 +11,14 @@ namespace DataMeshGroup.Fusion
 {
     public class FusionClient : IFusionClient
     {
+        /// <summary>
+        /// An identifier for this object instance. Useful to tracking this object instance in logging
+        /// </summary>
+        private readonly string instanceId;
+
+        /// <summary>
+        /// Raw Websocket used by this class
+        /// </summary>
         private WebSocket ws;
 
         /// <summary>
@@ -63,14 +71,16 @@ namespace DataMeshGroup.Fusion
         /// <param name="useTestEnvironment">True to default to test environment params, false for production.</param>
         public FusionClient(bool useTestEnvironment = false)
         {
+            instanceId = new Random().Next().ToString("X8", System.Globalization.CultureInfo.InvariantCulture);
             MessageParser = new NexoMessageParser() { UseTestKeyIdentifier = useTestEnvironment, EnableMACValidation = true };
+            MessageParser.OnLog += MessageParser_OnLog;
             URL = useTestEnvironment ? UnifyURL.Test : UnifyURL.Production;
             DefaultTimeout = TimeSpan.FromSeconds(60);
             DefaultHeartbeatTimeout = TimeSpan.FromSeconds(15);
             LoginRequest = null;
             LoginResponse = null;
             ReceiveBufferSize = 1024;
-            LogLevel = LogLevel.None;
+            LogLevel = LogLevel.Debug; // default logging 
             recvQueueSemaphore = new SemaphoreSlim(0);
             recvQueue = new Queue<MessagePayload>();
             RootCA = useTestEnvironment ? UnifyRootCA.Test : UnifyRootCA.Production;
@@ -80,13 +90,27 @@ namespace DataMeshGroup.Fusion
             ServicePointManager.ServerCertificateValidationCallback = CertificateValidation.RemoteCertificateValidationCallback; // unsubscribe in dispose
         }
 
+        private void MessageParser_OnLog(object sender, LogEventArgs e) => Log(e.LogLevel, e.Data, e.Exception);
+
         /// <summary>
-        /// Sets ServiceId to a hex timestamp of the milliseconds since 1st January
-        /// Potential issue if sending > 1 transaction per MS but should not be an issue here
+        /// Creates a new, unique service ID and stores it in <see cref="ServiceID"/>
         /// </summary>
         public string UpdateServiceId()
         {
             ServiceID = Convert.ToInt64((DateTime.UtcNow - new DateTime(DateTime.UtcNow.Year, 1, 1)).TotalMilliseconds).ToString("X", System.Globalization.CultureInfo.InvariantCulture);
+
+            // Previously, this function created a hex timestamp of the milliseconds since 1st January. This is due to the 10 byte limit of ServiceId in the API specification.
+            // 
+            // Potential issues of handling it this way:
+            //   - Not unique if sending >1 transaction per millisecond
+            //   - Not unique across all POS lanes for all customers 
+            //   - Not unique on this lane
+            //
+            // It now returns a UUIDv1. This does not conform to the Nexo spec, but solves the issues listed above
+            //
+            //ServiceID = Guid.NewGuid().ToString("N", System.Globalization.CultureInfo.InvariantCulture);
+            //
+
             return ServiceID;
         }
 
@@ -150,17 +174,17 @@ namespace DataMeshGroup.Fusion
 
                 if (isConnected)
                 {
-                    OnConnect?.Invoke(this, EventArgs.Empty);
+                    FireOnConnect();
                     RecvLoop();
                 }
 
                 Log(LogLevel.Information, $"Connected = {isConnected}");
                 return isConnected;
             }
-            catch (Exception e) // TODO handle possible errors better here
+            catch (Exception e) // TODO handle possible errors better here (e.g. DNS? Socket error? SSL certificate error?)
             {
-                Log(LogLevel.Error, $"A network error occured connecting to {urlString}.", e);
-                OnConnectError?.Invoke(this, EventArgs.Empty);
+                Log(LogLevel.Error, $"A network error occured connecting to {urlString}. {e.Message}", e);
+                FireOnConnectError();
                 throw new NetworkException(e.Message, e.InnerException);
             }
         }
@@ -204,7 +228,7 @@ namespace DataMeshGroup.Fusion
             }
             catch (Exception e)
             {
-                Log(LogLevel.Error, $"Exception occured in DisconnectAsync()", e);
+                Log(LogLevel.Error, $"Exception occured in DisconnectAsync(). {e.Message}", e);
             }
             finally
             {
@@ -214,7 +238,7 @@ namespace DataMeshGroup.Fusion
                 cts = null;
             }
 
-            OnDisconnect?.Invoke(this, EventArgs.Empty);
+            FireOnDisconnect();
             Log(LogLevel.Information, $"Disconnected");
         }
 
@@ -305,7 +329,7 @@ namespace DataMeshGroup.Fusion
             }
             catch (Exception e)
             {
-                string message = "Error occured building request json";
+                string message = $"Error building DataMesh request. {e.Message}";
                 Log(LogLevel.Error, message, e);
                 throw new MessageFormatException(message, e);
             }
@@ -336,7 +360,7 @@ namespace DataMeshGroup.Fusion
             }
             catch (Exception e)
             {
-                string message = "A network error occured sending the request message";
+                string message = $"A network error occured sending the request message. {e.Message}";
                 Log(LogLevel.Error, message, e);
                 await DisconnectAsync();
                 throw new NetworkException(message, false, e.InnerException);
@@ -371,7 +395,7 @@ namespace DataMeshGroup.Fusion
         {
             if (IsEventModeEnabled)
             {
-                throw new InvalidOperationException($"Unable to call {nameof(RecvAsync)} when {nameof(OnLoginResponse)}, {nameof(OnLogoutResponse)}, {nameof(OnCardAcquisitionResponse)}, {nameof(OnPaymentResponse)}, {nameof(OnReconciliationResponse)}, {nameof(DisplayRequest)} or {nameof(OnTransactionStatusResponse)} are assigned");
+                throw new InvalidOperationException($"Unable to call {nameof(RecvAsync)} when {nameof(OnLoginResponse)}, {nameof(OnLogoutResponse)}, {nameof(OnCardAcquisitionResponse)}, {nameof(OnPaymentResponse)}, {nameof(OnReconciliationResponse)}, {nameof(DisplayRequest)}, {nameof(OnTransactionStatusResponse)}, or {nameof(OnEventNotification)} are assigned");
             }
 
             // cts is fired when disconnect occurs (NetworkError)
@@ -465,7 +489,7 @@ namespace DataMeshGroup.Fusion
                     }
                     catch (Exception e)
                     {
-                        Log(LogLevel.Error, "Error occured parsing the json response", e);
+                        Log(LogLevel.Error, $"An error occured parsing the json response. {e.Message}", e);
                     }
 
                     // Try to processes the next message if we couldn't unpack
@@ -493,7 +517,7 @@ namespace DataMeshGroup.Fusion
                     // Special handling for login/logout
                     if (messagePayload is LogoutResponse)
                     {
-                        if((messagePayload as LogoutResponse)?.Response?.Success == true)
+                        if ((messagePayload as LogoutResponse)?.Response?.Success == true)
                         {
                             loginRequired = true;
                         }
@@ -541,9 +565,9 @@ namespace DataMeshGroup.Fusion
                     }
                 }
             }
-            catch
+            catch(Exception e)
             {
-                Log(LogLevel.Debug, "Network error");
+                Log(LogLevel.Error, $"An error occured in socket receive loop. {e.Message}", e);
             }
             finally
             {
@@ -661,12 +685,12 @@ namespace DataMeshGroup.Fusion
 
         /// <summary>
         /// Indicates if event mode has been enabled. This is set when <see cref="OnLoginResponse"/>, <see cref="OnLogoutResponse"/>, <see cref="OnCardAcquisitionResponse"/>, <see cref="OnPaymentResponse"/>, 
-        /// <see cref="OnReconciliationResponse"/>, <see cref="OnTransactionStatusResponse"/>, or <see cref="OnDisplayRequest"/> events 
+        /// <see cref="OnReconciliationResponse"/>, <see cref="OnTransactionStatusResponse"/>, <see cref="OnDisplayRequest"/>, <see cref="OnEventNotification"/> events 
         /// have been subscribed to. When events mode is enabled, responses will be returned to the owner via <see cref="OnLoginResponse"/>, 
         /// <see cref="OnPaymentResponse"/>, <see cref="OnReconciliationResponse"/> , <see cref="OnTransactionStatusResponse"/>, and 
         /// <see cref="OnDisplayRequest"/> events, and all requests to <see cref="RecvAsync"/> will throw an <see cref="InvalidOperationException"/>
         /// </summary>
-        public bool IsEventModeEnabled => (OnLoginResponse != null) || (OnLogoutResponse != null) || (OnCardAcquisitionResponse != null) || (OnPaymentResponse != null) || (OnReconciliationResponse != null) || (OnDisplayRequest != null) || (OnTransactionStatusResponse != null);
+        public bool IsEventModeEnabled => (OnLoginResponse != null) || (OnLogoutResponse != null) || (OnCardAcquisitionResponse != null) || (OnPaymentResponse != null) || (OnReconciliationResponse != null) || (OnDisplayRequest != null) || (OnTransactionStatusResponse != null) || (OnEventNotification != null);
         #endregion
 
         #region Events
@@ -720,11 +744,16 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         public event EventHandler<MessagePayloadEventArgs<DisplayRequest>> OnDisplayRequest;
 
-
         /// <summary>
         /// Fired when a <see cref="TransactionStatusResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
         /// </summary>
         public event EventHandler<MessagePayloadEventArgs<TransactionStatusResponse>> OnTransactionStatusResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="EventNotification"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        public event EventHandler<MessagePayloadEventArgs<EventNotification>> OnEventNotification;
+
         #endregion
 
         #region Dispose Pattern
@@ -765,39 +794,98 @@ namespace DataMeshGroup.Fusion
         }
         #endregion
 
-
+        #region Helper functions to fire events
         /// <summary>
         /// Helper file to fire a response event based on a message payload
         /// </summary>
         /// <param name=""></param>
         private void FireResponseEvent(MessagePayload MessagePayload)
         {
-            switch (MessagePayload)
+            try
             {
-                case LoginResponse r:
-                    OnLoginResponse?.Invoke(this, new MessagePayloadEventArgs<LoginResponse>(r));
-                    break;
-                case LogoutResponse r:
-                    OnLogoutResponse?.Invoke(this, new MessagePayloadEventArgs<LogoutResponse>(r));
-                    break;
-                case CardAcquisitionResponse r:
-                    OnCardAcquisitionResponse?.Invoke(this, new MessagePayloadEventArgs<CardAcquisitionResponse>(r));
-                    break;
-                case PaymentResponse r:
-                    OnPaymentResponse?.Invoke(this, new MessagePayloadEventArgs<PaymentResponse>(r));
-                    break;
-                case ReconciliationResponse r:
-                    OnReconciliationResponse?.Invoke(this, new MessagePayloadEventArgs<ReconciliationResponse>(r));
-                    break;
-                case TransactionStatusResponse r:
-                    OnTransactionStatusResponse?.Invoke(this, new MessagePayloadEventArgs<TransactionStatusResponse>(r));
-                    break;
-                case DisplayRequest r:
-                    OnDisplayRequest?.Invoke(this, new MessagePayloadEventArgs<DisplayRequest>(r));
-                    break;
-                default:
-                    Log(LogLevel.Error, $"Unknown response message {MessagePayload.GetMessageDescription()}");
-                    break;
+                switch (MessagePayload)
+                {
+                    case LoginResponse r:
+                        OnLoginResponse?.Invoke(this, new MessagePayloadEventArgs<LoginResponse>(r));
+                        break;
+                    case LogoutResponse r:
+                        OnLogoutResponse?.Invoke(this, new MessagePayloadEventArgs<LogoutResponse>(r));
+                        break;
+                    case CardAcquisitionResponse r:
+                        OnCardAcquisitionResponse?.Invoke(this, new MessagePayloadEventArgs<CardAcquisitionResponse>(r));
+                        break;
+                    case PaymentResponse r:
+                        OnPaymentResponse?.Invoke(this, new MessagePayloadEventArgs<PaymentResponse>(r));
+                        break;
+                    case ReconciliationResponse r:
+                        OnReconciliationResponse?.Invoke(this, new MessagePayloadEventArgs<ReconciliationResponse>(r));
+                        break;
+                    case TransactionStatusResponse r:
+                        OnTransactionStatusResponse?.Invoke(this, new MessagePayloadEventArgs<TransactionStatusResponse>(r));
+                        break;
+                    case DisplayRequest r:
+                        OnDisplayRequest?.Invoke(this, new MessagePayloadEventArgs<DisplayRequest>(r));
+                        break;
+                    case EventNotification r:
+                        OnEventNotification?.Invoke(this, new MessagePayloadEventArgs<EventNotification>(r));
+                        break;
+
+                    default:
+                        Log(LogLevel.Error, $"Unknown response message {MessagePayload.GetMessageDescription()}");
+                        break;
+                }
+            }
+            catch(Exception e)
+            {
+                Log(LogLevel.Critical, $"An exception was thrown from POS event handler On{MessagePayload.GetMessageDescription()}. {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Helper file to fire OnConnect
+        /// </summary>
+        /// <param name=""></param>
+        private void FireOnConnect()
+        {
+            try
+            {
+                OnConnect?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception e)
+            {
+                Log(LogLevel.Critical, $"An exception was thrown from POS event handler {nameof(OnConnect)}. {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Helper file to fire OnConnectError
+        /// </summary>
+        /// <param name=""></param>
+        private void FireOnConnectError()
+        {
+            try
+            {
+                OnConnectError?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception e)
+            {
+                Log(LogLevel.Critical, $"An exception was thrown from POS event handler {nameof(OnConnectError)}. {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Helper file to fire FireOnDisconnect
+        /// </summary>
+        /// <param name=""></param>
+        private void FireOnDisconnect()
+        {
+            try
+            {
+                OnDisconnect?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception e)
+            {
+                Log(LogLevel.Critical, $"An exception was thrown from POS event handler {nameof(OnDisconnect)}. {e.Message}");
             }
         }
 
@@ -811,7 +899,17 @@ namespace DataMeshGroup.Fusion
                 return;
             }
 
-            OnLog.Invoke(this, new LogEventArgs() { LogLevel = logLevel, Data = data, Exception = exception });
+            try
+            {
+                OnLog.Invoke(this, new LogEventArgs() { LogLevel = logLevel, Data = $"[{instanceId}] {data}", Exception = exception });
+            }
+            catch
+            {
+                // Intentional suppression of this exception. POS has thrown an exception in OnLog. We can't log this error. 
+                // TODO: Any way to handle this better? 
+            }
         }
+
+        #endregion
     }
 }

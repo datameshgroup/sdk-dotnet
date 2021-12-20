@@ -18,7 +18,8 @@ namespace DataMeshGroup.Fusion
             }
             else
             {
-                return Convert.ToDecimal(reader.Value, System.Globalization.CultureInfo.InvariantCulture);
+                var result = Convert.ToDecimal(reader.Value, System.Globalization.CultureInfo.InvariantCulture);
+                return result;
             }
         }
 
