@@ -66,6 +66,11 @@ namespace DataMeshGroup.Fusion
         public IWebSocketFactory WebSocketFactory { get; set; } = new DefaultWebSocketFactory();
 
         /// <summary>
+        /// ServiceID of the last transaction message sent
+        /// </summary>
+        private string lastTxnServiceID = string.Empty;
+
+        /// <summary>
         /// Constructs a client which can be used to communicate with the DataMesh Unify payments system
         /// </summary>
         /// <param name="useTestEnvironment">True to default to test environment params, false for production.</param>
@@ -345,6 +350,10 @@ namespace DataMeshGroup.Fusion
                 return saleToPOIRequest;
             }
 
+            //AbortRequest's ServiceID will not be used in verifying response message.
+            if (!(requestMessage is AbortRequest)) 
+                lastTxnServiceID = serviceID;
+
             Log(LogLevel.Debug, $"TX {s}");
 
             try
@@ -482,10 +491,11 @@ namespace DataMeshGroup.Fusion
                     Log(LogLevel.Debug, $"RX {stringResult}");
 
                     // Attempt to parse the response json
+                    MessageHeader messageHeader = null;
                     MessagePayload messagePayload = null;
                     try
                     {
-                        messagePayload = MessageParser.ParseSaleToPOIMessage(stringResult, KEK);
+                        messagePayload = MessageParser.ParseSaleToPOIMessage(stringResult, KEK, out messageHeader);
                     }
                     catch (Exception e)
                     {
@@ -495,6 +505,13 @@ namespace DataMeshGroup.Fusion
                     // Try to processes the next message if we couldn't unpack
                     if (messagePayload == null)
                     {
+                        continue;
+                    }
+
+                    //Don't verify ServiceID for EventNotification
+                    if((messageHeader != null) && !(messagePayload is EventNotification) && (!string.IsNullOrEmpty(lastTxnServiceID)) && (!lastTxnServiceID.Equals(messageHeader.ServiceID)))
+                    {
+                        Log(LogLevel.Debug, $"Unexpected ServiceID ({messageHeader.ServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
                         continue;
                     }
 
