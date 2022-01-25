@@ -350,8 +350,8 @@ namespace DataMeshGroup.Fusion
                 return saleToPOIRequest;
             }
 
-            //AbortRequest's ServiceID will not be used in verifying response message.
-            if (!(requestMessage is AbortRequest)) 
+            //AbortRequest's and Transaction Status' ServiceID will not be used in verifying response message.
+            if (!(requestMessage is AbortRequest) && !(requestMessage is TransactionStatusRequest)) 
                 lastTxnServiceID = serviceID;
 
             Log(LogLevel.Debug, $"TX {s}");
@@ -509,10 +509,24 @@ namespace DataMeshGroup.Fusion
                     }
 
                     //Don't verify ServiceID for EventNotification
-                    if((messageHeader != null) && !(messagePayload is EventNotification) && (!string.IsNullOrEmpty(lastTxnServiceID)) && (!lastTxnServiceID.Equals(messageHeader.ServiceID)))
+                    if ((messageHeader != null) && !(messagePayload is EventNotification) && !string.IsNullOrEmpty(lastTxnServiceID))
                     {
-                        Log(LogLevel.Debug, $"Unexpected ServiceID ({messageHeader.ServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
-                        continue;
+                        string responseServiceID = messageHeader.ServiceID;
+                        //for TransactionStatusResponse, use the ServiceID in the RepeatedMessageResponse instead.
+                        if (messagePayload is TransactionStatusResponse)
+                        {
+                            TransactionStatusResponse transactionStatusResponse = messagePayload as TransactionStatusResponse;    
+                            if((transactionStatusResponse != null) &&
+                               (transactionStatusResponse.RepeatedMessageResponse != null) &&
+                               (transactionStatusResponse.RepeatedMessageResponse.MessageHeader != null))
+                                responseServiceID = transactionStatusResponse.RepeatedMessageResponse.MessageHeader.ServiceID;
+                        }
+                        Log(LogLevel.Debug, $"Response ServiceID = {responseServiceID}");
+                        if (!lastTxnServiceID.Equals(responseServiceID))
+                        {
+                            Log(LogLevel.Debug, $"Unexpected ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
+                            continue;
+                        }
                     }
 
                     if (messagePayload is LoginResponse)
