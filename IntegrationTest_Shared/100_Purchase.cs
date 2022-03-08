@@ -95,7 +95,7 @@ namespace IntegrationTest
         }
 
         [Fact]
-        public async Task Purchase_AutoLogin_Visa_Chip()
+        public async Task Purchase_AutoLogin_Visa_Chip_Credit()
         {
             string transactionId = DateTime.Now.ToString("yyMMddHHmmssfff");
             decimal requestedAmount = 2.00M;

@@ -22,7 +22,7 @@ namespace IntegrationTest
         public string OperatorID { get; set; }
         public string ShiftNumber { get; set; }
         public bool EnableLogFile { get; set; }
-        public string CustomNexoURL { get; set; }
+        public string CustomURL { get; set; }
         public bool UseTestEnvironment { get; set; }
     }
 }

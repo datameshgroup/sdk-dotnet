@@ -24,8 +24,8 @@ namespace IntegrationTest
         [Fact]
         public async Task Purchase_AutoLogin_Visa_Tap()
         {
-            // Ensure SaleToPOIRequestHistory has 2 payments
-            while (fusionClientFixture.SaleToPOIRequestHistory.Count < 2)
+            // Ensure SaleToPOIRequestHistory has 3 payments
+            while (fusionClientFixture.SaleToPOIRequestHistory.Count < 3)
             {
                 string transactionId = DateTime.Now.ToString("yyMMddHHmmssfff");
                 decimal requestedAmount = 1.00M;
@@ -58,7 +58,12 @@ namespace IntegrationTest
             Assert.True(r.MessageClass == MessageClass.Service);
             Assert.True(r.MessageType == MessageType.Response);
 
-            // TODO: Validate that we have the correct response (should be last payment in fusionClientFixture.SaleToPOIRequestHistory)
+            // Validate that we have the correct response (should be last payment in fusionClientFixture.SaleToPOIRequestHistory)
+            MessageHeader expectedHeader = fusionClientFixture.SaleToPOIRequestHistory.Last().MessageHeader;
+            MessageHeader actualHeader = r.RepeatedMessageResponse.MessageHeader;
+            Assert.Equal(expectedHeader.ServiceID, actualHeader.ServiceID);
+            Assert.Equal(expectedHeader.SaleID, actualHeader.SaleID);
+            Assert.Equal(expectedHeader.POIID, actualHeader.POIID);
 
             // Response
             Assert.True(r.Response.Success);
@@ -66,17 +71,28 @@ namespace IntegrationTest
         }
 
         [Fact]
-        public async Task TransactionStatus_IncludeServiceId()
+        public async Task TransactionStatus_IncludeServiceId_FirstTxn()
+        {
+            await TransactionStatus_IncludeServiceId_Internal(fusionClientFixture.SaleToPOIRequestHistory.First().MessageHeader);
+        }
+
+        [Fact]
+        public async Task TransactionStatus_IncludeServiceId_LastTxn()
+        {
+            await TransactionStatus_IncludeServiceId_Internal(fusionClientFixture.SaleToPOIRequestHistory.Last().MessageHeader);
+        }
+
+        private async Task TransactionStatus_IncludeServiceId_Internal(MessageHeader expectedHeader)
         {
             TransactionStatusRequest request = new TransactionStatusRequest()
             {
                 MessageReference = new MessageReference()
                 {
-                    MessageCategory = fusionClientFixture.SaleToPOIRequestHistory[0].MessageHeader.MessageCategory,
-                    DeviceID = fusionClientFixture.SaleToPOIRequestHistory[0].MessageHeader.DeviceID,
-                    POIID = fusionClientFixture.SaleToPOIRequestHistory[0].MessageHeader.POIID,
-                    SaleID = fusionClientFixture.SaleToPOIRequestHistory[0].MessageHeader.SaleID,
-                    ServiceID = fusionClientFixture.SaleToPOIRequestHistory[0].MessageHeader.ServiceID
+                    MessageCategory = expectedHeader.MessageCategory,
+                    DeviceID = expectedHeader.DeviceID,
+                    POIID = expectedHeader.POIID,
+                    SaleID = expectedHeader.SaleID,
+                    ServiceID = expectedHeader.ServiceID
                 }
             };
             _ = await Client.SendAsync(request);
@@ -94,8 +110,11 @@ namespace IntegrationTest
             Assert.True(r.MessageClass == MessageClass.Service);
             Assert.True(r.MessageType == MessageType.Response);
 
-
-            // TODO: Validate that we have the correct response (should be fusionClientFixture.SaleToPOIRequestHistory[0])
+            // Validate that we have the correct response (should be fusionClientFixture.SaleToPOIRequestHistory.First())
+            MessageHeader actualHeader = r.RepeatedMessageResponse.MessageHeader;
+            Assert.Equal(expectedHeader.ServiceID, actualHeader.ServiceID);
+            Assert.Equal(expectedHeader.SaleID, actualHeader.SaleID);
+            Assert.Equal(expectedHeader.POIID, actualHeader.POIID);
 
             // Response
             Assert.True(r.Response.Success);

@@ -6,6 +6,9 @@
 # Custom launchSettings.json
 launchSettings.json
 
+# Custom config
+IntegrationTest_Shared/settings.json
+
 # User-specific files
 *.rsuser
 *.suo

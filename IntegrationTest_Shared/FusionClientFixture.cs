@@ -21,9 +21,18 @@ namespace IntegrationTest
                 LoginRequest = new DataMeshGroup.Fusion.Model.LoginRequest(Settings.ProviderIdentification, Settings.ApplicationName, Settings.SoftwareVersion, Settings.CertificationCode, new List<DataMeshGroup.Fusion.Model.SaleCapability>() { DataMeshGroup.Fusion.Model.SaleCapability.CashierStatus, DataMeshGroup.Fusion.Model.SaleCapability.PrinterReceipt }),
                 SaleID = Settings.SaleID,
                 POIID = Settings.POIID,
-                KEK = Settings.KEK
+                KEK = Settings.KEK,
+                CustomURL = Settings.CustomURL
             };
+            Client.URL = !string.IsNullOrEmpty(Settings.CustomURL) ? UnifyURL.Custom : Client.URL;
+            Client.OnLog += (s,e) => { File.AppendAllText("IntegrationTest.log", $"{DateTime.Now} {e.LogLevel}\t\t{e.Data}{Environment.NewLine}"); };
+            Client.LogLevel = LogLevel.Trace;
             SaleToPOIRequestHistory = new List<SaleToPOIMessage>();
+        }
+
+        private void Client_OnLog(object sender, LogEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public async void Dispose()

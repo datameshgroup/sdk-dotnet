@@ -102,7 +102,7 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         public string UpdateServiceId()
         {
-            ServiceID = Convert.ToInt64((DateTime.UtcNow - new DateTime(DateTime.UtcNow.Year, 1, 1)).TotalMilliseconds).ToString("X", System.Globalization.CultureInfo.InvariantCulture);
+            //ServiceID = Convert.ToInt64((DateTime.UtcNow - new DateTime(DateTime.UtcNow.Year, 1, 1)).TotalMilliseconds).ToString("X", System.Globalization.CultureInfo.InvariantCulture);
 
             // Previously, this function created a hex timestamp of the milliseconds since 1st January. This is due to the 10 byte limit of ServiceId in the API specification.
             // 
@@ -112,9 +112,7 @@ namespace DataMeshGroup.Fusion
             //   - Not unique on this lane
             //
             // It now returns a UUIDv1. This does not conform to the Nexo spec, but solves the issues listed above
-            //
-            //ServiceID = Guid.NewGuid().ToString("N", System.Globalization.CultureInfo.InvariantCulture);
-            //
+            ServiceID = Guid.NewGuid().ToString("N", System.Globalization.CultureInfo.InvariantCulture);
 
             return ServiceID;
         }
@@ -263,6 +261,7 @@ namespace DataMeshGroup.Fusion
 
             if (LoginRequest is null)
             {
+                await DisconnectAsync();
                 throw new InvalidOperationException($"Login required, but {nameof(LoginRequest)} is null");
             }
 
@@ -350,9 +349,21 @@ namespace DataMeshGroup.Fusion
                 return saleToPOIRequest;
             }
 
-            //AbortRequest's and Transaction Status' ServiceID will not be used in verifying response message.
-            if (!(requestMessage is AbortRequest) && !(requestMessage is TransactionStatusRequest)) 
+            // Record lastTxnServiceID. Special handling for AbortRequest and TransactionStatus, all other messages record the ServiceID we use in the MessageHeader
+            if(requestMessage is TransactionStatusRequest)
+            {
+                // For a TransactionStatus we validate the ServiceID in the RepeatedMessageResponse, not the message header
+                // Two types of TransactionStatusRequest - with and without ServiceID. With ServiceID, we should validate but without serviceID we can't validate (it's just going to be the last request)
+                lastTxnServiceID = (requestMessage as TransactionStatusRequest)?.MessageReference?.ServiceID;
+                Log(LogLevel.Trace, $"Request ServiceID = {lastTxnServiceID}");
+            }
+            // Default case for all other message types except AbortRequest
+            else if (!(requestMessage is AbortRequest))
+            {
                 lastTxnServiceID = serviceID;
+                Log(LogLevel.Trace, $"Request ServiceID = {lastTxnServiceID}");
+            }
+
 
             Log(LogLevel.Debug, $"TX {s}");
 
@@ -453,7 +464,7 @@ namespace DataMeshGroup.Fusion
                     return MessagePayload as T;
                 }
 
-                Log(LogLevel.Trace, $"Discarding response type {MessagePayload.GetType()}");
+                Log(LogLevel.Trace, $"RecvAsync<{typeof(T)}>, discarding response type {MessagePayload.GetType()}");
 
             }
             return null;
@@ -512,19 +523,16 @@ namespace DataMeshGroup.Fusion
                     if ((messageHeader != null) && !(messagePayload is EventNotification) && !string.IsNullOrEmpty(lastTxnServiceID))
                     {
                         string responseServiceID = messageHeader.ServiceID;
-                        //for TransactionStatusResponse, use the ServiceID in the RepeatedMessageResponse instead.
+                        
+                        // For TransactionStatusResponse, use the ServiceID in the RepeatedMessageResponse instead.
                         if (messagePayload is TransactionStatusResponse)
                         {
-                            TransactionStatusResponse transactionStatusResponse = messagePayload as TransactionStatusResponse;    
-                            if((transactionStatusResponse != null) &&
-                               (transactionStatusResponse.RepeatedMessageResponse != null) &&
-                               (transactionStatusResponse.RepeatedMessageResponse.MessageHeader != null))
-                                responseServiceID = transactionStatusResponse.RepeatedMessageResponse.MessageHeader.ServiceID;
+                            responseServiceID = (messagePayload as TransactionStatusResponse)?.RepeatedMessageResponse?.MessageHeader?.ServiceID;
                         }
-                        Log(LogLevel.Debug, $"Response ServiceID = {responseServiceID}");
+                        Log(LogLevel.Trace, $"Response ServiceID = {responseServiceID}");
                         if (!lastTxnServiceID.Equals(responseServiceID))
                         {
-                            Log(LogLevel.Debug, $"Unexpected ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
+                            Log(LogLevel.Error, $"Unexpected ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
                             continue;
                         }
                     }
@@ -925,7 +933,7 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         private void Log(LogLevel logLevel, string data, Exception exception = null)
         {
-            if (OnLog == null || LogLevel >= logLevel)
+            if (OnLog == null || LogLevel > logLevel)
             {
                 return;
             }

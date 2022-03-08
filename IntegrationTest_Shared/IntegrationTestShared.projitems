@@ -9,11 +9,12 @@
     <Import_RootNamespace>IntegrationTestShared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)00_UnitTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)01_Purchase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)02_Refund.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)03_TransactionStatus.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)04_Reconciliation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)000_UnitTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)100_Purchase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)200_Refund.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)300_TransactionStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)010_Login.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)400_Reconciliation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FusionClientFixture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
   </ItemGroup>
