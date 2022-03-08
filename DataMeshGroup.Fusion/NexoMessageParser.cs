@@ -46,9 +46,9 @@ namespace DataMeshGroup.Fusion
             {
                 if (EnableMACValidation)
                 {
+                    OnLog?.Invoke(this, new LogEventArgs() { LogLevel = LogLevel.Debug, Data = $"An error occured validating the KEK. {e.Message}", Exception = e });
                     throw;
                 }
-                OnLog?.Invoke(this, new LogEventArgs() { LogLevel = LogLevel.Debug, Data = $"An error occured validating the KEK. {e.Message}", Exception = e });
             }
 
             // Parse JSON to JObject
@@ -113,9 +113,9 @@ namespace DataMeshGroup.Fusion
             {
                 if (EnableMACValidation)
                 {
+                    OnLog?.Invoke(this, new LogEventArgs() { LogLevel = LogLevel.Debug, Data = $"Invalid MAC on response message. {e.Message}", Exception = e });
                     throw;
                 }
-                OnLog?.Invoke(this, new LogEventArgs() { LogLevel = LogLevel.Debug, Data = $"Invalid MAC on response message. {e.Message}", Exception = e });
             }
 
             // Return
@@ -124,9 +124,9 @@ namespace DataMeshGroup.Fusion
         }
 
 
-        public MessagePayload ParseSaleToPOIMessage(string saleToPOIMessageString, string kek)
+        public MessagePayload ParseSaleToPOIMessage(string saleToPOIMessageString, string kek, out MessageHeader messageHeader)
         {
-            if (!TryParseSaleToPOIMessage(saleToPOIMessageString, kek, out _, out MessagePayload messagePayload, out _))
+            if (!TryParseSaleToPOIMessage(saleToPOIMessageString, kek, out messageHeader, out MessagePayload messagePayload, out _))
             {
                 OnLog?.Invoke(this, new LogEventArgs() { LogLevel = LogLevel.Debug, Data = $"TryParseSaleToPOIMessage returned null" });
                 return null;

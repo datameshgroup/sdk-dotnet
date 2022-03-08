@@ -66,6 +66,11 @@ namespace DataMeshGroup.Fusion
         public IWebSocketFactory WebSocketFactory { get; set; } = new DefaultWebSocketFactory();
 
         /// <summary>
+        /// ServiceID of the last transaction message sent
+        /// </summary>
+        private string lastTxnServiceID = string.Empty;
+
+        /// <summary>
         /// Constructs a client which can be used to communicate with the DataMesh Unify payments system
         /// </summary>
         /// <param name="useTestEnvironment">True to default to test environment params, false for production.</param>
@@ -345,6 +350,10 @@ namespace DataMeshGroup.Fusion
                 return saleToPOIRequest;
             }
 
+            //AbortRequest's and Transaction Status' ServiceID will not be used in verifying response message.
+            if (!(requestMessage is AbortRequest) && !(requestMessage is TransactionStatusRequest)) 
+                lastTxnServiceID = serviceID;
+
             Log(LogLevel.Debug, $"TX {s}");
 
             try
@@ -482,10 +491,11 @@ namespace DataMeshGroup.Fusion
                     Log(LogLevel.Debug, $"RX {stringResult}");
 
                     // Attempt to parse the response json
+                    MessageHeader messageHeader = null;
                     MessagePayload messagePayload = null;
                     try
                     {
-                        messagePayload = MessageParser.ParseSaleToPOIMessage(stringResult, KEK);
+                        messagePayload = MessageParser.ParseSaleToPOIMessage(stringResult, KEK, out messageHeader);
                     }
                     catch (Exception e)
                     {
@@ -496,6 +506,27 @@ namespace DataMeshGroup.Fusion
                     if (messagePayload == null)
                     {
                         continue;
+                    }
+
+                    //Don't verify ServiceID for EventNotification
+                    if ((messageHeader != null) && !(messagePayload is EventNotification) && !string.IsNullOrEmpty(lastTxnServiceID))
+                    {
+                        string responseServiceID = messageHeader.ServiceID;
+                        //for TransactionStatusResponse, use the ServiceID in the RepeatedMessageResponse instead.
+                        if (messagePayload is TransactionStatusResponse)
+                        {
+                            TransactionStatusResponse transactionStatusResponse = messagePayload as TransactionStatusResponse;    
+                            if((transactionStatusResponse != null) &&
+                               (transactionStatusResponse.RepeatedMessageResponse != null) &&
+                               (transactionStatusResponse.RepeatedMessageResponse.MessageHeader != null))
+                                responseServiceID = transactionStatusResponse.RepeatedMessageResponse.MessageHeader.ServiceID;
+                        }
+                        Log(LogLevel.Debug, $"Response ServiceID = {responseServiceID}");
+                        if (!lastTxnServiceID.Equals(responseServiceID))
+                        {
+                            Log(LogLevel.Debug, $"Unexpected ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
+                            continue;
+                        }
                     }
 
                     if (messagePayload is LoginResponse)
