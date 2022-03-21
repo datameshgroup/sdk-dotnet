@@ -7,8 +7,14 @@ using Xunit;
 using DataMeshGroup.Fusion;
 using DataMeshGroup.Fusion.Model;
 
-namespace IntegrationTest
+namespace DataMeshGroup.Fusion.IntegrationTest
 {
+#if (!NETFRAMEWORK)
+    [TestCaseOrderer("DataMeshGroup.Fusion.IntegrationTest.AlphabeticalOrderer", "IntegrationTest")]
+#else
+    [TestCaseOrderer("DataMeshGroup.Fusion.IntegrationTest.AlphabeticalOrderer", "IntegrationTest_Net48")]
+#endif
+
     public class UnitTests
     {
         private readonly IMessageParser messageParser;

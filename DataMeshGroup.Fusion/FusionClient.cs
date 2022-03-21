@@ -59,6 +59,11 @@ namespace DataMeshGroup.Fusion
         private readonly SemaphoreSlim recvQueueSemaphore;
 
         /// <summary>
+        /// Used to signal when the RecvLoop has ended
+        /// </summary>
+        private readonly SemaphoreSlim recvLoopSemaphore;
+
+        /// <summary>
         /// Receive queue for messages when in async mode
         /// </summary>
         private readonly Queue<MessagePayload> recvQueue;
@@ -69,6 +74,25 @@ namespace DataMeshGroup.Fusion
         /// ServiceID of the last transaction message sent
         /// </summary>
         private string lastTxnServiceID = string.Empty;
+
+
+        private enum ConnectState { Connected, Connecting, Disconnecting, Disconnected };
+        
+        /// <summary>
+        /// Internal connect state
+        /// </summary>
+        private ConnectState connectState;
+
+        /// <summary>
+        /// Number of milliseconds to allow the RecvLoop to exit after DisconnectAsync is called 
+        /// </summary>
+        private readonly int RECVLOOP_EXIT_TIMEOUT_MSECS = 1000;
+
+        /// <summary>
+        /// Number of milliseconds to allow the websocket to close after socket close is called
+        /// </summary>
+        private readonly int SOCKET_CLOSE_TIMEOUT_MSECS = 2000;
+
 
         /// <summary>
         /// Constructs a client which can be used to communicate with the DataMesh Unify payments system
@@ -87,8 +111,10 @@ namespace DataMeshGroup.Fusion
             ReceiveBufferSize = 1024;
             LogLevel = LogLevel.Debug; // default logging 
             recvQueueSemaphore = new SemaphoreSlim(0);
+            recvLoopSemaphore = new SemaphoreSlim(0, 1);
             recvQueue = new Queue<MessagePayload>();
             RootCA = useTestEnvironment ? UnifyRootCA.Test : UnifyRootCA.Production;
+            connectState = ConnectState.Disconnected;
 
             // ServicePointManager is used for .NET Framework
             ServicePointManager.MaxServicePointIdleTime = 0;
@@ -122,6 +148,8 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         public async Task<bool> ConnectAsync()
         {
+            Log(LogLevel.Trace, "ConnectAsync() called...");
+
             string urlString = null;
             try
             {
@@ -129,11 +157,13 @@ namespace DataMeshGroup.Fusion
                 {
                     if (ws.State == WebSocketState.Open)
                     {
+                        Log(LogLevel.Trace, "Skipping ConnectAsync(). ws.State=Open");
                         return true;
                     }
 
                     ws.Dispose();
                 }
+                connectState = ConnectState.Connecting;
 
                 if (cts != null)
                 {
@@ -177,6 +207,7 @@ namespace DataMeshGroup.Fusion
 
                 if (isConnected)
                 {
+                    connectState = ConnectState.Connected;
                     FireOnConnect();
                     RecvLoop();
                 }
@@ -197,24 +228,32 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         public async Task DisconnectAsync()
         {
+            // Can't disconnect if we are disconnected or disconnecting
+            if (connectState == ConnectState.Disconnecting || connectState == ConnectState.Disconnected)
+            {
+                Log(LogLevel.Trace, $"Skipping DisconnectAsync()... connectState={connectState}");
+                return;
+            }
+
+            connectState = ConnectState.Disconnecting;
+            Log(LogLevel.Trace, $"DisconnectAsync() called");
             Log(LogLevel.Debug, $"Disconnecting...");
             loginRequired = true;
-
+            
             try
             {
-                if (ws is null)
+                if (socketCloseCTS?.IsCancellationRequested == false || cts?.IsCancellationRequested == false)
                 {
-                    return;
+                    socketCloseCTS?.Cancel();
+                    cts?.Cancel();
+
+                    // Give the RecvLoop time to acknowledge the cancellation...
+                    _ = await recvLoopSemaphore.WaitAsync(RECVLOOP_EXIT_TIMEOUT_MSECS);
                 }
 
-                if (socketCloseCTS != null && !socketCloseCTS.IsCancellationRequested)
+                if (ws?.State == WebSocketState.Open)
                 {
-                    socketCloseCTS.Cancel();
-                }
-
-                if (ws.State == WebSocketState.Open)
-                {
-                    cts?.CancelAfter(TimeSpan.FromSeconds(2));
+                    cts?.CancelAfter(TimeSpan.FromMilliseconds(SOCKET_CLOSE_TIMEOUT_MSECS));
 
                     // this will send a socket close request for a clean socket disconnect it may 
                     // throw an exception if the transport stream is closed, but we still need to 
@@ -239,6 +278,7 @@ namespace DataMeshGroup.Fusion
                 ws = null;
                 cts?.Dispose();
                 cts = null;
+                connectState = ConnectState.Disconnected;
             }
 
             FireOnDisconnect();
@@ -365,7 +405,7 @@ namespace DataMeshGroup.Fusion
             }
 
 
-            Log(LogLevel.Debug, $"TX {s}");
+            Log(LogLevel.Information, $"TX {s}");
 
             try
             {
@@ -475,6 +515,8 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         private async void RecvLoop()
         {
+            Log(LogLevel.Trace, $"Start RecvLoop()");
+
             var buffer = new byte[ReceiveBufferSize];
 
             try
@@ -490,7 +532,6 @@ namespace DataMeshGroup.Fusion
 
                         if (wsrr.MessageType == WebSocketMessageType.Close)
                         {
-                            await DisconnectAsync();
                             throw new NetworkException();
                         }
 
@@ -499,7 +540,7 @@ namespace DataMeshGroup.Fusion
                     while (!wsrr.EndOfMessage);
 
                     string stringResult = sb.ToString();
-                    Log(LogLevel.Debug, $"RX {stringResult}");
+                    Log(LogLevel.Information, $"RX {stringResult}");
 
                     // Attempt to parse the response json
                     MessageHeader messageHeader = null;
@@ -523,14 +564,18 @@ namespace DataMeshGroup.Fusion
                     if ((messageHeader != null) && !(messagePayload is EventNotification) && !string.IsNullOrEmpty(lastTxnServiceID))
                     {
                         string responseServiceID = messageHeader.ServiceID;
-                        
-                        // For TransactionStatusResponse, use the ServiceID in the RepeatedMessageResponse instead.
+
+                        // For a successful TransactionStatusResponse, use the ServiceID in the RepeatedMessageResponse instead. Note that 
+                        // where TransactionStatusResponse.Response.Success==false (i.e. no RepeatedMessageResponse is returned) responseServiceID
+                        // will be set to null which will prevent the 
                         if (messagePayload is TransactionStatusResponse)
                         {
                             responseServiceID = (messagePayload as TransactionStatusResponse)?.RepeatedMessageResponse?.MessageHeader?.ServiceID;
                         }
+
+                        // Validate responseServiceID if we received one
                         Log(LogLevel.Trace, $"Response ServiceID = {responseServiceID}");
-                        if (!lastTxnServiceID.Equals(responseServiceID))
+                        if (!string.IsNullOrEmpty(responseServiceID) && !lastTxnServiceID.Equals(responseServiceID))
                         {
                             Log(LogLevel.Error, $"Unexpected ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
                             continue;
@@ -610,8 +655,13 @@ namespace DataMeshGroup.Fusion
             }
             finally
             {
-                await DisconnectAsync();
+                recvLoopSemaphore.Release();
+                if(connectState == ConnectState.Connected || connectState == ConnectState.Connecting)
+                {
+                    await DisconnectAsync();
+                }
             }
+            Log(LogLevel.Trace, $"End RecvLoop()");
         }
 
         /// <summary>

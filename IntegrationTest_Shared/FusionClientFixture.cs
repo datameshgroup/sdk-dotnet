@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IntegrationTest
+namespace DataMeshGroup.Fusion.IntegrationTest
 {
     public class FusionClientFixture: IDisposable
     {

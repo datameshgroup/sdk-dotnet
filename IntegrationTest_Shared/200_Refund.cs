@@ -6,8 +6,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IntegrationTest
+namespace DataMeshGroup.Fusion.IntegrationTest
 {
+#if (!NETFRAMEWORK)
+    [TestCaseOrderer("DataMeshGroup.Fusion.IntegrationTest.AlphabeticalOrderer", "IntegrationTest")]
+#else
+    [TestCaseOrderer("DataMeshGroup.Fusion.IntegrationTest.AlphabeticalOrderer", "IntegrationTest_Net48")]
+#endif
+
     [Collection(nameof(FusionClientFixtureCollection))]
     public class RefundIntegrationTest
     {
@@ -26,7 +32,7 @@ namespace IntegrationTest
             string transactionId = DateTime.Now.ToString("yyMMddHHmmssfff");
             decimal requestedAmount = 1.00M;
             PaymentRequest request = new DataMeshGroup.Fusion.Model.PaymentRequest(transactionId, requestedAmount, paymentType: PaymentType.Refund);
-            _ = await Client.SendAsync(request);
+            SaleToPOIMessage saleToPOIRequest = await Client.SendAsync(request);
 
             List<MessagePayload> responses = new List<MessagePayload>();
             MessagePayload messagePayload;
@@ -90,6 +96,8 @@ namespace IntegrationTest
             // Response
             Assert.True(r.Response.Success);
             Assert.Equal(Result.Success, r.Response.Result);
+
+            fusionClientFixture.SaleToPOIRequestHistory.Add(saleToPOIRequest);
         }
     }
 }

@@ -7,8 +7,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IntegrationTest
+namespace DataMeshGroup.Fusion.IntegrationTest
 {
+#if (!NETFRAMEWORK)
+    [TestCaseOrderer("DataMeshGroup.Fusion.IntegrationTest.AlphabeticalOrderer", "IntegrationTest")]
+#else
+    [TestCaseOrderer("DataMeshGroup.Fusion.IntegrationTest.AlphabeticalOrderer", "IntegrationTest_Net48")]
+#endif
+
+
     [Collection(nameof(FusionClientFixtureCollection))]
     public class ReconciliationIntegrationTest
     {

@@ -6,8 +6,14 @@ using Xunit;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IntegrationTest
+namespace DataMeshGroup.Fusion.IntegrationTest
 {
+#if (!NETFRAMEWORK)
+    [TestCaseOrderer("DataMeshGroup.Fusion.IntegrationTest.AlphabeticalOrderer", "IntegrationTest")]
+#else
+    [TestCaseOrderer("DataMeshGroup.Fusion.IntegrationTest.AlphabeticalOrderer", "IntegrationTest_Net48")]
+#endif
+
     [Collection(nameof(FusionClientFixtureCollection))]
     public class PurchaseIntegrationTest
     {
