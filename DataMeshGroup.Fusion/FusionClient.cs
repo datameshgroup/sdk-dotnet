@@ -75,7 +75,6 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         private string lastTxnServiceID = string.Empty;
 
-
         private enum ConnectState { Connected, Connecting, Disconnecting, Disconnected };
         
         /// <summary>
@@ -92,6 +91,16 @@ namespace DataMeshGroup.Fusion
         /// Number of milliseconds to allow the websocket to close after socket close is called
         /// </summary>
         private readonly int SOCKET_CLOSE_TIMEOUT_MSECS = 2000;
+
+        /// <summary>
+        /// Default URL to connect to when URL == UnifyURL.Test
+        /// </summary>
+        private readonly string DEFAULT_TEST_URL = "wss://www.cloudposintegration.io/nexouat1";
+
+        /// <summary>
+        /// Default URL to connect to when URL == UnifyURL.Production
+        /// </summary>
+        private readonly string DEFAULT_PRODUCTION_URL = "wss://prod1.datameshgroup.io:5000";
 
 
         /// <summary>
@@ -184,10 +193,10 @@ namespace DataMeshGroup.Fusion
                 switch (URL)
                 {
                     case UnifyURL.Test:
-                        urlString = "wss://www.cloudposintegration.io/nexouat1";
+                        urlString = DEFAULT_TEST_URL;
                         break;
                     case UnifyURL.Production:
-                        urlString = "wss://prod1.datameshgroup.io:5000";
+                        urlString = DEFAULT_PRODUCTION_URL;
                         break;
                     case UnifyURL.Custom:
                         urlString = CustomURL;
@@ -217,7 +226,7 @@ namespace DataMeshGroup.Fusion
             }
             catch (Exception e) // TODO handle possible errors better here (e.g. DNS? Socket error? SSL certificate error?)
             {
-                Log(LogLevel.Error, $"A network error occured connecting to {urlString}. {e.Message}", e);
+                Log(LogLevel.Error, $"A network error occured connecting to {urlString}. {e.Message}. {e.InnerException?.Message}", e);
                 FireOnConnectError();
                 throw new NetworkException(e.Message, e.InnerException);
             }
@@ -381,6 +390,28 @@ namespace DataMeshGroup.Fusion
             // Check if we need to connect and/or login
             if (ensureConnectedAndLoginComplete && (await EnsureConnectedAndLoginComplete(requestMessage is LoginRequest, cancellationToken)))
             {
+                // Special rule for AbortRequest. 
+                // IF we have sent an auto-login
+                //   AND parkedRequestMessage is a PaymentRequest
+                //   AND we haven't received a response
+                //   AND this is a valid AbortRequest which matched the parked request
+                // THEN cancel the parked request message
+                if (requestMessage is AbortRequest 
+                    && parkedRequestMessage != null 
+                    && parkedRequestMessage is PaymentRequest
+                    && parkedServiceID == (requestMessage as AbortRequest).MessageReference?.ServiceID)
+                {
+                    await HandleParkedRequestMessage(new Response() 
+                    { 
+                        Result = Result.Failure, 
+                        ErrorCondition = ErrorCondition.Aborted,
+                        AdditionalResponse = "User Cancelled"
+                    });
+                    return saleToPOIRequest;
+                }
+                
+                //HandleParkedRequestMessage
+
                 // EnsureConnectedAndLoginComplete() returned true, we need to park this 
                 // request and pick it up again when our login request is returned
                 parkedRequestMessage = requestMessage;
@@ -537,7 +568,7 @@ namespace DataMeshGroup.Fusion
 
                         _ = sb.Append(Encoding.UTF8.GetString(buffer, 0, wsrr.Count));
                     }
-                    while (!wsrr.EndOfMessage);
+                    while (!wsrr.EndOfMessage); // Continue to wait for websocket "EndOfMessage". This joins together the message which may have been split into multiple IP packets
 
                     string stringResult = sb.ToString();
                     Log(LogLevel.Information, $"RX {stringResult}");
@@ -613,38 +644,7 @@ namespace DataMeshGroup.Fusion
                         if (loginRequired)
                         {
                             loginRequired = !LoginResponse.Response.Success;
-
-                            // Check if we have a parked request waiting for this login response
-                            if (parkedRequestMessage != null)
-                            {
-                                // If our login was successful, we can send the parked request that triggered this auto-login
-                                if (LoginResponse.Response.Success)
-                                {
-                                    _ = await SendAsync(parkedRequestMessage, parkedServiceID, false, parkedCancellationToken);
-                                }
-                                // Otherwise, we need to respond to the initial request
-                                else
-                                {
-                                    MessagePayload response = parkedRequestMessage.CreateDefaultResponseMessagePayload(LoginResponse.Response);
-
-                                    if (response != null)
-                                    {
-
-                                        // Either fire an event or push to our queue for next request to RecvAsync
-                                        if (IsEventModeEnabled)
-                                        {
-                                            FireResponseEvent(response);
-                                        }
-                                        else
-                                        {
-                                            recvQueue.Enqueue(response);
-                                            _ = recvQueueSemaphore.Release();
-                                        }
-                                    }
-                                }
-                                parkedRequestMessage = null;
-                                parkedServiceID = null;
-                            }
+                            await HandleParkedRequestMessage(LoginResponse.Response);
                         }
                     }
                 }
@@ -662,6 +662,53 @@ namespace DataMeshGroup.Fusion
                 }
             }
             Log(LogLevel.Trace, $"End RecvLoop()");
+        }
+
+        /// <summary>
+        /// Handle the parked request message. 
+        /// 
+        /// * If parkedRequestMessage is null, do nothing. 
+        /// * If response.Success, send the parked message
+        /// * If !response.Success, send a default response to the client based on <paramref name="response"/>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        private async Task HandleParkedRequestMessage(Response response)
+        {
+            // Return if we don't have a parkedRequestMessage
+            if (parkedRequestMessage == null)
+            {
+                return;
+            }
+
+            // If our login was successful, we can send the parked request that triggered this auto-login
+            if (response.Success)
+            {
+                _ = await SendAsync(parkedRequestMessage, parkedServiceID, false, parkedCancellationToken);
+            }
+            
+            // Otherwise, we need to respond to the original request which triggered this auto-login 
+            else
+            {
+                MessagePayload messagePayload = parkedRequestMessage.CreateDefaultResponseMessagePayload(response);
+
+                if (messagePayload != null)
+                {
+                    // Either fire an event or push to our queue for next request to RecvAsync
+                    if (IsEventModeEnabled)
+                    {
+                        FireResponseEvent(messagePayload);
+                    }
+                    else
+                    {
+                        recvQueue.Enqueue(messagePayload);
+                        _ = recvQueueSemaphore.Release();
+                    }
+                }
+            }
+
+            parkedRequestMessage = null;
+            parkedServiceID = null;
         }
 
         /// <summary>

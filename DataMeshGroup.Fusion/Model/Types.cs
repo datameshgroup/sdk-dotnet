@@ -263,7 +263,18 @@ namespace DataMeshGroup.Fusion.Model
         [EnumMember(Value = "CUP Debit")] 
         CUPDebit,
         
-        Discover
+        Discover,
+
+        Debit, 
+
+        AliPay,
+
+        [EnumMember(Value = "WeChat Pay")]
+        WeChatPay, 
+
+        Card, 
+
+        CryptoDotCom
     };
 
 
