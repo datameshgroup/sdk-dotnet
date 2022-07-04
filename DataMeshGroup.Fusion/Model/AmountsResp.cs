@@ -21,5 +21,11 @@
 
         [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
         public decimal? SurchargeAmount { get; set; }
+
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
+        public decimal? RequestedAmount { get; set; }
+
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
+        public decimal? PartialAuthorizedAmount { get; set; }
     }
 }
