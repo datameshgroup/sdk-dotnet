@@ -274,7 +274,11 @@ namespace DataMeshGroup.Fusion.Model
 
         Card, 
 
-        CryptoDotCom
+        CryptoDotCom,
+
+        Cash, 
+
+        Other
     };
 
 
@@ -1237,6 +1241,51 @@ namespace DataMeshGroup.Fusion.Model
         Object
     }
 
+    /// <summary>
+    /// Unit of a loyalty amount.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<SaleItemCustomFieldType>))]
+    public enum LoyaltyUnit
+    {
+        /// <summary>
+        /// Unknown type
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// The amount is expressed in point.
+        /// </summary>
+        Point,
+
+        /// <summary>
+        /// The amount is expressed in a monetary value in a currency.
+        /// </summary>
+        Monetary
+    }
+
+
+
+    [JsonConverter(typeof(StringEnumConverterWithDefault<LoyaltyBrand>))]
+    public enum LoyaltyBrand
+    {
+        Unknown,
+
+        Qantas,
+
+        Other
+    };
+
+
+    //public static class LoyaltyHandling
+    //{
+    //    public const string Forbidden = "Forbidden";
+    //    public const string Processed = "Processed";
+    //    public const string Allowed = "Allowed";
+    //    public const string Proposed = "Proposed";
+    //    public const string Required = "Required";
+    //}
+
+
 
     //public static class CheckTypeCode
     //{
@@ -1330,27 +1379,4 @@ namespace DataMeshGroup.Fusion.Model
     //    public const string Malfunction = "Malfunction";
     //    public const string Unable2Compl = "Unable2Compl";
     //}
-
-    //public static class LoyaltyUnit
-    //{
-    //    public const string Point = "Point";
-    //    public const string Monetary = "Monetary";
-    //}
-
-    //public static class LoyaltyHandling
-    //{
-    //    public const string Forbidden = "Forbidden";
-    //    public const string Processed = "Processed";
-    //    public const string Allowed = "Allowed";
-    //    public const string Proposed = "Proposed";
-    //    public const string Required = "Required";
-    //}
-
-    //public static class AllowedPaymentBrand
-    //{
-    //    public const string Visa = "Visa";
-    //    public const string MasterCard = "MasterCard";
-    //    public const string AmericanExpress = "American Express";
-    //}
-
 }

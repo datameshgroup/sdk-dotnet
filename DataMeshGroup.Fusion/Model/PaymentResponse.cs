@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace DataMeshGroup.Fusion.Model
 {
+    /// <summary>
+    /// Conveys Information related to the Payment transaction processed by the POI System
+    /// </summary>
     public class PaymentResponse: MessagePayload
     {
         public PaymentResponse() :
@@ -11,14 +14,44 @@ namespace DataMeshGroup.Fusion.Model
         {
         }
 
+        /// <summary>
+        /// Result of a message request processing.
+        /// If Result is Success, ErrorCondition is absent or not used in the processing of the message. 
+        /// In the other cases, the ErrorCondition has to be present and can refine the processing of the message response.
+        /// AdditionalResponse gives more information about the success or the failure of the message request processing
+        /// </summary>
         public Response Response { get; set; }
+
+        /// <summary>
+        /// Data related to the Sale System.
+        /// Data associated to the Sale System, with a particular value during the processing of the payment by the POI, including the cards acquisition.
+        /// </summary>
         public SaleData SaleData { get; set; }
+
+        /// <summary>
+        /// Data related to the POI System.
+        /// </summary>
         public POIData POIData { get; set; }
+
+        /// <summary>
+        /// Data related to the result of a processed payment transaction.
+        /// </summary>
         public PaymentResult PaymentResult { get; set; }
-        //public LoyaltyResult LoyaltyResult { get; set; }
-        
+
+        /// <summary>
+        /// Data related to the result of a processed loyalty transaction.
+        /// </summary>
+        public List<LoyaltyResult> LoyaltyResult { get; set; }
+
+        /// <summary>
+        /// Customer or Merchant payment receipt.
+        /// </summary>
         public List<PaymentReceipt> PaymentReceipt { get; set; }
-        
+
+        /// <summary>
+        /// Customer order attached to a customer, recorded in the POI system.
+        /// Allows the management of customer orders by the POI, for instance in a multi-channel or a click and collect sale transaction.
+        /// </summary>
         public CustomerOrder CustomerOrder { get; set; }
 
         /// <summary>
