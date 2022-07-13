@@ -1244,7 +1244,7 @@ namespace DataMeshGroup.Fusion.Model
     /// <summary>
     /// Unit of a loyalty amount.
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverterWithDefault<SaleItemCustomFieldType>))]
+    [JsonConverter(typeof(StringEnumConverterWithDefault<LoyaltyUnit>))]
     public enum LoyaltyUnit
     {
         /// <summary>
