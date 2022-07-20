@@ -15,7 +15,7 @@ namespace DataMeshGroup.Fusion.IntegrationTest
     {
         public FusionClientFixture()
         {
-            Settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("settings.json"));
+            Settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("IntegrationTestSettings.json"));
             Client = new FusionClient(useTestEnvironment: Settings.UseTestEnvironment)
             {
                 LoginRequest = new DataMeshGroup.Fusion.Model.LoginRequest(Settings.ProviderIdentification, Settings.ApplicationName, Settings.SoftwareVersion, Settings.CertificationCode, new List<DataMeshGroup.Fusion.Model.SaleCapability>() { DataMeshGroup.Fusion.Model.SaleCapability.CashierStatus, DataMeshGroup.Fusion.Model.SaleCapability.PrinterReceipt }),

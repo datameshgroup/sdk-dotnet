@@ -28,6 +28,48 @@ namespace DataMeshGroup.Fusion.IntegrationTest
         }
 
         [Fact]
+        public async Task Login_Success()
+        {
+            await Client.DisconnectAsync();
+
+            // Sending a ReconciliationRequest to force an autologin
+            await Client.SendRecvAsync<LoginResponse>(Client.LoginRequest);
+
+            var r = Client.LoginResponse;
+            Assert.NotNull(r);
+
+            // Message type
+            Assert.True(r.MessageCategory == MessageCategory.Login);
+            Assert.True(r.MessageClass == MessageClass.Service);
+            Assert.True(r.MessageType == MessageType.Response);
+
+            // Response
+            Assert.True(r.Response.Success);
+            Assert.Equal(Result.Success, r.Response.Result);
+
+            // POISystemData
+            Assert.NotNull(r.POISystemData);
+            Assert.NotNull(r.POISystemData.DateTime);
+            Assert.True(r.POISystemData.TokenRequestStatus);
+
+            // POISystemData.POITerminalData
+            Assert.NotNull(r.POISystemData.POITerminalData);
+            Assert.Equal("Attended", r.POISystemData.POITerminalData.TerminalEnvironment);
+            Assert.Equal(POICapability.ICC, r.POISystemData.POITerminalData.POICapabilities.First(c => c == POICapability.ICC));
+            Assert.Equal(POICapability.MagStripe, r.POISystemData.POITerminalData.POICapabilities.First(c => c == POICapability.MagStripe));
+            Assert.Equal(POICapability.EMVContactless, r.POISystemData.POITerminalData.POICapabilities.First(c => c == POICapability.EMVContactless));
+            Assert.NotNull(r.POISystemData.POITerminalData.POISerialNumber);
+
+            // POISystemData.POIStatus
+            Assert.NotNull(r.POISystemData.POIStatus);
+            Assert.Equal(GlobalStatus.OK, r.POISystemData.POIStatus.GlobalStatus);
+            Assert.True(r.POISystemData.POIStatus.PEDOKFlag);
+            Assert.True(r.POISystemData.POIStatus.CardReaderOKFlag);
+            Assert.Equal(PrinterStatus.OK, r.POISystemData.POIStatus.PrinterStatus);
+            Assert.True(r.POISystemData.POIStatus.CommunicationOKFlag);
+        }
+
+        [Fact]
         public async Task Login_AutoLogin_Fail()
         {
             LoginRequest originalLoginRequest = fusionClientFixture.Client.LoginRequest;

@@ -7,7 +7,7 @@
 launchSettings.json
 
 # Custom config
-IntegrationTest_Shared/settings.json
+IntegrationTestSettings.json
 
 # User-specific files
 *.rsuser
@@ -392,3 +392,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+

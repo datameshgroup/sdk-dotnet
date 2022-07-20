@@ -19,9 +19,4 @@
     <Compile Include="$(MSBuildThisFileDirectory)FusionClientFixture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)settings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 </Project>

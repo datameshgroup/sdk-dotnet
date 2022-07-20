@@ -127,6 +127,8 @@ namespace DataMeshGroup.Fusion
 
             // ServicePointManager is used for .NET Framework
             ServicePointManager.MaxServicePointIdleTime = 0;
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             ServicePointManager.ServerCertificateValidationCallback = CertificateValidation.RemoteCertificateValidationCallback; // unsubscribe in dispose
         }
 

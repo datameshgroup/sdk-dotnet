@@ -11,9 +11,9 @@
     <PackageId>DataMeshGroup.Fusion.FusionClient</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageLicenseFile></PackageLicenseFile>
-    <Version>1.2.6</Version>
+    <Version>1.2.7</Version>
     <RepositoryUrl>https://github.com/datameshgroup/sdk-dotnet</RepositoryUrl>
-    <PackageReleaseNotes>Added lib, framework, and OS info to ComponentDescription in logon</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed production bug preventing TLS1.2 connection under some conditions</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

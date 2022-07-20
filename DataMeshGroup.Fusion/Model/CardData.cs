@@ -8,7 +8,7 @@
         public EntryMode EntryMode { get; set; }
         public string CardCountryCode { get; set; }
         public ProtectedCardData ProtectedCardData { get; set; }
-        //public string AllowedProductCode { get; set; }
+        //public string AllowedProductCodes { get; set; }
         //public AllowedProduct AllowedProduct { get; set; }
 
         /// <summary>
