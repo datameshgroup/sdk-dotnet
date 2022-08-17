@@ -75,6 +75,11 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         private string lastTxnServiceID = string.Empty;
 
+        /// <summary>
+        /// ServiceID of the message reference in the last transaction message sent
+        /// </summary>
+        private string lastMessageRefServiceID = string.Empty;
+
         private enum ConnectState { Connected, Connecting, Disconnecting, Disconnected };
         
         /// <summary>
@@ -422,21 +427,22 @@ namespace DataMeshGroup.Fusion
                 return saleToPOIRequest;
             }
 
-            // Record lastTxnServiceID. Special handling for AbortRequest and TransactionStatus, all other messages record the ServiceID we use in the MessageHeader
-            if(requestMessage is TransactionStatusRequest)
+            // Record lastTxnServiceID. Special handling for AbortRequest and the message reference Service ID for TransactionStatusRequest, all other messages record the ServiceID we use in the MessageHeader
+            lastMessageRefServiceID = string.Empty;
+            if (requestMessage is TransactionStatusRequest)
             {
-                // For a TransactionStatus we validate the ServiceID in the RepeatedMessageResponse, not the message header
+                // For a TransactionStatus we validate also the ServiceID in the RepeatedMessageResponse
                 // Two types of TransactionStatusRequest - with and without ServiceID. With ServiceID, we should validate but without serviceID we can't validate (it's just going to be the last request)
-                lastTxnServiceID = (requestMessage as TransactionStatusRequest)?.MessageReference?.ServiceID;
-                Log(LogLevel.Trace, $"Request ServiceID = {lastTxnServiceID}");
+                lastMessageRefServiceID = (requestMessage as TransactionStatusRequest)?.MessageReference?.ServiceID;
+                Log(LogLevel.Trace, $"Request Message Reference ServiceID = {lastMessageRefServiceID}");
             }
-            // Default case for all other message types except AbortRequest
-            else if (!(requestMessage is AbortRequest))
+               
+            // Default case for all other message types except AbortRequest            
+            if (!(requestMessage is AbortRequest))
             {
                 lastTxnServiceID = serviceID;
                 Log(LogLevel.Trace, $"Request ServiceID = {lastTxnServiceID}");
             }
-
 
             Log(LogLevel.Information, $"TX {s}");
 
@@ -597,21 +603,35 @@ namespace DataMeshGroup.Fusion
                     if ((messageHeader != null) && !(messagePayload is EventNotification) && !string.IsNullOrEmpty(lastTxnServiceID))
                     {
                         string responseServiceID = messageHeader.ServiceID;
-
-                        // For a successful TransactionStatusResponse, use the ServiceID in the RepeatedMessageResponse instead. Note that 
-                        // where TransactionStatusResponse.Response.Success==false (i.e. no RepeatedMessageResponse is returned) responseServiceID
-                        // will be set to null which will prevent the 
-                        if (messagePayload is TransactionStatusResponse)
-                        {
-                            responseServiceID = (messagePayload as TransactionStatusResponse)?.RepeatedMessageResponse?.MessageHeader?.ServiceID;
-                        }
-
+                       
                         // Validate responseServiceID if we received one
                         Log(LogLevel.Trace, $"Response ServiceID = {responseServiceID}");
                         if (!string.IsNullOrEmpty(responseServiceID) && !lastTxnServiceID.Equals(responseServiceID))
                         {
                             Log(LogLevel.Error, $"Unexpected ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
                             continue;
+                        }
+
+                        // For a successful TransactionStatusResponse, check also the ServiceID in the RepeatedMessageResponse or MessageReference. Note that 
+                        // where TransactionStatusResponse.Response.Success==false (i.e. no RepeatedMessageResponse is returned), the ServiceID will come from the 
+                        // MessageReference instead.
+                        if (messagePayload is TransactionStatusResponse)
+                        {
+                            TransactionStatusResponse tr = messagePayload as TransactionStatusResponse;
+                            if (tr != null)
+                            {
+                                if (tr.RepeatedMessageResponse != null)
+                                    responseServiceID = tr.RepeatedMessageResponse.MessageHeader?.ServiceID;
+                                else
+                                    responseServiceID = tr.MessageReference?.ServiceID;
+
+                                Log(LogLevel.Trace, $"Response Message Reference ServiceID = {responseServiceID}");
+                                if (!string.IsNullOrEmpty(responseServiceID) && !lastMessageRefServiceID.Equals(responseServiceID))
+                                {
+                                    Log(LogLevel.Error, $"Unexpected Message Reference ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastMessageRefServiceID}.  Will process the next message instead.");
+                                    continue;
+                                }
+                            }
                         }
                     }
 
