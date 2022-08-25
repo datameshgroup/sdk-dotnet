@@ -380,10 +380,6 @@ namespace DataMeshGroup.Fusion
         /// <exception cref="NetworkException">A network error occured sending the request</exception>
         public async Task<SaleToPOIMessage> SendAsync(MessagePayload requestMessage, string serviceID, bool ensureConnectedAndLoginComplete, System.Threading.CancellationToken cancellationToken)
         {
-            Log(LogLevel.Trace, $"Clear Request ServiceID and Message Reference ServiceID before request message processing.");
-            lastTxnServiceID = String.Empty;
-            lastMessageRefServiceID = String.Empty;
-
             SaleToPOIMessage saleToPOIRequest;
             string s;
             try
@@ -621,19 +617,16 @@ namespace DataMeshGroup.Fusion
                         if (messagePayload is TransactionStatusResponse)
                         {
                             TransactionStatusResponse tr = messagePayload as TransactionStatusResponse;
-                            if (tr != null)
-                            {
-                                if (tr.RepeatedMessageResponse != null)
-                                    responseServiceID = tr.RepeatedMessageResponse.MessageHeader?.ServiceID;
-                                else
-                                    responseServiceID = tr.MessageReference?.ServiceID;
+                            if (tr.RepeatedMessageResponse != null)
+                                responseServiceID = tr.RepeatedMessageResponse.MessageHeader?.ServiceID;
+                            else //Failure - In Progress
+                                responseServiceID = tr.MessageReference?.ServiceID;
 
-                                Log(LogLevel.Trace, $"Response Message Reference ServiceID = {responseServiceID}");
-                                if (!string.IsNullOrEmpty(responseServiceID) && !lastMessageRefServiceID.Equals(responseServiceID))
-                                {
-                                    Log(LogLevel.Error, $"Unexpected Message Reference ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastMessageRefServiceID}.  Will process the next message instead.");
-                                    continue;
-                                }
+                            Log(LogLevel.Trace, $"Response Message Reference ServiceID = {responseServiceID}");
+                            if (!string.IsNullOrEmpty(responseServiceID) && !lastMessageRefServiceID.Equals(responseServiceID))
+                            {
+                                Log(LogLevel.Error, $"Unexpected Message Reference ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastMessageRefServiceID}.  Will process the next message instead.");
+                                continue;
                             }
                         }
                     }
