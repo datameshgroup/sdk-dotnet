@@ -380,6 +380,10 @@ namespace DataMeshGroup.Fusion
         /// <exception cref="NetworkException">A network error occured sending the request</exception>
         public async Task<SaleToPOIMessage> SendAsync(MessagePayload requestMessage, string serviceID, bool ensureConnectedAndLoginComplete, System.Threading.CancellationToken cancellationToken)
         {
+            Log(LogLevel.Trace, $"Clear Request ServiceID and Message Reference ServiceID before request message processing.");
+            lastTxnServiceID = String.Empty;
+            lastMessageRefServiceID = String.Empty;
+
             SaleToPOIMessage saleToPOIRequest;
             string s;
             try
@@ -428,7 +432,6 @@ namespace DataMeshGroup.Fusion
             }
 
             // Record lastTxnServiceID. Special handling for AbortRequest and the message reference Service ID for TransactionStatusRequest, all other messages record the ServiceID we use in the MessageHeader
-            lastMessageRefServiceID = string.Empty;
             if (requestMessage is TransactionStatusRequest)
             {
                 // For a TransactionStatus we validate also the ServiceID in the RepeatedMessageResponse
