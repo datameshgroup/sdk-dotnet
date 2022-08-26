@@ -66,7 +66,7 @@ namespace DataMeshGroup.Fusion
         /// <summary>
         /// Receive queue for messages when in async mode
         /// </summary>
-        private readonly Queue<MessagePayload> recvQueue;
+        private readonly Queue<QueuedMessagePayload> recvQueue;
 
         public IWebSocketFactory WebSocketFactory { get; set; } = new DefaultWebSocketFactory();
 
@@ -126,7 +126,7 @@ namespace DataMeshGroup.Fusion
             LogLevel = LogLevel.Debug; // default logging 
             recvQueueSemaphore = new SemaphoreSlim(0);
             recvLoopSemaphore = new SemaphoreSlim(0, 1);
-            recvQueue = new Queue<MessagePayload>();
+            recvQueue = new Queue<QueuedMessagePayload>();
             RootCA = useTestEnvironment ? UnifyRootCA.Test : UnifyRootCA.Production;
             connectState = ConnectState.Disconnected;
 
@@ -380,6 +380,8 @@ namespace DataMeshGroup.Fusion
         /// <exception cref="NetworkException">A network error occured sending the request</exception>
         public async Task<SaleToPOIMessage> SendAsync(MessagePayload requestMessage, string serviceID, bool ensureConnectedAndLoginComplete, System.Threading.CancellationToken cancellationToken)
         {
+            Log(LogLevel.Trace, $"SendAsync processing for ServiceID = {serviceID}, Message = {requestMessage?.GetType()}.");
+
             SaleToPOIMessage saleToPOIRequest;
             string s;
             try
@@ -502,7 +504,15 @@ namespace DataMeshGroup.Fusion
             try
             {
                 await recvQueueSemaphore.WaitAsync(CancellationTokenSource.CreateLinkedTokenSource(new CancellationToken[] { cancellationToken, socketCloseCTS.Token }).Token);
-                return recvQueue.Dequeue();
+                QueuedMessagePayload qMessagePayload = recvQueue.Dequeue();
+                if ((qMessagePayload != null) && ValidateMessage(qMessagePayload.ServiceID, qMessagePayload.MessagePayload))
+                {
+                    return qMessagePayload.MessagePayload;
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (OperationCanceledException)
             {
@@ -598,37 +608,9 @@ namespace DataMeshGroup.Fusion
                         continue;
                     }
 
-                    //Don't verify ServiceID for EventNotification
-                    if ((messageHeader != null) && !(messagePayload is EventNotification) && !string.IsNullOrEmpty(lastTxnServiceID))
-                    {
-                        string responseServiceID = messageHeader.ServiceID;
-                       
-                        // Validate responseServiceID if we received one
-                        Log(LogLevel.Trace, $"Response ServiceID = {responseServiceID}");
-                        if (!string.IsNullOrEmpty(responseServiceID) && !lastTxnServiceID.Equals(responseServiceID))
-                        {
-                            Log(LogLevel.Error, $"Unexpected ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
-                            continue;
-                        }
-
-                        // For a successful TransactionStatusResponse, check also the ServiceID in the RepeatedMessageResponse or MessageReference. Note that 
-                        // where TransactionStatusResponse.Response.Success==false (i.e. no RepeatedMessageResponse is returned), the ServiceID will come from the 
-                        // MessageReference instead.
-                        if (messagePayload is TransactionStatusResponse)
-                        {
-                            TransactionStatusResponse tr = messagePayload as TransactionStatusResponse;
-                            if (tr.RepeatedMessageResponse != null)
-                                responseServiceID = tr.RepeatedMessageResponse.MessageHeader?.ServiceID;
-                            else //Failure - In Progress
-                                responseServiceID = tr.MessageReference?.ServiceID;
-
-                            Log(LogLevel.Trace, $"Response Message Reference ServiceID = {responseServiceID}");
-                            if (!string.IsNullOrEmpty(responseServiceID) && !lastMessageRefServiceID.Equals(responseServiceID))
-                            {
-                                Log(LogLevel.Error, $"Unexpected Message Reference ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastMessageRefServiceID}.  Will process the next message instead.");
-                                continue;
-                            }
-                        }
+                    if ((messageHeader != null) && !ValidateMessage(messageHeader.ServiceID, messagePayload))
+                    { 
+                        continue;                                               
                     }
 
                     if (messagePayload is LoginResponse)
@@ -643,7 +625,7 @@ namespace DataMeshGroup.Fusion
                     }
                     else
                     {
-                        recvQueue.Enqueue(messagePayload);
+                        recvQueue.Enqueue(new QueuedMessagePayload(messageHeader?.ServiceID, messagePayload));
                         _ = recvQueueSemaphore.Release();
                     }
 
@@ -719,7 +701,7 @@ namespace DataMeshGroup.Fusion
                     }
                     else
                     {
-                        recvQueue.Enqueue(messagePayload);
+                        recvQueue.Enqueue(new QueuedMessagePayload(parkedServiceID, messagePayload));
                         _ = recvQueueSemaphore.Release();
                     }
                 }
@@ -757,6 +739,55 @@ namespace DataMeshGroup.Fusion
         {
             _ = await SendAsync(requestMessage, cancellationToken);
             return await RecvAsync<T>(cancellationToken);
+        }
+
+        /// <summary>
+        /// Validates whether the message should be processed or not
+        /// </summary>
+        /// <param name="responseServiceID"></param>
+        /// <param name="messagePayload"></param>
+        /// <returns></returns>
+        private bool ValidateMessage(string responseServiceID, MessagePayload messagePayload)
+        {
+            //Don't verify ServiceID for EventNotification
+            if ((messagePayload is EventNotification) || string.IsNullOrEmpty(lastTxnServiceID))
+                return true;
+
+            //Response ServiceID should exists
+            if (string.IsNullOrEmpty(responseServiceID))
+            {
+                Log(LogLevel.Error, $"No ServiceID received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
+                return false;
+            }
+
+            // Validate responseServiceID if we received one
+            Log(LogLevel.Trace, $"Response ServiceID = {responseServiceID}");
+            if (!lastTxnServiceID.Equals(responseServiceID))
+            {
+                Log(LogLevel.Error, $"Unexpected ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
+                return false;
+            }
+
+            // For a successful TransactionStatusResponse, check also the ServiceID in the RepeatedMessageResponse or MessageReference. Note that 
+            // where TransactionStatusResponse.Response.Success==false (i.e. no RepeatedMessageResponse is returned), the ServiceID will come from the 
+            // MessageReference instead.
+            if (messagePayload is TransactionStatusResponse)
+            {
+                TransactionStatusResponse tr = messagePayload as TransactionStatusResponse;
+                if (tr.RepeatedMessageResponse != null)
+                    responseServiceID = tr.RepeatedMessageResponse.MessageHeader?.ServiceID;
+                else //Failure - In Progress
+                    responseServiceID = tr.MessageReference?.ServiceID;
+
+                Log(LogLevel.Trace, $"Response Message Reference ServiceID = {responseServiceID}");
+                if (!string.IsNullOrEmpty(responseServiceID) && !lastMessageRefServiceID.Equals(responseServiceID))
+                {
+                    Log(LogLevel.Error, $"Unexpected Message Reference ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastMessageRefServiceID}.  Will process the next message instead.");
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         #region Properties
