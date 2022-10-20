@@ -4,6 +4,25 @@ namespace DataMeshGroup.Fusion.Model
 {
     public class Response
     {
+        public Response() : this(Result.Failure, ErrorCondition.Cancel, null)
+        {
+        }
+
+        public Response(Result result) : this(result, ErrorCondition.Cancel, null)
+        {
+        }
+
+        public Response(ErrorCondition errorCondition, string additionalResponse = null) : this(Result.Failure, errorCondition, additionalResponse)
+        {
+        }
+
+        public Response(Result result, ErrorCondition errorCondition, string additionalResponse)
+        {
+            this.Result = result;
+            this.ErrorCondition = errorCondition;
+            this.AdditionalResponse = additionalResponse;
+        }
+
         /// <summary>
         /// Indicates the success of the response
         /// </summary>

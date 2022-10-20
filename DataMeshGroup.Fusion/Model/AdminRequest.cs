@@ -16,7 +16,7 @@ namespace DataMeshGroup.Fusion.Model
         {
         }
 
-        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             return new AdminResponse
             {

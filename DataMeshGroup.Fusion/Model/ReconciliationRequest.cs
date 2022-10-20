@@ -27,7 +27,7 @@
         /// </summary>
         public string POIReconciliationID { get; set; }
 
-        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             return new ReconciliationResponse
             {

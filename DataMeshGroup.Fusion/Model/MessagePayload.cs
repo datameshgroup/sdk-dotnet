@@ -37,6 +37,6 @@ namespace DataMeshGroup.Fusion.Model
         /// message. Used for error handling.
         /// </summary>
         /// <param name="response">The <see cref="Response"/> object to be included in the response payload</param>
-        internal abstract MessagePayload CreateDefaultResponseMessagePayload(Response response);
+        public abstract MessagePayload CreateDefaultResponseMessagePayload(Response response);
     }
 }

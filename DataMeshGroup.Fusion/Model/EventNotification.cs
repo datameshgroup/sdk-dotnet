@@ -22,7 +22,7 @@ namespace DataMeshGroup.Fusion.Model
         /// </summary>
         public string EventDetails { get; set; }
 
-        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             throw new System.NotImplementedException();
         }

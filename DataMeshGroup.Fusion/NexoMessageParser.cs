@@ -37,17 +37,19 @@ namespace DataMeshGroup.Fusion
         {
             messagePayload = null;
 
-            try
+            if (EnableMACValidation)
             {
-                kek = kek?.Trim();
-                _ = SecurityTrailerHelper.ValidateKEK(kek); // Throws ArgumentException
-            }
-            catch (Exception e)
-            {
-                if (EnableMACValidation)
+                try
                 {
+                    kek = kek?.Trim();
+                    _ = SecurityTrailerHelper.ValidateKEK(kek); // Throws ArgumentException
+                }
+                catch (Exception e)
+                {
+
                     OnLog?.Invoke(this, new LogEventArgs() { LogLevel = LogLevel.Debug, Data = $"An error occured validating the KEK. {e.Message}", Exception = e });
                     throw;
+
                 }
             }
 
@@ -59,18 +61,18 @@ namespace DataMeshGroup.Fusion
             });
 
             // Message from Unify could be SaleToPOIResponse or SaleToPOIRequest
-            JToken saleToPOIMessageNode = rootJObject.SelectToken("SaleToPOIResponse", false) ?? rootJObject.SelectToken("SaleToPOIRequest", false);
+            JToken saleToPOIMessageNode = rootJObject.GetValue("SaleToPOIResponse", StringComparison.OrdinalIgnoreCase) ?? rootJObject.GetValue("SaleToPOIRequest", StringComparison.OrdinalIgnoreCase);
 
             // Find MessageHeader and SecurityTrailer object
-            JToken messageHeaderJObject = saleToPOIMessageNode?.SelectToken("MessageHeader", false);
-            JToken securityTrailerJObject = saleToPOIMessageNode?.SelectToken("SecurityTrailer", false);
+            JToken messageHeaderJObject = ((JObject)saleToPOIMessageNode)?.GetValue("MessageHeader", StringComparison.OrdinalIgnoreCase);
+            JToken securityTrailerJObject = ((JObject)saleToPOIMessageNode)?.GetValue("SecurityTrailer", StringComparison.OrdinalIgnoreCase);
 
             // Parse JObject to MessageHeader 
             messageHeader = messageHeaderJObject?.ToObject<MessageHeader>();
             securityTrailer = securityTrailerJObject?.ToObject<SecurityTrailer>();
 
             // Throw if we can't find/parse header + trailer
-            if (messageHeaderJObject is null || securityTrailerJObject is null || messageHeader is null || securityTrailer is null)
+            if (messageHeaderJObject is null || messageHeader is null || (EnableMACValidation && (securityTrailerJObject is null || securityTrailer is null)))
             {
                 // to enable forwards-compatibility we need to just return null here instead of throwing an exception
                 OnLog?.Invoke(this, new LogEventArgs() { LogLevel = LogLevel.Debug, Data = $"In TryParseSaleToPOIMessage, messageHeaderJObject is null || securityTrailerJObject is null || messageHeader is null || securityTrailer is null" });
@@ -87,7 +89,7 @@ namespace DataMeshGroup.Fusion
             }
 
             // Find Payload 
-            JToken payloadJObject = saleToPOIMessageNode.SelectToken(messageHeader.GetMessageDescription(), false);
+            JToken payloadJObject = ((JObject)saleToPOIMessageNode).GetValue(messageHeader.GetMessageDescription(), StringComparison.OrdinalIgnoreCase);
             object payload = payloadJObject?.ToObject(type);
             // Throw if we can't find/parse payload
             if (payloadJObject is null || payload is null)
@@ -98,23 +100,24 @@ namespace DataMeshGroup.Fusion
             }
 
             // Validate MAC. Throws MessageFormatException
-            try
+            if (EnableMACValidation)
             {
-                SecurityTrailerHelper.ValidateSecurityTrailer(
-                    kek,
-                    messageHeaderJson: messageHeaderJObject.ToString(Formatting.None),
-                    payloadDescription: messageHeader.GetMessageDescription(),
-                    payloadJson: payloadJObject.ToString(Formatting.None),
-                    expectedMAC: securityTrailer.AuthenticatedData.Recipient.MAC,
-                    expectedEncryptedKey: securityTrailer.AuthenticatedData.Recipient.KEK.EncryptedKey
-                    );
-            }
-            catch (Exception e)
-            {
-                if (EnableMACValidation)
+                try
+                {
+                    SecurityTrailerHelper.ValidateSecurityTrailer(
+                        kek,
+                        messageHeaderJson: messageHeaderJObject.ToString(Formatting.None),
+                        payloadDescription: messageHeader.GetMessageDescription(),
+                        payloadJson: payloadJObject.ToString(Formatting.None),
+                        expectedMAC: securityTrailer?.AuthenticatedData?.Recipient?.MAC,
+                        expectedEncryptedKey: securityTrailer?.AuthenticatedData?.Recipient?.KEK?.EncryptedKey
+                        );
+                }
+                catch (Exception e)
                 {
                     OnLog?.Invoke(this, new LogEventArgs() { LogLevel = LogLevel.Debug, Data = $"Invalid MAC on response message. {e.Message}", Exception = e });
                     throw;
+
                 }
             }
 

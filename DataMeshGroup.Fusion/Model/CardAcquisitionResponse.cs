@@ -7,7 +7,7 @@
         {
         }
 
-        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             throw new System.NotImplementedException();
         }

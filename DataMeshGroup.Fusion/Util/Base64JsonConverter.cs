@@ -20,7 +20,7 @@ namespace DataMeshGroup.Fusion
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteRawValue(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(value as string)));
+            writer.WriteValue(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(value as string)));
         }
     }
 }

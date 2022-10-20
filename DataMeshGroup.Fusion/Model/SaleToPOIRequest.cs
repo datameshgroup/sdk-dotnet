@@ -1,4 +1,6 @@
-﻿namespace DataMeshGroup.Fusion.Model
+﻿using System;
+
+namespace DataMeshGroup.Fusion.Model
 {
     public class SaleToPOIMessage
     {

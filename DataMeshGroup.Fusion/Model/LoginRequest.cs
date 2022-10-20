@@ -59,7 +59,7 @@ namespace DataMeshGroup.Fusion.Model
         public string CustomerOrderReq { get; set; }
         public string POISerialNumber { get; set; }
 
-        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             return new LoginResponse
             {

@@ -100,7 +100,7 @@ namespace DataMeshGroup.Fusion
         /// <summary>
         /// Default URL to connect to when URL == UnifyURL.Production
         /// </summary>
-        private readonly string DEFAULT_PRODUCTION_URL = "wss://prod1.datameshgroup.io:5000";
+        private readonly string DEFAULT_PRODUCTION_URL = "wss://nexo.datameshgroup.io:5000";
 
 
         /// <summary>
@@ -381,6 +381,12 @@ namespace DataMeshGroup.Fusion
             {
                 saleToPOIRequest = MessageParser.BuildSaleToPOIMessage(serviceID, SaleID, POIID, KEK, requestMessage);
                 s = MessageParser.SaleToPOIMessageToString(saleToPOIRequest);
+
+
+                MessageHeader messageHeader;
+                MessagePayload messagePayload;
+                SecurityTrailer securityTrailer;
+                var res = MessageParser.TryParseSaleToPOIMessage(s, KEK, out messageHeader, out messagePayload, out securityTrailer);
             }
             catch (Exception e)
             {

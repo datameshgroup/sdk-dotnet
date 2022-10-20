@@ -10,7 +10,7 @@
         public SaleData SaleData { get; set; }
         public CardAcquisitionTransaction CardAcquisitionTransaction { get; set; }
 
-        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             return new CardAcquisitionResponse
             {

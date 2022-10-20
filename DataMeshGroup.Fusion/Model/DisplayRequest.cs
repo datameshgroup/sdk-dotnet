@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataMeshGroup.Fusion.Model;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace DataMeshGroup.Fusion.Model
 {
@@ -24,15 +26,33 @@ namespace DataMeshGroup.Fusion.Model
 
             // Some strings will be formatted as "SHORT TEXT | FULL TEXT"
             int index = result.IndexOf("|");
-            if(index > -1 && index < result.Length - 2)
+            if (index > -1 && index < result.Length - 2)
             {
-                result = result.Substring(index+2).Trim();
+                result = result.Substring(index + 2).Trim();
             }
 
             return result;
         }
 
-        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        /// <summary>
+        /// Constructs a DisplayOutput for a Cashier display as plain text
+        /// </summary>
+        /// <param name="text">Cashier display text to set</param>
+        public void SetCashierDisplayAsPlainText(string text)
+        {
+            DisplayOutput = new DisplayOutput()
+            {
+                OutputContent = new OutputContent()
+                {
+                    OutputText = new OutputText()
+                    {
+                        Text = text
+                    }
+                }
+            };
+        }
+
+        public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             throw new NotImplementedException();
         }

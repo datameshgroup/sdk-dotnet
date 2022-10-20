@@ -10,7 +10,7 @@
         public MessageReference MessageReference { get; set; }
         public RepeatedMessageResponse RepeatedMessageResponse { get; set; }
 
-        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             throw new System.NotImplementedException();
         }

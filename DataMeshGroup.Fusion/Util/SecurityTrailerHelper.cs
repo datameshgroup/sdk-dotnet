@@ -1,5 +1,6 @@
 ﻿using DataMeshGroup.Fusion.Model;
 using Newtonsoft.Json;
+using System;
 
 namespace DataMeshGroup.Fusion
 {
@@ -42,7 +43,6 @@ namespace DataMeshGroup.Fusion
             }
 
             var sessionKey = Crypto.DecryptWithTripleDES(expectedEncryptedKey, kek);
-
             string macBody = $"\"MessageHeader\":{messageHeaderJson},\"{payloadDescription}\":{payloadJson}";
             string sha256 = Crypto.HashBySHA256(macBody);
             string buffer = sha256 + 8000000000000000;
@@ -65,7 +65,7 @@ namespace DataMeshGroup.Fusion
         {
             JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
 
-            string sessionKey = Crypto.GenerateKey();
+            string sessionKey = Crypto.GenerateKey(); 
             string macBody = $"\"MessageHeader\":{JsonConvert.SerializeObject(messageHeader, Formatting.None, jsonSerializerSettings)},\"{messageHeader.GetMessageDescription()}\":{JsonConvert.SerializeObject(messagePayload, Formatting.None, jsonSerializerSettings)}";
             string sha256 = Crypto.HashBySHA256(macBody);
             string buffer = sha256 + 8000000000000000;

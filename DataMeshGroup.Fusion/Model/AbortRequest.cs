@@ -11,7 +11,7 @@
         public MessageReference MessageReference { get; set; }
         public string AbortReason { get; set; }
 
-        internal override MessagePayload CreateDefaultResponseMessagePayload(Response response)
+        public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             return null;
         }
