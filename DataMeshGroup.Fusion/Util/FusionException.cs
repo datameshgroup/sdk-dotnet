@@ -14,6 +14,11 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         public bool ErrorRecoveryRequired { get; set; }
 
+        /// <summary>
+        /// Text description of the error. Can be used to set AbortRequest.AbortReason during error recovery.
+        /// </summary>
+        public virtual string ErrorReason => "Other Exception";
+
         public FusionException()
         {
         }

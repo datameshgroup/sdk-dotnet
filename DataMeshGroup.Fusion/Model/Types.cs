@@ -1276,6 +1276,38 @@ namespace DataMeshGroup.Fusion.Model
     };
 
 
+    /// <summary>
+    /// Defines account type used for the payment
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<Account>))]
+    public enum Account
+    {
+        /// <summary>
+        /// Unknown account
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// Default account. Returned for payment types which don't require an account
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// Credit account was used for the payment
+        /// </summary>
+        Credit,
+
+        /// <summary>
+        /// Cheque account was used for the payment
+        /// </summary>
+        Cheque,
+
+        /// <summary>
+        /// Savings account was used for the payment
+        /// </summary>
+        Savings
+    };
+
     //public static class LoyaltyHandling
     //{
     //    public const string Forbidden = "Forbidden";

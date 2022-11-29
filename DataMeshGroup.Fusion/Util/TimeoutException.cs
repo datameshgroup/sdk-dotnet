@@ -9,6 +9,11 @@ namespace DataMeshGroup.Fusion
     [Serializable]
     public class TimeoutException : FusionException
     {
+        /// <summary>
+        /// Text description of the error. Can be used to set AbortRequest.AbortReason during error recovery.
+        /// </summary>
+        public override string ErrorReason => "Timeout";
+
         public TimeoutException()
         {
         }

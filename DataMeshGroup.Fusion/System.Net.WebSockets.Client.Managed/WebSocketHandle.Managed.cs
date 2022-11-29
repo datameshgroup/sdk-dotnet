@@ -53,6 +53,7 @@ namespace System.Net.WebSockets.Managed
         {
             _state = WebSocketState.Closed;
             _webSocket?.Dispose();
+            _abortSource?.Dispose();
         }
 
         public void Abort()

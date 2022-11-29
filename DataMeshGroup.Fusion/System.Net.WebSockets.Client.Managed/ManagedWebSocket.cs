@@ -244,6 +244,7 @@ namespace System.Net.WebSockets.Managed
                 _disposed = true;
                 _keepAliveTimer?.Dispose();
                 _stream?.Dispose();
+                _abortSource?.Dispose();
                 if (_receiveBufferFromPool)
                 {
                     byte[] old = _receiveBuffer;

@@ -31,6 +31,27 @@ namespace DataMeshGroup.Fusion.Model
         // We don't support barcode yet
         //public OutputBarcode OutputBarcode { get; set; }
 
+
+        /// <summary>
+        /// Returns the receipt or display content as plain text. Returns "DATAMESH INVALID FORMAT" if content format is invalid. 
+        /// </summary>
+        public string ContentAsPlainText
+        {
+            get
+            {
+                try
+                {
+                    return GetContentAsPlainText();
+                }
+                catch
+                {
+                    // Not great to supress this exception, but required as POS systems 
+                    // could access this field without implementing error handling
+                    return "DATAMESH INVALID FORMAT";
+                }
+            }
+        }
+
         /// <summary>
         /// Returns a plain text version of the content
         /// </summary>

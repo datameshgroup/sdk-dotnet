@@ -485,7 +485,10 @@ namespace DataMeshGroup.Fusion
         /// <exception cref="NetworkException">A network error occured awaiting a response</exception>        
         public async Task<MessagePayload> RecvAsync()
         {
-            return await RecvAsync(new CancellationTokenSource(DefaultTimeout).Token);
+            using (CancellationTokenSource cts = new CancellationTokenSource(DefaultTimeout))
+            {
+                return await RecvAsync(cts.Token);
+            }
         }
 
 
@@ -728,7 +731,10 @@ namespace DataMeshGroup.Fusion
         /// <exception cref="NetworkException">A network error occured awaiting a response</exception>        
         public async Task<T> SendRecvAsync<T>(MessagePayload requestMessage) where T : MessagePayload
         {
-            return await SendRecvAsync<T>(requestMessage, new CancellationTokenSource(DefaultTimeout).Token);
+            using (CancellationTokenSource cts = new CancellationTokenSource(DefaultTimeout))
+            {
+                return await SendRecvAsync<T>(requestMessage, cts.Token);
+            }
         }
 
         /// <summary>

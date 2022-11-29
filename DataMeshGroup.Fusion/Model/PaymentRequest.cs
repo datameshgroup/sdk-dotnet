@@ -183,6 +183,20 @@ namespace DataMeshGroup.Fusion.Model
                     AdditionalResponse = ""
                 },
 
+                PaymentResult = new PaymentResult()
+                {
+                    PaymentType = this.PaymentData.PaymentType,
+                    PaymentInstrumentData = new PaymentInstrumentData()
+                    {
+                        PaymentInstrumentType = PaymentInstrumentType.Card,
+                        CardData = new CardData()
+                        {
+                            PaymentBrand = "Card",
+                            EntryMode = EntryMode.Contactless
+                        }
+                    }
+                },
+
                 SaleData = SaleData
             };
         }
