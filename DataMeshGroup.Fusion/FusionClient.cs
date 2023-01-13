@@ -388,12 +388,6 @@ namespace DataMeshGroup.Fusion
             {
                 saleToPOIRequest = MessageParser.BuildSaleToPOIMessage(serviceID, SaleID, POIID, KEK, requestMessage);
                 s = MessageParser.SaleToPOIMessageToString(saleToPOIRequest);
-
-
-                MessageHeader messageHeader;
-                MessagePayload messagePayload;
-                SecurityTrailer securityTrailer;
-                var res = MessageParser.TryParseSaleToPOIMessage(s, KEK, out messageHeader, out messagePayload, out securityTrailer);
             }
             catch (Exception e)
             {
@@ -416,6 +410,9 @@ namespace DataMeshGroup.Fusion
                     && parkedRequestMessage is PaymentRequest
                     && parkedServiceID == (requestMessage as AbortRequest).MessageReference?.ServiceID)
                 {
+                    // lastTxnServiceID will be equal to the auto-login. As we aren't waiting for the auto-login result
+                    // lastTxnServiceID  needs to be updated 
+                    lastTxnServiceID = parkedServiceID;
                     await HandleParkedRequestMessage(new Response() 
                     { 
                         Result = Result.Failure, 
@@ -763,8 +760,10 @@ namespace DataMeshGroup.Fusion
         {
             //Don't verify ServiceID for EventNotification
             if ((messagePayload is EventNotification) || string.IsNullOrEmpty(lastTxnServiceID))
+            {
                 return true;
-
+            }
+                
             //Response ServiceID should exists
             if (string.IsNullOrEmpty(responseServiceID))
             {
@@ -792,7 +791,7 @@ namespace DataMeshGroup.Fusion
                     responseServiceID = tr.MessageReference?.ServiceID;
 
                 Log(LogLevel.Trace, $"Response Message Reference ServiceID = {responseServiceID}");
-                if (!string.IsNullOrEmpty(responseServiceID) && !lastMessageRefServiceID.Equals(responseServiceID))
+                if (!string.IsNullOrEmpty(responseServiceID) && !string.IsNullOrEmpty(lastMessageRefServiceID) && !lastMessageRefServiceID.Equals(responseServiceID))
                 {
                     Log(LogLevel.Error, $"Unexpected Message Reference ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastMessageRefServiceID}.  Will process the next message instead.");
                     return false;

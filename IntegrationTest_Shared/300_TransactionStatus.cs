@@ -49,11 +49,8 @@ namespace DataMeshGroup.Fusion.IntegrationTest
         public async Task TransactionStatus_NoServiceId()
         {
             TransactionStatusRequest request = new TransactionStatusRequest();
-            _ = await Client.SendAsync(request);
+            MessagePayload messagePayload = await Client.SendRecvAsync<TransactionStatusResponse>(request);
 
-            List<MessagePayload> responses = new List<MessagePayload>();
-            MessagePayload messagePayload  = await Client.RecvAsync();
-            
             Assert.IsType<TransactionStatusResponse>(messagePayload);
 
             TransactionStatusResponse r = messagePayload as TransactionStatusResponse;

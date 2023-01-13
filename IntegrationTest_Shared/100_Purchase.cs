@@ -74,7 +74,7 @@ namespace DataMeshGroup.Fusion.IntegrationTest
             Assert.True(r.PaymentReceipt[0].OutputContent.OutputFormat == OutputFormat.XHTML);
             Assert.True(r.PaymentReceipt[0].OutputContent.OutputXHTML?.Length > 0);
             // PaymentResult.PaymentAcquirerData
-            Assert.Equal("343455", r.PaymentResult.PaymentAcquirerData.AcquirerID); // Validate NAB acquirer code
+            Assert.Matches("(343455|560251)", r.PaymentResult.PaymentAcquirerData.AcquirerID); // Validate NAB OR DummyProc acquirer code
             Assert.NotNull(r.PaymentResult.PaymentAcquirerData.AcquirerPOIID);
             Assert.NotNull(r.PaymentResult.PaymentAcquirerData.AcquirerTransactionID.TransactionID);
             Assert.NotNull(r.PaymentResult.PaymentAcquirerData.ApprovalCode);
@@ -150,7 +150,7 @@ namespace DataMeshGroup.Fusion.IntegrationTest
             Assert.True(r.PaymentReceipt[0].OutputContent.OutputFormat == OutputFormat.XHTML);
             Assert.True(r.PaymentReceipt[0].OutputContent.OutputXHTML?.Length > 0);
             // PaymentResult.PaymentAcquirerData
-            Assert.Equal("343455", r.PaymentResult.PaymentAcquirerData.AcquirerID); // Validate NAB acquirer code
+            Assert.Matches("(343455|560251)", r.PaymentResult.PaymentAcquirerData.AcquirerID); // Validate NAB OR DummyProc acquirer code
             Assert.NotNull(r.PaymentResult.PaymentAcquirerData.AcquirerPOIID);
             Assert.NotNull(r.PaymentResult.PaymentAcquirerData.AcquirerTransactionID.TransactionID);
             Assert.NotNull(r.PaymentResult.PaymentAcquirerData.ApprovalCode);
