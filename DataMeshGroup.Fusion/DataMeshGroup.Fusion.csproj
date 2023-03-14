@@ -1,29 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1;netstandard2.0;net48;net472;net471;net47;net462;net461;net46;net452;</TargetFrameworks>
+    <TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.0;netstandard2.1;net48;net472;net471;net47;net462;net461;net46;net452;</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>DataMesh Group</Company>
     <Authors>Clinton Dean</Authors>
     <Description>Client which enables connection to the DataMesh Unify payments platform</Description>
-    <Copyright>DataMesh Group 2022</Copyright>
+    <Copyright>DataMesh Group 2023</Copyright>
     <PackageId>DataMeshGroup.Fusion.FusionClient</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageLicenseFile></PackageLicenseFile>
-    <Version>1.2.12</Version>
+    <Version>1.2.13</Version>
     <RepositoryUrl>https://github.com/datameshgroup/sdk-dotnet</RepositoryUrl>
-    <PackageReleaseNotes>Support .NET 7 and FusionApp</PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for Xamarin and MAUI. Removed support for net5.0.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="license.txt" />
   </ItemGroup>
+	
+	<!--Newtonsoft.Json is required for all Frameworks-->
+	<ItemGroup>
+	    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="System.Buffers" Version="4.5.1" />
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-  </ItemGroup>
+	<!--Buffers & Vectors required for .NET Framework & .netstandard2.0-->
+	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' Or '$(TargetFramework)' == 'netstandard2.0' ">
+		<PackageReference Include="System.Buffers" Version="4.5.1" />
+		<PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+	</ItemGroup>
 
 </Project>
