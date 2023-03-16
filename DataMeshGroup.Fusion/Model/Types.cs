@@ -1272,6 +1272,8 @@ namespace DataMeshGroup.Fusion.Model
 
         Qantas,
 
+        DRC,
+
         Other
     };
 
