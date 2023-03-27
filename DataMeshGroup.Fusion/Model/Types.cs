@@ -1310,6 +1310,44 @@ namespace DataMeshGroup.Fusion.Model
         Savings
     };
 
+    /// <summary>
+    /// Identifies the reason a payment was reversed
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<ReversalReason>))]
+    public enum ReversalReason
+    {
+        
+        /// <summary>
+        /// Unknown reason
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// Customer cancellation
+        /// </summary>
+        CustCancel,
+
+        /// <summary>
+        /// Cashier cancellation
+        /// </summary>
+        MerchantCancel,
+
+        /// <summary>
+        /// Suspected malfunction
+        /// </summary>
+        Malfunction,
+
+        /// <summary>
+        /// Card acceptor device unable to complete transaction
+        /// </summary>
+        Unable2Compl,
+
+        /// <summary>
+        /// Customer signature has been declined
+        /// </summary>
+        SignatureDeclined
+    }
+
     //public static class LoyaltyHandling
     //{
     //    public const string Forbidden = "Forbidden";
@@ -1406,11 +1444,5 @@ namespace DataMeshGroup.Fusion.Model
     //    public const string NonSelectableSubMenu = "NonSelectableSubMenu";
     //}
 
-    //public static class ReversalReason
-    //{
-    //    public const string CustCancel = "CustCancel";
-    //    public const string MerchantCancel = "MerchantCancel";
-    //    public const string Malfunction = "Malfunction";
-    //    public const string Unable2Compl = "Unable2Compl";
-    //}
+
 }
