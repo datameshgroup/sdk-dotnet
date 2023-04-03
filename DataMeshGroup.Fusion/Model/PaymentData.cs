@@ -12,7 +12,7 @@
         /// </summary>
         public PaymentType PaymentType { get; set; }
         
-        public bool? SplitPaymentFlag { get; }
+        public bool? SplitPaymentFlag { get; set; }
         public TransactionIdentification CardAcquisitionReference { get; set; }
         public string RequestedValidityDate { get; set; }
         //public Instalment Instalment { get; set; }
