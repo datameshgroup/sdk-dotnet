@@ -2,6 +2,9 @@
 
 namespace DataMeshGroup.Fusion.Model
 {
+    /// <summary>
+    /// Totals of the payment transaction during the reconciliation period.
+    /// </summary>
     public class PaymentTotals
     {
         /// <summary>

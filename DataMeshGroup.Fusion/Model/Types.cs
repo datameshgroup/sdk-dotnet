@@ -1348,6 +1348,50 @@ namespace DataMeshGroup.Fusion.Model
         SignatureDeclined
     }
 
+
+    /// <summary>
+    /// Require to present totals per value of element included in this cluster(POI Terminal, Sale Terminal, Cashier, Shift, TotalsGroupID)
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<TotalDetail>))]
+    public enum TotalDetail
+    {
+        /// <summary>
+        /// Unknown reason
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// Give the totals result per POIID value.
+        /// </summary>
+        POIID,
+
+        /// <summary>
+        /// Give the totals result per SaleID value.
+        /// </summary>
+        SaleID,
+
+        /// <summary>
+        /// Give the totals result per OperatorID value.
+        /// </summary>
+        OperatorID,
+
+        /// <summary>
+        /// Give the totals result per ShiftNumber value.
+        /// </summary>
+        ShiftNumber,
+
+        /// <summary>
+        /// Give the totals result per TotalsGroupID value.
+        /// </summary>
+        TotalsGroupID,
+
+        /// <summary>
+        /// Present the totals report as a transaction listing
+        /// </summary>
+        TxnListing
+    }
+
+
     //public static class LoyaltyHandling
     //{
     //    public const string Forbidden = "Forbidden";
@@ -1356,8 +1400,6 @@ namespace DataMeshGroup.Fusion.Model
     //    public const string Proposed = "Proposed";
     //    public const string Required = "Required";
     //}
-
-
 
     //public static class CheckTypeCode
     //{

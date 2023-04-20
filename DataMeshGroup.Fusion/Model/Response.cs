@@ -2,6 +2,14 @@
 
 namespace DataMeshGroup.Fusion.Model
 {
+
+    /// <summary>
+    /// Defines the result of a message request
+    /// 
+    /// If Result is Success, ErrorCondition is absent or not used in the processing of the message. 
+    /// In the other cases, the ErrorCondition has to be present and can refine the processing of the message response.
+    /// AdditionalResponse gives more information about the success or the failure of the message request processing, for logging without real time involvements.
+    /// </summary>
     public class Response
     {
         /// <summary>

@@ -36,11 +36,21 @@ namespace DataMeshGroup.Fusion.Model
             };
         }
 
+        /// <summary>
+        /// Data associated to the Sale System, with a particular value during the processing of the payment by the POI, including the cards acquisition.
+        /// </summary>
         public SaleData SaleData { get; set; }
+
         public PaymentTransaction PaymentTransaction { get; set; }
+        
         public PaymentData PaymentData { get; set; }
+
         //public LoyaltyData LoyaltyData { get; set; }
 
+        /// <summary>
+        /// Extra extension data outside the standard payments specification 
+        /// </summary>
+        public ExtensionData ExtensionData { get; set; }
 
         /// <summary>
         /// Helper function to create <see cref="SaleItem"/> objects add sale items and modifiers to the payment, this function will attempt to create values where possible.
