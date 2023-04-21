@@ -11,7 +11,7 @@
     <PackageId>DataMeshGroup.Fusion.FusionClient</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageLicenseFile></PackageLicenseFile>
-    <Version>1.2.18-beta2</Version>
+    <Version>1.2.18-beta3</Version>
     <RepositoryUrl>https://github.com/datameshgroup/sdk-dotnet</RepositoryUrl>
     <PackageReleaseNotes>Support for GetTotals and TransitData</PackageReleaseNotes>
   </PropertyGroup>

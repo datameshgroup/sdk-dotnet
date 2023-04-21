@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,6 +51,7 @@ namespace DataMeshGroup.Fusion.Model.Transit
         /// <summary>
         /// Helper function to access the "Pickup" stop
         /// </summary>
+        [JsonIgnore]
         public Stop Pickup
         {
             get
@@ -66,6 +68,7 @@ namespace DataMeshGroup.Fusion.Model.Transit
         /// <summary>
         /// Helper function to access the "Destination" stop
         /// </summary>
+        [JsonIgnore]
         public Stop Destination
         {
             get
