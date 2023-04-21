@@ -32,7 +32,8 @@ namespace DataMeshGroup.Fusion.Model.Transit
         /// <summary>
         /// Total distance travelled in kilometers.
         /// </summary>
-        public decimal TotalDistanceTravelled { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
+        public decimal? TotalDistanceTravelled { get; set; }
 
         /// <summary>
         /// Defines an array of stops for the trip. MUST contain a minimum of two entries which indicate start and end of the trip.

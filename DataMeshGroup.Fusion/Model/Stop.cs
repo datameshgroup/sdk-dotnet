@@ -43,12 +43,14 @@ namespace DataMeshGroup.Fusion.Model.Transit
         /// <summary>
         /// Latitude of the stop location.
         /// </summary>
-        public decimal Latitude { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
+        public decimal? Latitude { get; set; }
 
         /// <summary>
         /// Longitude of the stop location.
         /// </summary>
-        public decimal Longitude { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
+        public decimal? Longitude { get; set; }
 
         /// <summary>
         /// Timestamp the stop occurred.
