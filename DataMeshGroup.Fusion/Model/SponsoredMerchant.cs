@@ -24,7 +24,7 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Identifier for the merchant site. i.e. Store Id
         /// </summary>
-        public string SiteId { get; set; }
+        public string SiteID { get; set; }
 
         /// <summary>
         /// Business identifier for the merchant performing the transaction. i.e. In Australia, the ABN
