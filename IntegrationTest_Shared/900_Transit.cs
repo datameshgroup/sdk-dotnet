@@ -42,6 +42,10 @@ namespace DataMeshGroup.Fusion.IntegrationTest
                     {
                         TransactionID = "0347d00e-5d13-4043-b92b-6bf32381ab16",
                         TimeStamp = DateTime.UtcNow
+                    },
+                    SaleTerminalData = new SaleTerminalData(false)
+                    {
+                        DeviceID = "0347d00e-5d13-aaaa-b92b-98235478239875"
                     }
                 },
                 PaymentTransaction = new PaymentTransaction()
@@ -109,16 +113,16 @@ namespace DataMeshGroup.Fusion.IntegrationTest
                             {
                                 StopIndex = 0,
                                 StopName = "Richmond",
-                                Latitude = -37.82274517047244M,
-                                Longitude = 144.98394642094434M,
+                                Latitude = "-37.82274517047244",
+                                Longitude = "144.98394642094434",
                                 Timestamp = DateTime.Parse("2023-04-06T03:00:15+0000")
                             },
                             Destination = new Stop()
                             {
                                 StopIndex = 1,
                                 StopName = "Beaumaris",
-                                Latitude = -37.988864997462048M,
-                                Longitude = 145.04484379736329M,
+                                Latitude = "-37.988864997462048",
+                                Longitude = "145.04484379736329",
                                 Timestamp = DateTime.Parse("2023-04-06T03:39:30+0000")
                             }
                         }

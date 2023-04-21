@@ -8,21 +8,36 @@ namespace DataMeshGroup.Fusion.Model
     /// </summary>
     public class SaleTerminalData
     {
+
+        /// <summary>
+        /// Construct a default SaleTerminalData
+        /// </summary>
+        /// <param name="loginRequest">true, set defaults for <see cref="TerminalEnvironment"/>, <see cref="SaleCapabilities"/>, and <see cref="SaleProfile"/> </param>
+        public SaleTerminalData(bool loginRequest = true)
+        {
+            if(loginRequest)
+            {
+                TerminalEnvironment = DataMeshGroup.Fusion.Model.TerminalEnvironment.Attended;
+                SaleCapabilities = new List<SaleCapability>();
+                SaleProfile = new SaleProfile() { GenericProfile = GenericProfile.Basic };
+            }
+        }
+
         /// <summary>
         /// Environment of the Terminal.
         /// Sent in the Login Request (resp. Response) to identify the environment of the Sale System (resp. POI System) during the session. In other message, when the data has changed since the Login.
         /// </summary>
-        public TerminalEnvironment TerminalEnvironment { get; set; } = TerminalEnvironment.Attended;
+        public TerminalEnvironment? TerminalEnvironment { get; set; }
 
         /// <summary>
         /// Hardware capabilities of the Sale Terminal.
         /// </summary>
-        public List<SaleCapability> SaleCapabilities { get; set; } = new List<SaleCapability>();
+        public List<SaleCapability> SaleCapabilities { get; set; }
 
         /// <summary>
         /// Functional profile of the Sale Terminal. Sent in the Login Request to identify the functions that might be requested by the Sale Terminal during the session.
         /// </summary>
-        public SaleProfile SaleProfile { get; set; } = new SaleProfile() { GenericProfile = GenericProfile.Basic };
+        public SaleProfile SaleProfile { get; set; } 
 
         /// <summary>
         /// Identification of a group of transaction on a POI Terminal, having the same Sale features.
