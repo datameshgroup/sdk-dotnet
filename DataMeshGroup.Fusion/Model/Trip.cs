@@ -14,19 +14,26 @@ namespace DataMeshGroup.Fusion.Model.Transit
         /// <summary>
         /// Constructs a default Trip
         /// </summary>
-        public Trip(int numOfStops = 2)
+        public Trip()
         {
-            Stops = new List<Stop>()
+            CreateDefaultStops();
+        }
+
+        private void CreateDefaultStops()
+        {
+            if(Stops?.Count >= 2)
             {
-                new Stop()
-                {
-                    StopIndex = 0
-                },
-                new Stop()
-                {
-                    StopIndex = 1
-                }
-            };
+                return;
+            }
+
+            if(Stops == null)
+            {
+                Stops = new List<Stop>();
+            }
+            while(Stops.Count < 2)
+            {
+                Stops.Add(new Stop() { StopIndex = Stops.Count });
+            }
         }
 
         /// <summary>
@@ -47,10 +54,11 @@ namespace DataMeshGroup.Fusion.Model.Transit
         {
             get
             {
-                return Stops.FirstOrDefault();
+                return Stops?.FirstOrDefault();
             }
             set
             {
+                CreateDefaultStops();
                 Stops[0] = value;
             }
         }
@@ -62,10 +70,11 @@ namespace DataMeshGroup.Fusion.Model.Transit
         {
             get
             {
-                return Stops.FirstOrDefault();
+                return Stops?.LastOrDefault();
             }
             set
             {
+                CreateDefaultStops();
                 Stops[Stops.Count-1] = value;
             }
         }
