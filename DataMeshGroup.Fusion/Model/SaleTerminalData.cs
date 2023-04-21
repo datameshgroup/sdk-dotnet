@@ -33,6 +33,6 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Unique identifier for the sale terminal hardware. i.e. Sale terminal serial number.
         /// </summary>
-        public string DeviceId { get; set; }
+        public string DeviceID { get; set; }
     }
 }
