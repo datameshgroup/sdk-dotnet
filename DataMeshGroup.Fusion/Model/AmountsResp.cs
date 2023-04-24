@@ -1,4 +1,6 @@
-﻿namespace DataMeshGroup.Fusion.Model
+﻿using System.Collections.Generic;
+
+namespace DataMeshGroup.Fusion.Model
 {
     public class AmountsResp
     {
@@ -10,6 +12,9 @@
         [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
         public decimal? AuthorizedAmount { get; set; }
 
+        /// <summary>
+        /// Total amount of all rebates applied to this payment
+        /// </summary>
         [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
         public decimal? TotalRebatesAmount { get; set; }
 
@@ -48,5 +53,17 @@
         /// </summary>
         [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
         public decimal? PartialAuthorizedAmount { get; set; }
+
+
+        /// <summary>
+        /// Sum of <see cref="AdditionalAmounts"/> applied to this payment
+        /// </summary>
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
+        public decimal? TotalAdditionalAmount { get; set; }
+
+        /// <summary>
+        /// List of all additional amounts associated with this payment response
+        /// </summary>
+        public List<AdditionalAmount> AdditionalAmounts { get; set; }
     }
 }
