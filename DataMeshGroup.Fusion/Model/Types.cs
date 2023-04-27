@@ -1386,9 +1386,9 @@ namespace DataMeshGroup.Fusion.Model
         TotalsGroupID,
 
         /// <summary>
-        /// Present the totals report as a transaction listing
+        /// Present the totals report as an end of shift report
         /// </summary>
-        TxnListing
+        EndOfShift
     }
 
 
