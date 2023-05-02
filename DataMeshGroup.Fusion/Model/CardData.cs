@@ -35,6 +35,21 @@ namespace DataMeshGroup.Fusion.Model
         /// </summary>
         public string MaskedPAN { get; set; }
 
+        /// <summary>
+        /// Card expiry formatted as YYMM
+        /// </summary>
+        private string expiry;
+        public string Expiry 
+        { 
+            get => expiry;
+            set
+            {
+                if (value?.Length != 4 || !int.TryParse(value, out int _)) 
+                    return;
+                expiry = value;
+            } 
+        }
+
         [Obsolete]
         public string PaymentAccountRef { get; set; }
 
