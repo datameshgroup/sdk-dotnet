@@ -249,36 +249,61 @@ namespace DataMeshGroup.Fusion.Model
         VISA,
 
         MasterCard,
-        
-        [EnumMember(Value = "American Express")] 
+
+        [EnumMember(Value = "American Express")]
         AmericanExpress,
-        
-        [EnumMember(Value = "Diners Club")] 
+
+        [EnumMember(Value = "Diners Club")]
         DinersClub,
-        
+
         JCB,
 
         UnionPay,
-        
-        [EnumMember(Value = "CUP Debit")] 
+
+        [EnumMember(Value = "CUP Debit")]
         CUPDebit,
-        
+
         Discover,
 
-        Debit, 
+        Debit,
 
         AliPay,
 
         [EnumMember(Value = "WeChat Pay")]
-        WeChatPay, 
+        WeChatPay,
 
-        Card, 
+        Card,
 
         CryptoDotCom,
 
-        Cash, 
+        Cash,
 
-        Other
+        Other,
+
+        Fastcard,
+
+        eTicket,
+
+        [EnumMember(Value = "Digital Pass")]
+        DigitalPass,
+
+        [EnumMember(Value = "NSW TSS")]
+        NSWTSS,
+
+        [EnumMember(Value = "QLD TSS")]
+        QLDTSS,
+
+        [EnumMember(Value = "ACT TSS")]
+        ACTTSS,
+
+        [EnumMember(Value = "VIC TSS")]
+        VICTSS,
+
+        [EnumMember(Value = "TAS TSS")]
+        TASTSS,
+
+        [EnumMember(Value = "NT TSS")]
+        NTTSS
     };
 
 
