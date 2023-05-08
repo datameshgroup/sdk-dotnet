@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace DataMeshGroup.Fusion.Model
 {
@@ -8,10 +9,20 @@ namespace DataMeshGroup.Fusion.Model
     public class CardData
     {
         /// <summary>
+        /// Use <see cref="CardData.PaymentBrandEnum"/> to avoid using string compare
+        /// 
         /// Indicates the card type used. One of VISA, Mastercard, American Express, Diners Club, JCB, UnionPay, CUP Debit, Discover, Debit, AliPay, WeChat Pay, Card
-        /// NOTE: <see cref="PaymentBrand"/> is not an enum. This list will expand in the future as new payment types are added.
+        /// Note that <see cref="PaymentBrand"/> is not an enum. This list will expand in the future as new payment types are added.
         /// </summary>
         public string PaymentBrand { get; set; }
+
+
+        /// <summary>
+        /// Indicates the card type used. 
+        /// </summary>
+        [JsonIgnore]
+        public PaymentBrand PaymentBrandEnum { get; set; }
+
 
         private Account account = Account.Unknown;
         /// <summary>
