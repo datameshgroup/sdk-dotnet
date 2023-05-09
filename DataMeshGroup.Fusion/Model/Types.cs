@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
@@ -265,6 +266,7 @@ namespace DataMeshGroup.Fusion.Model
 
         Discover,
 
+        [Obsolete("Not used", true)]
         Debit,
 
         AliPay,
@@ -276,6 +278,7 @@ namespace DataMeshGroup.Fusion.Model
 
         CryptoDotCom,
 
+        [Obsolete("Not used", true)]
         Cash,
 
         Other,
@@ -303,7 +306,9 @@ namespace DataMeshGroup.Fusion.Model
         TASTSS,
 
         [EnumMember(Value = "NT TSS")]
-        NTTSS
+        NTTSS,
+
+        BPGiftCard
     };
 
 

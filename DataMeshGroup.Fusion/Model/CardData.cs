@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace DataMeshGroup.Fusion.Model
 {
@@ -14,14 +16,26 @@ namespace DataMeshGroup.Fusion.Model
         /// Indicates the card type used. One of VISA, Mastercard, American Express, Diners Club, JCB, UnionPay, CUP Debit, Discover, Debit, AliPay, WeChat Pay, Card
         /// Note that <see cref="PaymentBrand"/> is not an enum. This list will expand in the future as new payment types are added.
         /// </summary>
-        public string PaymentBrand { get; set; }
+        private string paymentBrand;
+        public string PaymentBrand 
+        {
+            get
+            {
+                return paymentBrand;
+            }
+            set
+            {
+                paymentBrand = value;
+                PaymentBrandEnum = ParseEnum<PaymentBrand>(value) ?? Model.PaymentBrand.Unknown;
+            }
+        }
 
 
         /// <summary>
         /// Indicates the card type used. 
         /// </summary>
         [JsonIgnore]
-        public PaymentBrand PaymentBrandEnum { get; set; }
+        public PaymentBrand PaymentBrandEnum { get; private set; }
 
 
         private Account account = Account.Unknown;
@@ -86,5 +100,35 @@ namespace DataMeshGroup.Fusion.Model
         public PaymentToken PaymentToken { get; set; }
 
         //public CustomerOrder CustomerOrder { get; set; }
+
+
+        public static T? ParseEnum<T>(string value) where T : struct, Enum
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            // Loop through all possible values for T
+            foreach (T enumValue in Enum.GetValues(typeof(T)))
+            {
+                // Try direct string compare
+                string enumStr = enumValue.ToString();
+                if (value.Equals(enumStr, StringComparison.OrdinalIgnoreCase))
+                {
+                    return enumValue;
+                }
+
+                // If direct compare doesn't work, check for EnumMemberAttribute
+                enumStr = typeof(T).GetMember(enumValue.ToString()).FirstOrDefault()?.GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault()?.Value;
+                if(value.Equals(enumStr, StringComparison.OrdinalIgnoreCase))
+                {
+                    return enumValue;
+                }
+            }
+
+            // If no match is found, return null
+            return null;
+        }
     }
 }

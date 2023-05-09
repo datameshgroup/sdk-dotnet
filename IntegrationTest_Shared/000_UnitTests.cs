@@ -53,5 +53,37 @@ namespace DataMeshGroup.Fusion.IntegrationTest
             Assert.NotNull(messageParser.BuildSaleToPOIMessage("00000000", "00000000", "00000000", "00112233445566778899AABBCCDDEEFF0011223344556677", request));
 
         }
+
+        [Fact]
+        public void PaymentBrand()
+        {
+            void AssertPaymentBrand(string paymentBrand, PaymentBrand paymentBrandEnum) 
+            {
+                CardData cd = new CardData() { PaymentBrand = paymentBrand };
+                Assert.Equal(cd.PaymentBrandEnum, paymentBrandEnum);
+            }
+            AssertPaymentBrand("VISA", Model.PaymentBrand.VISA);
+            AssertPaymentBrand("MasterCard", Model.PaymentBrand.MasterCard);
+            AssertPaymentBrand("American Express", Model.PaymentBrand.AmericanExpress);
+            AssertPaymentBrand("Diners Club", Model.PaymentBrand.DinersClub);
+            AssertPaymentBrand("JCB", Model.PaymentBrand.JCB);
+            AssertPaymentBrand("UnionPay", Model.PaymentBrand.UnionPay);
+            AssertPaymentBrand("CUP Debit", Model.PaymentBrand.CUPDebit);
+            AssertPaymentBrand("Discover", Model.PaymentBrand.Discover);
+            AssertPaymentBrand("WeChat Pay", Model.PaymentBrand.WeChatPay);
+            AssertPaymentBrand("CryptoDotCom", Model.PaymentBrand.CryptoDotCom);
+            AssertPaymentBrand("Fastcard", Model.PaymentBrand.Fastcard);
+            AssertPaymentBrand("eTicket", Model.PaymentBrand.eTicket);
+            AssertPaymentBrand("Digital Pass", Model.PaymentBrand.DigitalPass);
+            AssertPaymentBrand("NSW TSS", Model.PaymentBrand.NSWTSS);
+            AssertPaymentBrand("QLD TSS", Model.PaymentBrand.QLDTSS);
+            AssertPaymentBrand("ACT TSS", Model.PaymentBrand.ACTTSS);
+            AssertPaymentBrand("VIC TSS", Model.PaymentBrand.VICTSS);
+            AssertPaymentBrand("TAS TSS", Model.PaymentBrand.TASTSS);
+            AssertPaymentBrand("NT TSS", Model.PaymentBrand.NTTSS);
+            AssertPaymentBrand("Unknown payment brand", Model.PaymentBrand.Unknown);
+            AssertPaymentBrand("Card", Model.PaymentBrand.Card);
+            AssertPaymentBrand("Other", Model.PaymentBrand.Other);
+        }
     }
 }
