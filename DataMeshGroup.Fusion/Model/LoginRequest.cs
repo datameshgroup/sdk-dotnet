@@ -47,7 +47,7 @@ namespace DataMeshGroup.Fusion.Model
         /// Information related to the software of the Sale System which manages the Sale to POI protocol.
         /// </summary>
         public SaleSoftware SaleSoftware { get; set; } // TODO: In standard Nexo v3.1 this is an array
-        
+
         
         public SaleTerminalData SaleTerminalData { get; set; } // TODO: In standard Nexo v3.1 this is an array
 

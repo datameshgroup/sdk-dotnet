@@ -6,6 +6,10 @@ namespace DataMeshGroup.Fusion.Model
 {
     public class TransactionIdentification
     {
+        public TransactionIdentification()
+        {
+        }
+
         public TransactionIdentification(string transactionID)
         {
             TransactionID = transactionID;

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
@@ -249,36 +250,65 @@ namespace DataMeshGroup.Fusion.Model
         VISA,
 
         MasterCard,
-        
-        [EnumMember(Value = "American Express")] 
+
+        [EnumMember(Value = "American Express")]
         AmericanExpress,
-        
-        [EnumMember(Value = "Diners Club")] 
+
+        [EnumMember(Value = "Diners Club")]
         DinersClub,
-        
+
         JCB,
 
         UnionPay,
-        
-        [EnumMember(Value = "CUP Debit")] 
+
+        [EnumMember(Value = "CUP Debit")]
         CUPDebit,
-        
+
         Discover,
 
-        Debit, 
+        [Obsolete("Not used", true)]
+        Debit,
 
         AliPay,
 
         [EnumMember(Value = "WeChat Pay")]
-        WeChatPay, 
+        WeChatPay,
 
-        Card, 
+        Card,
 
         CryptoDotCom,
 
-        Cash, 
+        [Obsolete("Not used", true)]
+        Cash,
 
-        Other
+        Other,
+
+        Fastcard,
+
+        eTicket,
+
+        [EnumMember(Value = "Digital Pass")]
+        DigitalPass,
+
+        [EnumMember(Value = "NSW TSS")]
+        NSWTSS,
+
+        [EnumMember(Value = "QLD TSS")]
+        QLDTSS,
+
+        [EnumMember(Value = "ACT TSS")]
+        ACTTSS,
+
+        [EnumMember(Value = "VIC TSS")]
+        VICTSS,
+
+        [EnumMember(Value = "TAS TSS")]
+        TASTSS,
+
+        [EnumMember(Value = "NT TSS")]
+        NTTSS,
+
+        BPGiftCard
     };
 
 
@@ -1348,6 +1378,50 @@ namespace DataMeshGroup.Fusion.Model
         SignatureDeclined
     }
 
+
+    /// <summary>
+    /// Require to present totals per value of element included in this cluster(POI Terminal, Sale Terminal, Cashier, Shift, TotalsGroupID)
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<TotalDetail>))]
+    public enum TotalDetail
+    {
+        /// <summary>
+        /// Unknown reason
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// Give the totals result per POIID value.
+        /// </summary>
+        POIID,
+
+        /// <summary>
+        /// Give the totals result per SaleID value.
+        /// </summary>
+        SaleID,
+
+        /// <summary>
+        /// Give the totals result per OperatorID value.
+        /// </summary>
+        OperatorID,
+
+        /// <summary>
+        /// Give the totals result per ShiftNumber value.
+        /// </summary>
+        ShiftNumber,
+
+        /// <summary>
+        /// Give the totals result per TotalsGroupID value.
+        /// </summary>
+        TotalsGroupID,
+
+        /// <summary>
+        /// Present the totals report as an end of shift report
+        /// </summary>
+        EndOfShift
+    }
+
+
     //public static class LoyaltyHandling
     //{
     //    public const string Forbidden = "Forbidden";
@@ -1356,8 +1430,6 @@ namespace DataMeshGroup.Fusion.Model
     //    public const string Proposed = "Proposed";
     //    public const string Required = "Required";
     //}
-
-
 
     //public static class CheckTypeCode
     //{

@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)010_Login.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)400_Reconciliation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)500_Reversal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)900_Transit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AlphabeticalOrderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FusionClientFixture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />

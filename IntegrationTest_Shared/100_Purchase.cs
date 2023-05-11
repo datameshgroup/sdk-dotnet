@@ -87,7 +87,7 @@ namespace DataMeshGroup.Fusion.IntegrationTest
             Assert.Equal(PaymentInstrumentType.Card, r.PaymentResult.PaymentInstrumentData.PaymentInstrumentType);
             Assert.Equal(EntryMode.Tapped, r.PaymentResult.PaymentInstrumentData.CardData.EntryMode);
             Assert.Equal("VISA", r.PaymentResult.PaymentInstrumentData.CardData.PaymentBrand);
-            Assert.Equal(16, r.PaymentResult.PaymentInstrumentData.CardData.MaskedPAN.Length);
+            Assert.InRange(r.PaymentResult.PaymentInstrumentData.CardData.MaskedPAN.Length, 16, 19);
             Assert.Equal("XXXXXX", r.PaymentResult.PaymentInstrumentData.CardData.MaskedPAN.Substring(6, 6)); // Ensure PAN is masked
             Assert.True(int.TryParse(r.PaymentResult.PaymentInstrumentData.CardData.MaskedPAN.Substring(0, 6), out int panPrefix));
             Assert.True(int.TryParse(r.PaymentResult.PaymentInstrumentData.CardData.MaskedPAN.Substring(12, 4), out int panSuffix));

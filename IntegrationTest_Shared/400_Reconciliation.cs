@@ -53,5 +53,31 @@ namespace DataMeshGroup.Fusion.IntegrationTest
             Assert.True(r.Response.Success);
             Assert.Equal(Result.Success, r.Response.Result);
         }
+
+        [Fact]
+        public async Task GetTotals()
+        {
+            GetTotalsRequest request = new GetTotalsRequest();
+            _ = await Client.SendAsync(request);
+
+            List<MessagePayload> responses = new List<MessagePayload>();
+            GetTotalsResponse r = await Client.RecvAsync<GetTotalsResponse>(new CancellationTokenSource(TimeSpan.FromSeconds(60)).Token);
+
+            //
+            Assert.NotNull(r);
+            Assert.IsType<GetTotalsResponse>(r);
+
+            // Message type
+            Assert.True(r.MessageCategory == MessageCategory.GetTotals);
+            Assert.True(r.MessageClass == MessageClass.Service);
+            Assert.True(r.MessageType == MessageType.Response);
+
+            // TODO: Validate totals
+            Assert.NotNull(r.GetReceiptAsPlainText());
+
+            // Response
+            Assert.True(r.Response.Success);
+            Assert.Equal(Result.Success, r.Response.Result);
+        }
     }
 }
