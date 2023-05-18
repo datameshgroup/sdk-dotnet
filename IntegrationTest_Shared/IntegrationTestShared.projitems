@@ -9,6 +9,7 @@
     <Import_RootNamespace>IntegrationTestShared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)005_JSONParsing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)000_UnitTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)100_Purchase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)200_Refund.cs" />
