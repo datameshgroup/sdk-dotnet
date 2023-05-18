@@ -82,7 +82,7 @@ namespace DataMeshGroup.Fusion.Model
         Partial 
     };
 
-    [JsonConverter(typeof(StringEnumConverterWithDefault<TerminalEnvironment>))]
+    [JsonConverter(typeof(StringEnumConverterWithDefaultOrNull<TerminalEnvironment>))]
     public enum TerminalEnvironment 
     { 
         Unknown, 
