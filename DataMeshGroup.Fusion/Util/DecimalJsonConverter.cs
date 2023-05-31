@@ -30,7 +30,7 @@ namespace DataMeshGroup.Fusion
                 throw new ArgumentException($"Invalid argument {nameof(value)}. DecimalJsonConverter allocated to a non-decimal field", nameof(value));
             }
             
-            writer.WriteRawValue(((decimal)value).ToString("G29", System.Globalization.CultureInfo.InvariantCulture));
+            writer.WriteRawValue(((decimal)value).ToString("G16", System.Globalization.CultureInfo.InvariantCulture));
         }
     }
 }

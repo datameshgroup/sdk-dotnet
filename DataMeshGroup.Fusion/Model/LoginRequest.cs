@@ -41,7 +41,14 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Returns the current DateTime formatted as "yyyy-MM-ddThh:mm:ss.sszzzzzz"
         /// </summary>
-        public string DateTime => System.DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss.sszzzzzz", System.Globalization.CultureInfo.InvariantCulture);
+        public string DateTime => DateTimeOverride ?? System.DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss.sszzzzzz", System.Globalization.CultureInfo.InvariantCulture);
+
+
+        /// <summary>
+        /// Enables overriding the DateTime with a custom value
+        /// </summary>
+        public string DateTimeOverride { get; set; }
+
 
         /// <summary>
         /// Information related to the software of the Sale System which manages the Sale to POI protocol.
