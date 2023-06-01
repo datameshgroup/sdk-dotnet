@@ -455,7 +455,7 @@ namespace DataMeshGroup.Fusion
             if (!(requestMessage is AbortRequest))
             {
                 lastTxnServiceID = serviceID;
-                Log(LogLevel.Trace, $"Request ServiceID = {lastTxnServiceID}");
+                Log(LogLevel.Trace, $"LastTxnServiceID = {lastTxnServiceID}");
             }
 
             Log(LogLevel.Information, $"TX {s}");
@@ -785,7 +785,6 @@ namespace DataMeshGroup.Fusion
             }
 
             // Validate responseServiceID if we received one
-            Log(LogLevel.Trace, $"Response ServiceID = {responseServiceID}");
             if (!lastTxnServiceID.Equals(responseServiceID))
             {
                 Log(LogLevel.Error, $"Unexpected ServiceID ({responseServiceID}) received in {messagePayload.GetType()}.  Expected value is {lastTxnServiceID}.  Will process the next message instead.");
