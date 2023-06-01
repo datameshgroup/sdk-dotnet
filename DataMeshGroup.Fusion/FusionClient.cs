@@ -68,7 +68,7 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         private readonly Queue<QueuedMessagePayload> recvQueue;
 
-        public IWebSocketFactory WebSocketFactory { get; set; } = new DefaultWebSocketFactory();
+        public IWebSocketFactory WebSocketFactory { get; set; }
 
         /// <summary>
         /// ServiceID of the last transaction message sent
@@ -115,6 +115,7 @@ namespace DataMeshGroup.Fusion
         public FusionClient(bool useTestEnvironment = false)
         {
             instanceId = new Random().Next().ToString("X8", System.Globalization.CultureInfo.InvariantCulture);
+            WebSocketFactory = new DefaultWebSocketFactory();
             MessageParser = new NexoMessageParser() { UseTestKeyIdentifier = useTestEnvironment, EnableMACValidation = true };
             MessageParser.OnLog += MessageParser_OnLog;
             URL = useTestEnvironment ? UnifyURL.Test : UnifyURL.Production;
@@ -129,12 +130,6 @@ namespace DataMeshGroup.Fusion
             recvQueue = new Queue<QueuedMessagePayload>();
             RootCA = useTestEnvironment ? UnifyRootCA.Test : UnifyRootCA.Production;
             connectState = ConnectState.Disconnected;
-
-            // ServicePointManager is used for .NET Framework
-            ServicePointManager.MaxServicePointIdleTime = 0;
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            ServicePointManager.ServerCertificateValidationCallback = CertificateValidation.RemoteCertificateValidationCallback; // unsubscribe in dispose
         }
 
         private void MessageParser_OnLog(object sender, LogEventArgs e) => Log(e.LogLevel, e.Data, e.Exception);
@@ -225,7 +220,22 @@ namespace DataMeshGroup.Fusion
                 {
                     connectState = ConnectState.Connected;
                     FireOnConnect();
-                    RecvLoop();
+
+                    // Load initial settings...
+                    RecvLoop()
+                        .ContinueWith(t =>
+                        {
+                            if (t.IsFaulted) // must check if this is faulted
+                            {
+                                Log(LogLevel.Error, "Unhandled exception in RecvLoop() task", t.Exception);
+                            }
+                        })
+                        .ConfigureAwait(true)
+                        .GetAwaiter()
+                        .OnCompleted(() =>
+                        {
+                            Log(LogLevel.Information, "RecvLoop() task complete");
+                        });
                 }
 
                 Log(LogLevel.Information, $"Connected = {isConnected}");
@@ -567,7 +577,7 @@ namespace DataMeshGroup.Fusion
         /// <summary>
         /// Main loop for handling recv messages on the web socket
         /// </summary>
-        private async void RecvLoop()
+        private async Task RecvLoop()
         {
             Log(LogLevel.Trace, $"Start RecvLoop()");
 
@@ -661,7 +671,10 @@ namespace DataMeshGroup.Fusion
             }
             finally
             {
-                recvLoopSemaphore.Release();
+                if(recvLoopSemaphore.CurrentCount == 0)
+                {
+                    recvLoopSemaphore.Release();
+                }
                 if(connectState == ConnectState.Connected || connectState == ConnectState.Connecting)
                 {
                     await DisconnectAsync();

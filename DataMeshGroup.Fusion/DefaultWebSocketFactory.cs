@@ -27,6 +27,10 @@ namespace DataMeshGroup.Fusion
                 {
                     return CertificateValidation.RemoteCertificateValidationCallback(sender, cert, chain, error);
                 };
+#else
+                // ServicePointManager is used for .NET Framework
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = CertificateValidation.RemoteCertificateValidationCallback; // unsubscribe in dispose
 #endif
 
                 await clientWebSocket.ConnectAsync(uri, cancellationToken);

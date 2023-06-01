@@ -20,17 +20,16 @@ namespace DataMeshGroup.Fusion
         /// <summary>
         /// Defines if we should validate the MAC on responses messages. Should always be enabled in production. Default=true
         /// </summary>
-        public bool EnableMACValidation { get; set; } = true;
+        public bool EnableMACValidation { get; set; }
 
         /// <summary>
         /// Fired when a log event occurs which is at or above <see cref="LogLevel"/>
         /// </summary>
         public event EventHandler<LogEventArgs> OnLog;
 
-        private readonly JsonSerializer jsonSerializer = new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore };
-
         public NexoMessageParser()
         {
+            EnableMACValidation = true;
         }
 
         public bool TryParseSaleToPOIMessage(string saleToPOIMessageString, string kek, out MessageHeader messageHeader, out MessagePayload messagePayload, out SecurityTrailer securityTrailer)
@@ -188,6 +187,8 @@ namespace DataMeshGroup.Fusion
 
         public string SaleToPOIMessageToString(Model.SaleToPOIMessage saleToPOIRequest)
         {
+            JsonSerializer jsonSerializer = new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore };
+
             // TODO: this could actually be a SaleToPOIRequest or SaleToPOIResponse. Need to check the message payload as that will give us 
             // a better idea. However... at this point only SaleToPOIRequest is supported
             JObject root = new JObject
