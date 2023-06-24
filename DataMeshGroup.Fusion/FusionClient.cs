@@ -824,16 +824,24 @@ namespace DataMeshGroup.Fusion
         /// <returns>A json string</returns>
         public string GetPairingDataJson(string posName = null)
         {
-            PairingData pairingData = CreatePairingData(
+            return Newtonsoft.Json.JsonConvert.SerializeObject(GetPairingData(posName));
+        }
+
+        /// <summary>
+        /// Creates a pairing data using parameters configued in this Fusion Client instance
+        /// </summary>
+        /// <param name="posName">Name of the POS to display. Max 16 characters</param>
+        /// <returns>A json string</returns>
+        public PairingData GetPairingData(string posName = null)
+        {
+            return CreatePairingData(
                 saleID: this.SaleID ?? Guid.NewGuid().ToString(),
                 pairingPOIID: Guid.NewGuid().ToString(),
-                kek: this.KEK, 
+                kek: this.KEK,
                 certificationCode: LoginRequest?.SaleSoftware?.CertificationCode,
                 posName: posName,
                 version: 1
                 );
-            
-            return Newtonsoft.Json.JsonConvert.SerializeObject(pairingData);
         }
 
 
@@ -857,17 +865,14 @@ namespace DataMeshGroup.Fusion
 
             return new PairingData()
             {
-                SaleID = saleID ?? Guid.NewGuid().ToString(),
-                PairingPOIID = pairingPOIID ?? Guid.NewGuid().ToString(),
-                KEK = kek ?? PairingData.CreateKEK(),
+                SaleID = string.IsNullOrWhiteSpace(saleID) ? Guid.NewGuid().ToString() : saleID,
+                PairingPOIID = string.IsNullOrWhiteSpace(pairingPOIID) ? Guid.NewGuid().ToString() : pairingPOIID,
+                KEK = string.IsNullOrWhiteSpace(kek) ? PairingData.CreateKEK() : kek,
                 CertificationCode = certificationCode,
-                POSName = posName ?? Environment.MachineName,
+                POSName = string.IsNullOrWhiteSpace(posName) ? Environment.MachineName : posName,
                 Version = version
             };
         }
-
-            
-    
 
         #region Properties
 
