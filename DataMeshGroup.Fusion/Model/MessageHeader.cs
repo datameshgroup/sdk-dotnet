@@ -10,6 +10,7 @@
         public string DeviceID { get; set; }
         public string SaleID { get; set; }
         public string POIID { get; set; }
+        public bool? IsPairing { get; set; } = null;
 
         public string GetMessageDescription() => MessageCategory.ToString() + MessageType.ToString();
 

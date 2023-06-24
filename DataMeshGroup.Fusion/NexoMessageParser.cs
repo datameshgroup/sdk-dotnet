@@ -126,15 +126,29 @@ namespace DataMeshGroup.Fusion
         }
 
 
-        public MessagePayload ParseSaleToPOIMessage(string saleToPOIMessageString, string kek, out MessageHeader messageHeader)
+        public MessagePayload ParseSaleToPOIMessagePayload(string saleToPOIMessageString, string kek, out MessageHeader messageHeader)
         {
-            if (!TryParseSaleToPOIMessage(saleToPOIMessageString, kek, out messageHeader, out MessagePayload messagePayload, out _))
+            SaleToPOIMessage saleToPOIMessage = ParseSaleToPOIMessage(saleToPOIMessageString, kek);
+            messageHeader = saleToPOIMessage?.MessageHeader;
+            return saleToPOIMessage?.MessagePayload;
+        }
+
+        public SaleToPOIMessage ParseSaleToPOIMessage(string saleToPOIMessageString, string kek)
+        {
+            if (!TryParseSaleToPOIMessage(saleToPOIMessageString, kek, out MessageHeader messageHeader, out MessagePayload messagePayload, out SecurityTrailer securityTrailer))
             {
                 OnLog?.Invoke(this, new LogEventArgs() { LogLevel = LogLevel.Debug, Data = $"TryParseSaleToPOIMessage returned null" });
                 return null;
             }
 
-            return messagePayload;
+            SaleToPOIMessage saleToPOIMessage = new SaleToPOIMessage()
+            {
+                MessageHeader = messageHeader,
+                MessagePayload = messagePayload,
+                SecurityTrailer = securityTrailer
+            };
+
+            return saleToPOIMessage;
         }
 
         /// <summary>

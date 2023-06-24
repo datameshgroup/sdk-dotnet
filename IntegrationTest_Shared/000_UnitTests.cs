@@ -85,5 +85,6 @@ namespace DataMeshGroup.Fusion.IntegrationTest
             AssertPaymentBrand("Card", Model.PaymentBrand.Card);
             AssertPaymentBrand("Other", Model.PaymentBrand.Other);
         }
+
     }
 }

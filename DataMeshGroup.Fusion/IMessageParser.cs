@@ -27,6 +27,8 @@ namespace DataMeshGroup.Fusion
 
         bool TryParseSaleToPOIMessage(string saleToPOIMessage, string kek, out MessageHeader messageHeader, out MessagePayload messagePayload, out SecurityTrailer securityTrailer);
 
-        Model.MessagePayload ParseSaleToPOIMessage(string saleToPOIMessageString, string kek, out MessageHeader messageHeader);
+        Model.MessagePayload ParseSaleToPOIMessagePayload(string saleToPOIMessageString, string kek, out MessageHeader messageHeader);
+
+        Model.SaleToPOIMessage ParseSaleToPOIMessage(string saleToPOIMessageString, string kek);
     }
 }

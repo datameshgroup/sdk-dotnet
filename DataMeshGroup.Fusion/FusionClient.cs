@@ -1,4 +1,5 @@
 ﻿using DataMeshGroup.Fusion.Model;
+using DataMeshGroup.Fusion.Util;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -611,7 +612,9 @@ namespace DataMeshGroup.Fusion
                     MessagePayload messagePayload = null;
                     try
                     {
-                        messagePayload = MessageParser.ParseSaleToPOIMessage(stringResult, KEK, out messageHeader);
+                        LastSaleToPOIResponse = MessageParser.ParseSaleToPOIMessage(stringResult, KEK);
+                        messagePayload = LastSaleToPOIResponse?.MessagePayload;
+                        messageHeader = LastSaleToPOIResponse?.MessageHeader;
                     }
                     catch (Exception e)
                     {
@@ -813,6 +816,59 @@ namespace DataMeshGroup.Fusion
             return true;
         }
 
+
+        /// <summary>
+        /// Creates a pairing data JSON string using parameters configued in this Fusion Client instance
+        /// </summary>
+        /// <param name="posName">Name of the POS to display. Max 16 characters</param>
+        /// <returns>A json string</returns>
+        public string GetPairingDataJson(string posName = null)
+        {
+            PairingData pairingData = CreatePairingData(
+                saleID: this.SaleID ?? Guid.NewGuid().ToString(),
+                pairingPOIID: Guid.NewGuid().ToString(),
+                kek: this.KEK, 
+                certificationCode: LoginRequest?.SaleSoftware?.CertificationCode,
+                posName: posName,
+                version: 1
+                );
+            
+            return Newtonsoft.Json.JsonConvert.SerializeObject(pairingData);
+        }
+
+
+        /// <summary>
+        /// Creates a pairing data object using the parameters provided
+        /// </summary>
+        /// <param name="saleID"></param>
+        /// <param name="pairingPOIID"></param>
+        /// <param name="kek"></param>
+        /// <param name="posName"></param>
+        /// <param name="certificationCode"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="certificationCode"/> is null</exception>
+        public static PairingData CreatePairingData(string saleID, string pairingPOIID, string kek, string posName, string certificationCode, int version = 1)
+        {
+            if (certificationCode is null)
+            {
+                throw new ArgumentNullException(nameof(certificationCode));
+            }
+
+            return new PairingData()
+            {
+                SaleID = saleID ?? Guid.NewGuid().ToString(),
+                PairingPOIID = pairingPOIID ?? Guid.NewGuid().ToString(),
+                KEK = kek ?? PairingData.CreateKEK(),
+                CertificationCode = certificationCode,
+                POSName = posName ?? Environment.MachineName,
+                Version = version
+            };
+        }
+
+            
+    
+
         #region Properties
 
         /// <summary>
@@ -890,6 +946,10 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         public TimeSpan DefaultHeartbeatTimeout { get; set; }
 
+        /// <summary>
+        /// Copy of the last SaleToPOIMessage recevied. 
+        /// </summary>
+        public SaleToPOIMessage LastSaleToPOIResponse { get; private set; }
 
         /// <summary>
         /// Indicates if event mode has been enabled. This is set when <see cref="OnLoginResponse"/>, <see cref="OnLogoutResponse"/>, <see cref="OnCardAcquisitionResponse"/>, <see cref="OnPaymentResponse"/>, 
