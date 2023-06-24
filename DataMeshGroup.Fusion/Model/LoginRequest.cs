@@ -66,6 +66,11 @@ namespace DataMeshGroup.Fusion.Model
         public string CustomerOrderReq { get; set; }
         public string POISerialNumber { get; set; }
 
+        /// <summary>
+        /// Set to true if this is a pairing login
+        /// </summary>
+        public bool? Pairing { get; set; } = null;
+
         public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             return new LoginResponse
