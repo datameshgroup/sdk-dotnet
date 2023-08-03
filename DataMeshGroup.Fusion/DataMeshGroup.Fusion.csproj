@@ -13,7 +13,7 @@
     <PackageLicenseFile></PackageLicenseFile>
     <Version>1.4.0</Version>
     <RepositoryUrl>https://github.com/datameshgroup/sdk-dotnet</RepositoryUrl>
-    <PackageReleaseNotes>Support for pairing data</PackageReleaseNotes>
+    <PackageReleaseNotes>Support for pairing</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

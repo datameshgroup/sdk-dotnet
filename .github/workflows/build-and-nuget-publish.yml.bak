@@ -1,21 +1,10 @@
-name: build-and-nuget-publish
+name: Build
 
 on:  
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "*" ]
-
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-  DOTNET_NOLOGO: true
-  OutputDirectory: ${{github.workspace}}/buildoutput
-  NuGetProject: DataMeshGroup.Fusion/DataMeshGroup.Fusion.csproj
-
-defaults:
-  run:
-    shell: pwsh
-    
+    branches: [ "master" ]
 
 jobs:  
   build:    
@@ -27,25 +16,25 @@ jobs:
           fetch-depth: 0 # Get all history to allow automatic versioning using MinVer
      
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.1
+        uses: microsoft/setup-msbuild@v1
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
 
       - name: Restore dependencies
-        run: msbuild.exe  ${{ env.NuGetProject }} /t:Restore /p:configuration="Release" /p:OutputPath=${{ env.OutputDirectory }}
+        run: msbuild.exe sdk-dotnet.sln /t:Restore /p:configuration="Release"
         
       - name: Build
-        run: msbuild.exe ${{ env.NuGetProject }} /t:Build /p:configuration="Release" /p:OutputPath=${{ env.OutputDirectory }}
+        run: msbuild.exe sdk-dotnet.sln /t:Build /p:configuration="Release"
         
       - name: Create Nuget package
-        run: msbuild.exe ${{ env.NuGetProject }} /t:Pack /p:configuration="Release" /p:OutputPath=${{ env.OutputDirectory }}
+        run: msbuild.exe sdk-dotnet.sln /t:Pack /p:configuration="Release"        
         
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: nuget
-          path: ${{ env.OutputDirectory }}/*.nupkg
+          path: DataMeshGroup.Fusion/bin/Release/*.nupkg
           
          
   publish:              
@@ -57,7 +46,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: nuget
-          path: ${{ env.OutputDirectory }}
+          path: nugetpath
           
       # Install the .NET SDK indicated in the global.json file
       - name: Setup .NET Core
@@ -67,8 +56,7 @@ jobs:
       # Use --skip-duplicate to prevent errors if a package with the same version already exists.
       # If you retry a failed workflow, already published packages will be skipped without error.
       - name: Publish NuGet package
-        shell: pwsh      
         run: |
-          foreach($file in (Get-ChildItem "${{ env.OutputDirectory }}" -Recurse -Include *.nupkg)) {
+          foreach($file in (Get-ChildItem "nugetpath" -Recurse -Include *.nupkg)) {
               dotnet nuget push $file --api-key "${{ secrets.PUBLISH_NUGET_SECRET }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           }       
