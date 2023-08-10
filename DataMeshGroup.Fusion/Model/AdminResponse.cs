@@ -18,6 +18,11 @@ namespace DataMeshGroup.Fusion.Model
 
         public Response Response { get; set; }
 
+        /// <summary>
+        /// Reflected from request
+        /// </summary>
+        public string ServiceIdentification { get; set; }
+
         public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             throw new System.NotImplementedException();
