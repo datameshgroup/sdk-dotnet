@@ -12,17 +12,17 @@ namespace DataMeshGroup.Fusion.Model
     public class SaleItemCustomField
     {
         
-        public SaleItemCustomField(string name, string value)
+        public SaleItemCustomField(string key, string value)
         {
-            Name = name;
+            Key = key;
             Type = SaleItemCustomFieldType.String;
             Value = value;
         }
 
         /// <summary>
-        /// Name of the field. Required.
+        /// Key of the field. Required.
         /// </summary>
-        public string Name { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// Defines the type of the content in 'Value'. In most instances 
