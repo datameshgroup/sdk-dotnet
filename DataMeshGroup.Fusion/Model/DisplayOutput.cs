@@ -12,10 +12,16 @@
         /// </summary>
         public int? MinimumDisplayTime { get; set; }
 
+        /// <summary>
+        /// Indicates the device the display should be presented on. Default is CashierDisplay
+        /// </summary>
         public Device Device { get; set; }
 
         public InfoQualify InfoQualify { get; set; }
 
+        /// <summary>
+        /// Content to display. At a minimum the POS should support <see cref="OutputFormat"/> of Text
+        /// </summary>
         public OutputContent OutputContent { get; set; }
         
         //public MenuEntry MenuEntry { get; set; }

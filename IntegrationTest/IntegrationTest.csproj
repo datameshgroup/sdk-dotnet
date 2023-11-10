@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+	  <!--<TargetFrameworks>net6.0-windows</TargetFrameworks>-->
+	  <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -23,7 +24,5 @@
   <ItemGroup>
     <ProjectReference Include="..\DataMeshGroup.Fusion\DataMeshGroup.Fusion.csproj" />
   </ItemGroup>
-
-  <Import Project="..\IntegrationTest_Shared\IntegrationTestShared.projitems" Label="Shared" />
 
 </Project>

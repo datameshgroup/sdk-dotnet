@@ -30,7 +30,6 @@ namespace DataMeshGroup.Fusion.Util
         [JsonProperty("c")]
         public string CertificationCode { get; set; }
 
-        private string posName;
         [JsonProperty("n")]
         public string POSName { get; set; }
 

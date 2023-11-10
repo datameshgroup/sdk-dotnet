@@ -3,10 +3,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-//public GenericProfile GenericProfile { get; set; } = GenericProfile.Basic;
-//public List<ServiceProfile> ServiceProfiles { get; private set; } = new List<ServiceProfile>();
-
-
 namespace DataMeshGroup.Fusion.Model
 {
     [JsonConverter(typeof(StringEnumConverterWithDefault<MessageClass>))]
@@ -1419,6 +1415,99 @@ namespace DataMeshGroup.Fusion.Model
         /// Present the totals report as an end of shift report
         /// </summary>
         EndOfShift
+    }
+
+    /// <summary>
+    /// Type of requested input
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<InputCommand>))]
+    public enum InputCommand
+    {
+        /// <summary>
+        /// Unknown input command 
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// Wait for a key pressed on the Terminal, to be able to read the message displayed on the Terminal.
+        /// </summary>
+        GetAnyKey,
+
+        /// <summary>
+        /// Wait for a confirmation Yes (Y) or No (N) on the Sale Terminal.
+        /// Wait for a confirmation (Valid or Cancel button) on the POI Terminal.
+        /// The result of the command is a Boolean: True or False.
+        /// </summary>
+        GetConfirmation,
+
+        /// <summary>
+        /// Wait for a confirmation Yes (Y) or No (N) of the Site Manager on the Sale Terminal
+        /// </summary>
+        SiteManager,
+
+        /// <summary>
+        /// Wait for a string of alphanumeric characters, the length range could be specified.
+        /// </summary>
+        TextString,
+
+        /// <summary>
+        /// Wait for a string of digit characters, the length range could be specified.
+        /// </summary>
+        DigitString,
+
+        /// <summary>
+        /// Wait for a string of digit characters with a decimal point, the length range could be specified.
+        /// </summary>
+        DecimalString,
+
+        /// <summary>
+        /// Wait for a function key pressed on the Terminal: From POI, Valid, Clear, Correct, Generic Function key number. From Sale, Generic Function key.
+        /// </summary>
+        GetFunctionKey,
+
+        /// <summary>
+        /// To choose an entry among a list of entrys (all of them are not necessary selectable). The OutputFormat has to be MenuEntry.
+        /// </summary>
+        GetMenuEntry,
+
+        /// <summary>
+        /// Request to enter a password with masked characters while typing the password.
+        /// </summary>
+        //Password
+    }
+
+
+    /// <summary>
+    /// Allows various type and synchronisation of requests for Print or Sound.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<ResponseMode>))]
+    public enum ResponseMode
+    {
+
+        /// <summary>
+        /// Unknown response
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// The Message Response is not required, except in case of error.
+        /// </summary>
+        NotRequired,
+
+        /// <summary>
+        /// The Message Response is immediate, after taking into account the request.
+        /// </summary>
+        Immediate,
+
+        /// <summary>
+        /// The Print Response is required at the end of print.
+        /// </summary>
+        PrintEnd,
+
+        /// <summary>
+        /// The Sound Response is required at the end of play.
+        /// </summary>
+        SoundEnd
     }
 
 

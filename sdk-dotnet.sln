@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMeshGroup.Fusion", "Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTest_Net48", "IntegrationTest_Net48\IntegrationTest_Net48.csproj", "{CD6F7785-B3F8-40F3-93F9-420222D12D5E}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "IntegrationTest_Shared", "IntegrationTest_Shared\IntegrationTest_Shared.shproj", "{8786B9CD-DD1E-413C-AD06-73B564134784}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTestHelper", "IntegrationTestHelper\IntegrationTestHelper.csproj", "{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,20 +23,15 @@ Global
 		{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD6F7785-B3F8-40F3-93F9-420222D12D5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD6F7785-B3F8-40F3-93F9-420222D12D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD6F7785-B3F8-40F3-93F9-420222D12D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD6F7785-B3F8-40F3-93F9-420222D12D5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {60A7927E-674C-4FBF-A720-F82D35BF0DE5}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		IntegrationTest_Shared\IntegrationTestShared.projitems*{8786b9cd-dd1e-413c-ad06-73b564134784}*SharedItemsImports = 13
-		IntegrationTest_Shared\IntegrationTestShared.projitems*{cd6f7785-b3f8-40f3-93f9-420222d12d5e}*SharedItemsImports = 5
-		IntegrationTest_Shared\IntegrationTestShared.projitems*{e0f5c36f-6f8d-46b7-9e24-9c7b4653ed95}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
