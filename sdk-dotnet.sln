@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMeshGroup.Fusion", "Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{E0F5C36F-6F8D-46B7-9E24-9C7B4653ED95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTestHelper", "IntegrationTestHelper\IntegrationTestHelper.csproj", "{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTestHelper", "IntegrationTestHelper\IntegrationTestHelper.csproj", "{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMeshGroup.Fusion.Model", "DataMeshGroup.Fusion.Model\DataMeshGroup.Fusion.Model.csproj", "{2E4FB528-3AB2-4A7C-9204-867527FBC6FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05AF8825-0D7E-4A16-AFD7-DA3A9457B4D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E4FB528-3AB2-4A7C-9204-867527FBC6FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E4FB528-3AB2-4A7C-9204-867527FBC6FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E4FB528-3AB2-4A7C-9204-867527FBC6FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E4FB528-3AB2-4A7C-9204-867527FBC6FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
