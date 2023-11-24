@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.0;netstandard2.1;net48;net472;net471;net47;net462;net461;net46;net452;</TargetFrameworks>
+		<TargetFrameworks>net8.0;net7.0;net6.0;netcoreapp3.1;netstandard2.0;netstandard2.1;net48;net472;net471;net47;net462;net461;net46;net452;</TargetFrameworks>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Company>DataMesh Group</Company>
@@ -11,13 +11,138 @@
 		<PackageId>DataMeshGroup.Fusion.Model</PackageId>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageLicenseFile></PackageLicenseFile>
-		<Version>1.5.1-rc2</Version>
+		<Version>1.5.1-rc4</Version>
 		<RepositoryUrl>https://github.com/datameshgroup/sdk-dotnet</RepositoryUrl>
 		<PackageReleaseNotes>Initial release</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Remove="license.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Include="..\DataMeshGroup.Fusion\IMessageParser.cs" Link="IMessageParser.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\AbortRequest.cs" Link="Model\AbortRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\AdditionalAmount.cs" Link="Model\AdditionalAmount.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\AddressLocation.cs" Link="Model\AddressLocation.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\AdminRequest.cs" Link="Model\AdminRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\AdminResponse.cs" Link="Model\AdminResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\AmountsReq.cs" Link="Model\AmountsReq.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\AmountsResp.cs" Link="Model\AmountsResp.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\AmountType.cs" Link="Model\AmountType.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\CapturedSignature.cs" Link="Model\CapturedSignature.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\CardAcquisitionRequest.cs" Link="Model\CardAcquisitionRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\CardAcquisitionResponse.cs" Link="Model\CardAcquisitionResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\CardAcquisitionTransaction.cs" Link="Model\CardAcquisitionTransaction.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\CardData.cs" Link="Model\CardData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\CashHandlingDevice.cs" Link="Model\CashHandlingDevice.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\CoinsOrBills.cs" Link="Model\CoinsOrBills.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\ContentEncryptionAlgorithm.cs" Link="Model\ContentEncryptionAlgorithm.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\CurrencyConversion.cs" Link="Model\CurrencyConversion.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\CustomerOrder.cs" Link="Model\CustomerOrder.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\DiagnosisRequest.cs" Link="Model\DiagnosisRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\DiagnosisResponse.cs" Link="Model\DiagnosisResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\DisplayOutput.cs" Link="Model\DisplayOutput.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\DisplayOutputContent.cs" Link="Model\DisplayOutputContent.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\DisplayRequest.cs" Link="Model\DisplayRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\EncryptedContent.cs" Link="Model\EncryptedContent.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\EnvelopedData.cs" Link="Model\EnvelopedData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\EventNotification.cs" Link="Model\EventNotification.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\ExtensionData.cs" Link="Model\ExtensionData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\GetTotalsRequest.cs" Link="Model\GetTotalsRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\GetTotalsResponse.cs" Link="Model\GetTotalsResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\HostStatus.cs" Link="Model\HostStatus.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\Input.cs" Link="Model\Input.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\InputData.cs" Link="Model\InputData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\InputRequest.cs" Link="Model\InputRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\InputResponse.cs" Link="Model\InputResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\InputResult.cs" Link="Model\InputResult.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\Instalment.cs" Link="Model\Instalment.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoginRequest.cs" Link="Model\LoginRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoginResponse.cs" Link="Model\LoginResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LogoutRequest.cs" Link="Model\LogoutRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LogoutResponse.cs" Link="Model\LogoutResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAccount.cs" Link="Model\LoyaltyAccount.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAccountID.cs" Link="Model\LoyaltyAccountID.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAcquirerData.cs" Link="Model\LoyaltyAcquirerData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAmount.cs" Link="Model\LoyaltyAmount.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyResult.cs" Link="Model\LoyaltyResult.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\MessageHeader.cs" Link="Model\MessageHeader.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\MessagePayload.cs" Link="Model\MessagePayload.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\MessageReference.cs" Link="Model\MessageReference.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\OriginalPOITransaction.cs" Link="Model\OriginalPOITransaction.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\OutputBarcode.cs" Link="Model\OutputBarcode.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\OutputContent.cs" Link="Model\OutputContent.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\OutputResult.cs" Link="Model\OutputResult.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\OutputText.cs" Link="Model\OutputText.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\Parameter.cs" Link="Model\Parameter.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentAcquirerData.cs" Link="Model\PaymentAcquirerData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentData.cs" Link="Model\PaymentData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentInstrumentData.cs" Link="Model\PaymentInstrumentData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentReceipt.cs" Link="Model\PaymentReceipt.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentRequest.cs" Link="Model\PaymentRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentResponse.cs" Link="Model\PaymentResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentResult.cs" Link="Model\PaymentResult.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentToken.cs" Link="Model\PaymentToken.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentTotals.cs" Link="Model\PaymentTotals.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentTransaction.cs" Link="Model\PaymentTransaction.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\POIData.cs" Link="Model\POIData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\POIInformation.cs" Link="Model\POIInformation.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\POIProfile.cs" Link="Model\POIProfile.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\POISoftware.cs" Link="Model\POISoftware.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\POIStatus.cs" Link="Model\POIStatus.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\POISystemData.cs" Link="Model\POISystemData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\POITerminalData.cs" Link="Model\POITerminalData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PredefinedContent.cs" Link="Model\PredefinedContent.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PrintOutput.cs" Link="Model\PrintOutput.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PrintRequest.cs" Link="Model\PrintRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PrintResponse.cs" Link="Model\PrintResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\ProtectedCardData.cs" Link="Model\ProtectedCardData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\QueuedMessagePayload.cs" Link="Model\QueuedMessagePayload.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\Rebates.cs" Link="Model\Rebates.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\ReconciliationRequest.cs" Link="Model\ReconciliationRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\ReconciliationResponse.cs" Link="Model\ReconciliationResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\RepeatedMessageResponse.cs" Link="Model\RepeatedMessageResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\RepeatedResponseMessageBody.cs" Link="Model\RepeatedResponseMessageBody.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\Response.cs" Link="Model\Response.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\ResponseExtensionData.cs" Link="Model\ResponseExtensionData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\ReversalRequest.cs" Link="Model\ReversalRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\ReversalResponse.cs" Link="Model\ReversalResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SaleData.cs" Link="Model\SaleData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SaleItem.cs" Link="Model\SaleItem.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SaleItemCustomField.cs" Link="Model\SaleItemCustomField.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SaleItemRebate.cs" Link="Model\SaleItemRebate.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SaleProfile.cs" Link="Model\SaleProfile.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SaleSoftware.cs" Link="Model\SaleSoftware.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SaleTerminalData.cs" Link="Model\SaleTerminalData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SaleToIssuerData.cs" Link="Model\SaleToIssuerData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SaleToPOIRequest.cs" Link="Model\SaleToPOIRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SecurityTrailer.cs" Link="Model\SecurityTrailer.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SensitiveCardData.cs" Link="Model\SensitiveCardData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SignatureImage.cs" Link="Model\SignatureImage.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\SponsoredMerchant.cs" Link="Model\SponsoredMerchant.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\Stop.cs" Link="Model\Stop.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\TotalFilter.cs" Link="Model\TotalFilter.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\TrackData.cs" Link="Model\TrackData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\TransactionConditions.cs" Link="Model\TransactionConditions.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\TransactionIdentification.cs" Link="Model\TransactionIdentification.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\TransactionStatusRequest.cs" Link="Model\TransactionStatusRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\TransactionStatusResponse.cs" Link="Model\TransactionStatusResponse.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\TransactionTotals.cs" Link="Model\TransactionTotals.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\TransitData.cs" Link="Model\TransitData.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\Trip.cs" Link="Model\Trip.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\Types.cs" Link="Model\Types.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\NexoMessageParser.cs" Link="NexoMessageParser.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\Base64JsonConverter.cs" Link="Util\Base64JsonConverter.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\Crypto.cs" Link="Util\Crypto.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\DecimalJsonConverter.cs" Link="Util\DecimalJsonConverter.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\FusionException.cs" Link="Util\FusionException.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\LogEventArgs.cs" Link="Util\LogEventArgs.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\LogLevel.cs" Link="Util\LogLevel.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\MessageFormatException.cs" Link="Util\MessageFormatException.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\SecurityTrailerHelper.cs" Link="Util\SecurityTrailerHelper.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\StringEnumConverterWithDefault.cs" Link="Util\StringEnumConverterWithDefault.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Util\StringEnumConverterWithDefaultOrNull.cs" Link="Util\StringEnumConverterWithDefaultOrNull.cs" />
 	</ItemGroup>
 
 	<!--Newtonsoft.Json is required for all Frameworks-->
@@ -29,6 +154,10 @@
 	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' Or '$(TargetFramework)' == 'netstandard2.0' ">
 		<PackageReference Include="System.Buffers" Version="4.5.1" />
 		<PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Model\" />
+	  <Folder Include="Util\" />
 	</ItemGroup>
 
 </Project>
