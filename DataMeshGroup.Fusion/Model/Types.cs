@@ -304,9 +304,36 @@ namespace DataMeshGroup.Fusion.Model
         [EnumMember(Value = "NT TSS")]
         NTTSS,
 
-        BPGiftCard
-    };
+        BPGiftCard,
 
+        [EnumMember(Value = "BP Fuel Card")]
+        BPFuelCard,
+
+        [EnumMember(Value = "Fleet Card")]
+        FleetCard,
+
+        [EnumMember(Value = "Shell Card")]
+        ShellCard,
+
+        Motorpass,
+
+        AmpolCard,
+
+        [EnumMember(Value = "Freedom Fuel Card")]
+        FreedomFuelCard,
+
+        [EnumMember(Value = "Trinity Fuel Card")]
+        TrinityFuelCard,
+
+        [EnumMember(Value = "Liberty Card")]
+        LibertyCard,
+
+        [EnumMember(Value = "Caltex StarCard")]
+        CaltexStarCard,
+
+        [EnumMember(Value = "United Fuel Card")]
+        UnitedFuelCard
+    };
 
     /// <summary>
     /// Payment instrument entry mode requested by the Sale System.

@@ -88,6 +88,16 @@ namespace DataMeshGroup.Fusion.Model
         /// </summary>
         public string CardCountryCode { get; set; }
 
+        /// <summary>
+        /// Product ID of the card based on a defined DMG enumeration.
+        /// </summary>
+        public string PaymentBrandId { get; set; }
+
+        /// <summary>
+        /// Free text display of the payment type as detected by the POI Terminal app.
+        /// </summary>
+        public string PaymentBrandLabel { get; set; }
+
         [Obsolete]
         public ProtectedCardData ProtectedCardData { get; set; }
         
