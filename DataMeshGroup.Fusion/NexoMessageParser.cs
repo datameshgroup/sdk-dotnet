@@ -199,19 +199,27 @@ namespace DataMeshGroup.Fusion
             };
         }
 
-        public string SaleToPOIMessageToString(Model.SaleToPOIMessage saleToPOIRequest)
+        public string SaleToPOIMessageToString(Model.SaleToPOIMessage saleToPOIMessage)
         {
             JsonSerializer jsonSerializer = new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore };
 
-            // TODO: this could actually be a SaleToPOIRequest or SaleToPOIResponse. Need to check the message payload as that will give us 
-            // a better idea. However... at this point only SaleToPOIRequest is supported
+            string messageRoot;
+            if (saleToPOIMessage?.MessageHeader?.MessageType == MessageType.Response)
+            {
+                messageRoot = "SaleToPOIResponse";
+            }
+            else
+            {
+                messageRoot = "SaleToPOIRequest";
+            }
+            
             JObject root = new JObject
             {
-                { "SaleToPOIRequest", new JObject
+                { messageRoot, new JObject
                     {
-                        { "MessageHeader", JObject.FromObject(saleToPOIRequest.MessageHeader, jsonSerializer) },
-                        { saleToPOIRequest.MessagePayload.GetMessageDescription(), JObject.FromObject(saleToPOIRequest.MessagePayload, jsonSerializer) },
-                        { "SecurityTrailer", JObject.FromObject(saleToPOIRequest.SecurityTrailer, jsonSerializer) }
+                        { "MessageHeader", JObject.FromObject(saleToPOIMessage.MessageHeader, jsonSerializer) },
+                        { saleToPOIMessage.MessagePayload.GetMessageDescription(), JObject.FromObject(saleToPOIMessage.MessagePayload, jsonSerializer) },
+                        { "SecurityTrailer", JObject.FromObject(saleToPOIMessage.SecurityTrailer, jsonSerializer) }
                     }
                 }
             };
