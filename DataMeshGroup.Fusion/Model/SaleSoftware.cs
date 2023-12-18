@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace DataMeshGroup.Fusion.Model
 {
@@ -65,16 +66,20 @@ namespace DataMeshGroup.Fusion.Model
 
         private string GetAssemblyVersionData()
         {
+            string baseName = "DataMesh.Fusion";
             try
             {
                 object[] customAttributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(true);
-                string framework = customAttributes.OfType<System.Runtime.Versioning.TargetFrameworkAttribute>().FirstOrDefault()?.FrameworkName ?? "UNKNOWN";
-                string version = customAttributes.OfType<System.Reflection.AssemblyFileVersionAttribute>().FirstOrDefault()?.Version ?? "UNKNOWN";
-                return $"DataMesh.Fusion,v{version}|{framework}|{System.Environment.OSVersion}";
+                string assemblyVersion = customAttributes.OfType<System.Reflection.AssemblyFileVersionAttribute>().FirstOrDefault()?.Version ?? "UNKNOWN";
+                var framework = customAttributes.OfType<System.Runtime.Versioning.TargetFrameworkAttribute>().FirstOrDefault()?.FrameworkDisplayName ?? "UNKNOWN";
+                string osVersionString = System.Environment.OSVersion.ToString();
+                string osArchitecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+                string appArchitecture = Environment.Is64BitProcess ? "Win64" : "Win32";
+                return $"{baseName}/{assemblyVersion}({framework}; {osVersionString}; {appArchitecture}; {osArchitecture})";
             }
             catch
             {
-                return null;  // Suppress errors here to prevent introduced crashes
+                return baseName;  // Suppress errors here to prevent introduced crashes
             }
         }
 

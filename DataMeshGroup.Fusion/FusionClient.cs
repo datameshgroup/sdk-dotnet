@@ -214,7 +214,14 @@ namespace DataMeshGroup.Fusion
                 }
 
                 Log(LogLevel.Debug, $"Connecting to {url}...");
-                ws = await WebSocketFactory.ConnectAsync(url, DefaultHeartbeatTimeout, cts.Token);
+                WebSocketHeaders headers = new WebSocketHeaders()
+                {
+                    CertificationCode = LoginRequest?.SaleSoftware?.CertificationCode,
+                    SaleID = SaleID,
+                    POIID = POIID,
+                    InstanceID = instanceId
+                };
+                ws = await WebSocketFactory.ConnectAsync(url, headers, DefaultHeartbeatTimeout, cts.Token);
                 bool isConnected = ws.State == WebSocketState.Open;
 
                 if (isConnected)
@@ -955,6 +962,21 @@ namespace DataMeshGroup.Fusion
         /// Copy of the last SaleToPOIMessage recevied. 
         /// </summary>
         public SaleToPOIMessage LastSaleToPOIResponse { get; private set; }
+
+        /// <summary>
+        /// Enable override of auto login behaviour
+        /// </summary>
+        public bool LoginRequired
+        {
+            get
+            {
+                return loginRequired;
+            }
+            set
+            {
+                loginRequired = value;
+            }
+        }
 
         /// <summary>
         /// Indicates if event mode has been enabled. This is set when <see cref="OnLoginResponse"/>, <see cref="OnLogoutResponse"/>, <see cref="OnCardAcquisitionResponse"/>, <see cref="OnPaymentResponse"/>, 

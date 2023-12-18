@@ -202,6 +202,8 @@ namespace DataMeshGroup.Fusion
         /// throw an <see cref="InvalidOperationException"/>
         /// </summary>
         bool IsEventModeEnabled { get; }
+
+        bool LoginRequired {get;set;}
         #endregion
 
         #region Events

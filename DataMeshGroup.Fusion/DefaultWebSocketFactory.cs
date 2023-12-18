@@ -14,12 +14,31 @@ namespace DataMeshGroup.Fusion
         /// <param name="keepAliveInterval">How often to send ping/pong heartbeat messages</param>
         /// <param name="cancellationToken">Token used to close socket during send/recv awaits</param>
         /// <returns>A connected web socket, otherwise throws exception</returns>
-        public async Task<System.Net.WebSockets.WebSocket> ConnectAsync(Uri uri, TimeSpan keepAliveInterval, CancellationToken cancellationToken)
+        public async Task<System.Net.WebSockets.WebSocket> ConnectAsync(Uri uri, WebSocketHeaders headers, TimeSpan keepAliveInterval, CancellationToken cancellationToken)
         {
             try
             {
                 var clientWebSocket = new System.Net.WebSockets.ClientWebSocket();
                 clientWebSocket.Options.KeepAliveInterval = keepAliveInterval;
+                // Set headers
+                clientWebSocket.Options.SetRequestHeader("User-Agent", headers.UserAgent);
+                if(!string.IsNullOrEmpty(headers.SaleID))
+                {
+                    clientWebSocket.Options.SetRequestHeader("X-SALE-ID", headers.SaleID);
+                }
+                if (!string.IsNullOrEmpty(headers.POIID))
+                {
+                    clientWebSocket.Options.SetRequestHeader("X-POI-ID", headers.SaleID);
+                }
+                if (!string.IsNullOrEmpty(headers.InstanceID))
+                {
+                    clientWebSocket.Options.SetRequestHeader("X-INSTANCE-ID", headers.SaleID);
+                }
+                if (!string.IsNullOrEmpty(headers.CertificationCode))
+                {
+                    clientWebSocket.Options.SetRequestHeader("X-CERTIFICATION-CODE", headers.SaleID);
+                }
+
 #if (!NETFRAMEWORK && !NETSTANDARD2_0)
                 // .NET Core has built-in support for certificate validation, where .NET Framework 
                 // relies on the static ServicePointManager.ServerCertificateValidationCallback

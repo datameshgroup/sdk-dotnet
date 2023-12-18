@@ -55,8 +55,6 @@ namespace DataMeshGroup.Fusion
                 var key = new byte[16];
                 rng.GetBytes(key);
 
-                System.Diagnostics.Debug.WriteLine($"ActualKey:{ByteArrayToHexString(key)}");
-
                 for (var i = 0; i < key.Length; ++i)
                 {
                     int keyByte = key[i] & 0xFE;
