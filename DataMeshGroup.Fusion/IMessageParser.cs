@@ -16,6 +16,11 @@ namespace DataMeshGroup.Fusion
         bool UseTestKeyIdentifier { get; set; }
 
         /// <summary>
+        /// Defines if we should validate the MAC on responses messages. Should always be enabled in production. Default=true
+        /// </summary>
+        bool EnableMACValidation { get; set; }
+
+        /// <summary>
         /// Fired when a log event occurs which is at or above <see cref="LogLevel"/>
         /// </summary>
         event EventHandler<LogEventArgs> OnLog;
@@ -24,6 +29,8 @@ namespace DataMeshGroup.Fusion
         Model.SaleToPOIMessage BuildSaleToPOIMessage(string serviceID, string saleID, string poiID, string kek, Model.MessagePayload requestMessage);
 
         string SaleToPOIMessageToString(Model.SaleToPOIMessage saleToPOIMessage);
+
+        string MessagePayloadToString(Model.MessagePayload messagePayload);
 
         bool TryParseSaleToPOIMessage(string saleToPOIMessage, string kek, out MessageHeader messageHeader, out MessagePayload messagePayload, out SecurityTrailer securityTrailer);
 

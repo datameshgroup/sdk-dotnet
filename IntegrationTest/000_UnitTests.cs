@@ -47,8 +47,10 @@ namespace DataMeshGroup.Fusion.IntegrationTest
             Assert.Throws<ArgumentException>(() => messageParser.BuildSaleToPOIMessage("00000000", "00000000", "00000000", "00112233445566778899AABBCCDDEEFF0011223344556677", null));
 
             // valid 
-            Assert.NotNull(messageParser.BuildSaleToPOIMessage("00000000", "00000000", "00000000", "00112233445566778899AABBCCDDEEFF0011223344556677", request));
+            SaleToPOIMessage saleToPOIMessage = messageParser.BuildSaleToPOIMessage("00000000", "00000000", "00000000", "00112233445566778899AABBCCDDEEFF0011223344556677", request);
+            Assert.NotNull(saleToPOIMessage);
 
+            string json = messageParser.MessagePayloadToString(saleToPOIMessage.MessagePayload);
         }
 
         [Fact]

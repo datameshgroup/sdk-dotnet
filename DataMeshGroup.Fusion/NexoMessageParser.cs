@@ -226,5 +226,17 @@ namespace DataMeshGroup.Fusion
 
             return root.ToString(Formatting.None);
         }
+
+        public string MessagePayloadToString(Model.MessagePayload messagePayload)
+        {
+            JsonSerializer jsonSerializer = new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore };
+
+            JObject root = new JObject
+            {
+                { messagePayload.GetMessageDescription(), JObject.FromObject(messagePayload, jsonSerializer) }
+            };
+
+            return root.ToString(Formatting.None);
+        }
     }
 }
