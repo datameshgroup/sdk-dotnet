@@ -133,7 +133,23 @@ namespace DataMeshGroup.Fusion
             return saleToPOIMessage?.MessagePayload;
         }
 
-        public SaleToPOIMessage ParseSaleToPOIMessage(string saleToPOIMessageString, string kek)
+        public MessagePayload ParseMessagePayload(MessageCategory messageCategory, MessageType messageType, string messagePayloadString)
+        {
+            // Not really efficient, but easier to construct a fake SaleToPOIMessage and parse it
+            if(messagePayloadString?.Length < 2)
+            {
+                return null;
+            }
+            messagePayloadString = messagePayloadString.Substring(1, messagePayloadString.Length - 2);
+
+            string saleToPOIMessageString = $"{{\"SaleToPOIRequest\":{{\"MessageHeader\":{{\"MessageCategory\":\"{messageCategory}\",\"MessageType\":\"{messageType}\"}},{messagePayloadString}}}}}";
+            bool tempEnableMACValidation = EnableMACValidation;
+            MessagePayload messagePayload = ParseSaleToPOIMessage(saleToPOIMessageString).MessagePayload;
+            EnableMACValidation = tempEnableMACValidation;
+            return messagePayload;
+        }
+
+        public SaleToPOIMessage ParseSaleToPOIMessage(string saleToPOIMessageString, string kek = null)
         {
             if (!TryParseSaleToPOIMessage(saleToPOIMessageString, kek, out MessageHeader messageHeader, out MessagePayload messagePayload, out SecurityTrailer securityTrailer))
             {
