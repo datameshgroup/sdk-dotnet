@@ -1537,6 +1537,66 @@ namespace DataMeshGroup.Fusion.Model
         SoundEnd
     }
 
+    /// <summary>
+    /// Identification of operation to proceed on the stored value account or the stored value card
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<StoredValueTransactionType>))]
+    public enum StoredValueTransactionType
+    {
+
+        /// <summary>
+        /// Reserve the account (e.g. get an activation code).
+        /// </summary>
+        Reserve,
+
+        /// <summary>
+        /// Activate the account or the card.
+        /// </summary>
+        Activate,
+
+        /// <summary>
+        /// Load the account or the card with money.
+        /// </summary>
+        Load,
+
+        /// <summary>
+        /// Unload the account.
+        /// </summary>
+        Unload,
+
+        /// <summary>
+        /// Reverse an activation or loading.
+        /// </summary>
+        Reverse,
+
+        /// <summary>
+        /// Duplicate the code or number provided by the loading or activation.
+        /// </summary>
+        Duplicate,
+    }
+
+    /// <summary>
+    /// Type of stored value account
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<StoredValueAccountType>))]
+    public enum StoredValueAccountType
+    {
+        /// <summary>
+        /// Payment mean issued by retailers or banks as a substitute to a non-monetary gift.
+        /// </summary>
+        GiftCard,
+
+        /// <summary>
+        /// Stored value instrument used to pay telephone services (e.g. card or identifier).
+        /// </summary>
+        PhoneCard,
+
+        /// <summary>
+        /// Other stored value instrument.
+        /// </summary>
+        Other
+    };
+
 
     //public static class LoyaltyHandling
     //{
