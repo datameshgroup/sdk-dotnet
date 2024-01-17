@@ -37,7 +37,7 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Data related to the stored value card.
         /// </summary>
-        public List<StoredValueData> StoredValueData { get; internal set; }
+        public List<StoredValueData> StoredValueData { get; set; }
 
         /// <summary>
         /// Adds stored value data
