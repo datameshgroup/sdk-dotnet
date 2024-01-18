@@ -27,7 +27,7 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Indicates the amount to be loaded onto the account. Exclusive of fees.
         /// </summary>
-        public decimal ItemAmount { get; set; }
+        public decimal? ItemAmount { get; set; }
 
         /// <summary>
         /// Total of fees associated with the transaction
