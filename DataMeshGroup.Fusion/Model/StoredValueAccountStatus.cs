@@ -19,6 +19,7 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Balance of the stored value card
         /// </summary>
-        public decimal CurrentBalance {  get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
+        public decimal? CurrentBalance {  get; set; }
     }
 }

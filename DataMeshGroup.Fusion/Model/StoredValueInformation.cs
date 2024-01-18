@@ -27,11 +27,13 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Indicates the amount to be loaded onto the account. Exclusive of fees.
         /// </summary>
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
         public decimal? ItemAmount { get; set; }
 
         /// <summary>
         /// Total of fees associated with the transaction
         /// </summary>
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
         public decimal? TotalFeesAmount { get; set; }
 
         /// <summary>

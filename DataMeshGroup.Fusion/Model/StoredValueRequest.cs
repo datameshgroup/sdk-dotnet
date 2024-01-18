@@ -66,7 +66,7 @@ namespace DataMeshGroup.Fusion.Model
         /// <param name="currency"></param>
         public void AddStoredValueData(
             StoredValueTransactionType storedValueTransactionType,
-            decimal itemAmount,
+            decimal? itemAmount,
             string storedValueProvider = null,             
             StoredValueAccountID storedValueAccountID = null,
             OriginalPOITransaction originalPOITransaction = null,
