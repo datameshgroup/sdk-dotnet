@@ -11,7 +11,7 @@
 		<PackageId>DataMeshGroup.Fusion.Model</PackageId>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageLicenseFile></PackageLicenseFile>
-		<Version>1.7.0</Version>
+		<Version>1.8.0-rc1</Version>
 		<RepositoryUrl>https://github.com/datameshgroup/sdk-dotnet</RepositoryUrl>
 		<PackageReleaseNotes>Initial release</PackageReleaseNotes>
 	</PropertyGroup>
@@ -30,6 +30,8 @@
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\AmountsReq.cs" Link="Model\AmountsReq.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\AmountsResp.cs" Link="Model\AmountsResp.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\AmountType.cs" Link="Model\AmountType.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\BalanceInquiryRequest.cs" Link="Model\BalanceInquiryRequest.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\BalanceInquiryResponse.cs" Link="Model\BalanceInquiryResponse.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\CapturedSignature.cs" Link="Model\CapturedSignature.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\CardAcquisitionRequest.cs" Link="Model\CardAcquisitionRequest.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\CardAcquisitionResponse.cs" Link="Model\CardAcquisitionResponse.cs" />
@@ -64,6 +66,8 @@
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\LogoutResponse.cs" Link="Model\LogoutResponse.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAccount.cs" Link="Model\LoyaltyAccount.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAccountID.cs" Link="Model\LoyaltyAccountID.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAccountReq.cs" Link="Model\LoyaltyAccountReq.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAccountStatus.cs" Link="Model\LoyaltyAccountStatus.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAcquirerData.cs" Link="Model\LoyaltyAcquirerData.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyAmount.cs" Link="Model\LoyaltyAmount.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\LoyaltyResult.cs" Link="Model\LoyaltyResult.cs" />
@@ -76,6 +80,8 @@
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\OutputResult.cs" Link="Model\OutputResult.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\OutputText.cs" Link="Model\OutputText.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\Parameter.cs" Link="Model\Parameter.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentAccountReq.cs" Link="Model\PaymentAccountReq.cs" />
+	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentAccountStatus.cs" Link="Model\PaymentAccountStatus.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentAcquirerData.cs" Link="Model\PaymentAcquirerData.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentData.cs" Link="Model\PaymentData.cs" />
 	  <Compile Include="..\DataMeshGroup.Fusion\Model\PaymentInstrumentData.cs" Link="Model\PaymentInstrumentData.cs" />

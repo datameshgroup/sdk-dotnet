@@ -419,13 +419,13 @@ namespace DataMeshGroup.Fusion
             {
                 // Special rule for AbortRequest. 
                 // IF we have sent an auto-login
-                //   AND parkedRequestMessage is a PaymentRequest or StoredValueRequest
+                //   AND parkedRequestMessage is a PaymentRequest or StoredValueRequest or BalanceInquiryRequest
                 //   AND we haven't received a response
                 //   AND this is a valid AbortRequest which matched the parked request
                 // THEN cancel the parked request message
                 if (requestMessage is AbortRequest 
                     && parkedRequestMessage != null 
-                    && ((parkedRequestMessage is PaymentRequest) || (parkedRequestMessage is StoredValueRequest))
+                    && ((parkedRequestMessage is PaymentRequest) || (parkedRequestMessage is StoredValueRequest) || (parkedRequestMessage is BalanceInquiryRequest))
                     && parkedServiceID == (requestMessage as AbortRequest).MessageReference?.ServiceID)
                 {
                     // lastTxnServiceID will be equal to the auto-login. As we aren't waiting for the auto-login result

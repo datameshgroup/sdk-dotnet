@@ -1597,6 +1597,48 @@ namespace DataMeshGroup.Fusion.Model
         Other
     };
 
+    /// <summary>
+    /// Type of cardholder account used for the transaction
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<AccountType>))]
+    public enum AccountType
+    {        
+        /// <summary>
+        /// Default account
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// Savings account
+        /// </summary>
+        Savings,
+
+        /// <summary>
+        /// Checking account
+        /// </summary>
+        Checking,
+
+        /// <summary>
+        /// Credit account
+        /// </summary>
+        CreditCard,
+
+        /// <summary>
+        /// Universal account
+        /// </summary>
+        Universal,
+
+        /// <summary>
+        /// Card totals
+        /// </summary>
+        CardTotals,
+
+        /// <summary>
+        /// e-Purse card account
+        /// </summary>
+        EpurseCard
+    };
+
 
     //public static class LoyaltyHandling
     //{

@@ -5,5 +5,7 @@
         public PaymentResponse PaymentResponse { get; set; }
 
         public StoredValueResponse StoredValueResponse { get; set; }
+
+        public BalanceInquiryResponse BalanceInquiryResponse { get; set; }
     }
 }
