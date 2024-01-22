@@ -114,7 +114,8 @@ namespace DataMeshGroup.Fusion.Model
                 string colour = null,
                 decimal? weight = null,
                 WeightUnitOfMeasure? weightUnitOfMeasure = null,
-                List<string> tags = null
+                List<string> tags = null, 
+                List<SaleItemCustomField> customFields = null
             )
         {
             if (PaymentTransaction == null)
@@ -164,7 +165,8 @@ namespace DataMeshGroup.Fusion.Model
                 Colour = colour,
                 Weight = weight,
                 WeightUnitOfMeasure = weightUnitOfMeasure,
-                Tags = tags
+                Tags = tags,
+                CustomFields = customFields
             };
 
             if(category != null || subCategory != null)
