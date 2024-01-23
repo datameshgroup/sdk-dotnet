@@ -8,29 +8,36 @@ namespace DataMeshGroup.Fusion.Model
 {
     public class BalanceInquiryRequest : MessagePayload
     {
-        public BalanceInquiryRequest() { }
+        public BalanceInquiryRequest():
+            base(MessageClass.Service, MessageCategory.BalanceInquiry, MessageType.Request)
+        { }
 
-        public BalanceInquiryRequest(PaymentAccountReq paymentAccountReq)
+        public BalanceInquiryRequest(PaymentAccountReq paymentAccountReq):
+            base(MessageClass.Service, MessageCategory.BalanceInquiry, MessageType.Request)
         {
             PaymentAccountReq = paymentAccountReq;
         }
 
-        public BalanceInquiryRequest(LoyaltyAccountReq loyaltyAccountReq)
+        public BalanceInquiryRequest(LoyaltyAccountReq loyaltyAccountReq):
+            base(MessageClass.Service, MessageCategory.BalanceInquiry, MessageType.Request)
         {
             LoyaltyAccountReq = loyaltyAccountReq;
         }
 
-        public BalanceInquiryRequest(StoredValueAccountID storedValueAccountID)
+        public BalanceInquiryRequest(StoredValueAccountID storedValueAccountID):
+            base(MessageClass.Service, MessageCategory.BalanceInquiry, MessageType.Request)
         {
             PaymentAccountReq = new PaymentAccountReq(storedValueAccountID);            
         }
 
-        public BalanceInquiryRequest(CardData cardData)
+        public BalanceInquiryRequest(CardData cardData):
+            base(MessageClass.Service, MessageCategory.BalanceInquiry, MessageType.Request)
         {
             PaymentAccountReq = new PaymentAccountReq(cardData);
         }
 
-        public BalanceInquiryRequest(LoyaltyAccountID loyaltyAccountID)
+        public BalanceInquiryRequest(LoyaltyAccountID loyaltyAccountID):
+            base(MessageClass.Service, MessageCategory.BalanceInquiry, MessageType.Request)
         {
             LoyaltyAccountReq = new LoyaltyAccountReq(loyaltyAccountID);
         }
