@@ -20,6 +20,21 @@ namespace DataMeshGroup.Fusion.Model
             LoyaltyAccountReq = loyaltyAccountReq;
         }
 
+        public BalanceInquiryRequest(StoredValueAccountID storedValueAccountID)
+        {
+            PaymentAccountReq = new PaymentAccountReq(storedValueAccountID);            
+        }
+
+        public BalanceInquiryRequest(CardData cardData)
+        {
+            PaymentAccountReq = new PaymentAccountReq(cardData);
+        }
+
+        public BalanceInquiryRequest(LoyaltyAccountID loyaltyAccountID)
+        {
+            LoyaltyAccountReq = new LoyaltyAccountReq(loyaltyAccountID);
+        }
+
         /// <summary>
         /// Data related to the account pointed by the payment card
         /// </summary>

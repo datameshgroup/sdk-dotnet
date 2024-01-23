@@ -10,6 +10,11 @@ namespace DataMeshGroup.Fusion.Model
     {
         public LoyaltyAccountReq() { }
 
+        public LoyaltyAccountReq(LoyaltyAccountID loyaltyAccountID) 
+        { 
+            LoyaltyAccountID = loyaltyAccountID;            
+        }
+
         /// <summary>
         /// Reference to the last CardAcquisition, to use the same card
         /// </summary>
