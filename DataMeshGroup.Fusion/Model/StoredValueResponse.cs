@@ -36,7 +36,18 @@ namespace DataMeshGroup.Fusion.Model
         /// Data related to the result of a processed stored value transaction.
         /// </summary>
         public List<StoredValueResult> StoredValueResult { get; set; }
-      
+
+        /// <summary>
+        /// Returns the first item in StoredValueResult
+        /// </summary>
+        public StoredValueResult StoredValueResultItem
+        {
+            get
+            {
+                return ((StoredValueResult == null) || (StoredValueResult.Count == 0)) ? null : StoredValueResult[0];
+            }
+        }
+
         /// <summary>
         /// Customer or Merchant receipt.
         /// </summary>

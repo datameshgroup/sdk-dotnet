@@ -40,6 +40,17 @@ namespace DataMeshGroup.Fusion.Model
         public List<StoredValueData> StoredValueData { get; set; }
 
         /// <summary>
+        /// Returns the first item in StoredValueData
+        /// </summary>
+        public StoredValueData StoredValueDataItem
+        {
+            get
+            {
+                return ((StoredValueData == null) || (StoredValueData.Count == 0)) ? null : StoredValueData[0];
+            }
+        }
+
+        /// <summary>
         /// Adds stored value data
         /// </summary>
         /// <param name="storedValueData"></param>
