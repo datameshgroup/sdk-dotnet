@@ -519,7 +519,7 @@ namespace DataMeshGroup.Fusion
         {
             if (IsEventModeEnabled)
             {
-                throw new InvalidOperationException($"Unable to call {nameof(RecvAsync)} when {nameof(OnLoginResponse)}, {nameof(OnLogoutResponse)}, {nameof(OnCardAcquisitionResponse)}, {nameof(OnPaymentResponse)}, {nameof(OnReconciliationResponse)}, {nameof(DisplayRequest)}, {nameof(OnTransactionStatusResponse)}, or {nameof(OnEventNotification)} are assigned");
+                throw new InvalidOperationException($"Unable to call {nameof(RecvAsync)} when {nameof(OnLoginResponse)}, {nameof(OnLogoutResponse)}, {nameof(OnCardAcquisitionResponse)}, {nameof(OnPaymentResponse)}, {nameof(OnReconciliationResponse)}, {nameof(DisplayRequest)}, {nameof(OnTransactionStatusResponse)}, or {nameof(OnEventNotification)}, or {nameof(OnStoredValueResponse)}, or {nameof(OnBalanceInquiryResponse)} are assigned");
             }
 
             // cts is fired when disconnect occurs (NetworkError)
@@ -980,12 +980,12 @@ namespace DataMeshGroup.Fusion
 
         /// <summary>
         /// Indicates if event mode has been enabled. This is set when <see cref="OnLoginResponse"/>, <see cref="OnLogoutResponse"/>, <see cref="OnCardAcquisitionResponse"/>, <see cref="OnPaymentResponse"/>, 
-        /// <see cref="OnReconciliationResponse"/>, <see cref="OnTransactionStatusResponse"/>, <see cref="OnDisplayRequest"/>, <see cref="OnEventNotification"/> events 
+        /// <see cref="OnReconciliationResponse"/>, <see cref="OnTransactionStatusResponse"/>, <see cref="OnDisplayRequest"/>, <see cref="OnEventNotification"/>, <see cref="=OnStoredValueResponse/">, <see cref="OnBalanceInquiryResponse"/> events 
         /// have been subscribed to. When events mode is enabled, responses will be returned to the owner via <see cref="OnLoginResponse"/>, 
         /// <see cref="OnPaymentResponse"/>, <see cref="OnReconciliationResponse"/> , <see cref="OnTransactionStatusResponse"/>, and 
-        /// <see cref="OnDisplayRequest"/> events, and all requests to <see cref="RecvAsync"/> will throw an <see cref="InvalidOperationException"/>
+        /// <see cref="OnDisplayRequest"/> events, and all requests to <see cref="RecvAsync"/> will throw an <see cref="InvalidOperationException"/
         /// </summary>
-        public bool IsEventModeEnabled => (OnLoginResponse != null) || (OnLogoutResponse != null) || (OnCardAcquisitionResponse != null) || (OnPaymentResponse != null) || (OnReconciliationResponse != null) || (OnDisplayRequest != null) || (OnTransactionStatusResponse != null) || (OnEventNotification != null);
+        public bool IsEventModeEnabled => (OnLoginResponse != null) || (OnLogoutResponse != null) || (OnCardAcquisitionResponse != null) || (OnPaymentResponse != null) || (OnReconciliationResponse != null) || (OnDisplayRequest != null) || (OnTransactionStatusResponse != null) || (OnEventNotification != null) || (OnStoredValueResponse != null) || (OnBalanceInquiryResponse != null);
         #endregion
 
         #region Events
@@ -1048,6 +1048,16 @@ namespace DataMeshGroup.Fusion
         /// Fired when a <see cref="EventNotification"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
         /// </summary>
         public event EventHandler<MessagePayloadEventArgs<EventNotification>> OnEventNotification;
+
+        /// <summary>
+        /// Fired when a <see cref="StoredValueResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        public event EventHandler<MessagePayloadEventArgs<StoredValueResponse>> OnStoredValueResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="BalanceInquiryResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        public event EventHandler<MessagePayloadEventArgs<BalanceInquiryResponse>> OnBalanceInquiryResponse;
 
         #endregion
 
@@ -1123,6 +1133,12 @@ namespace DataMeshGroup.Fusion
                         break;
                     case EventNotification r:
                         OnEventNotification?.Invoke(this, new MessagePayloadEventArgs<EventNotification>(r));
+                        break;
+                    case StoredValueResponse r:
+                        OnStoredValueResponse?.Invoke(this, new MessagePayloadEventArgs<StoredValueResponse>(r));
+                        break;
+                    case BalanceInquiryResponse r:
+                        OnBalanceInquiryResponse?.Invoke(this, new MessagePayloadEventArgs<BalanceInquiryResponse>(r));
                         break;
 
                     default:

@@ -267,6 +267,16 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         event EventHandler<MessagePayloadEventArgs<EventNotification>> OnEventNotification;
 
+        /// <summary>
+        /// Fired when a <see cref="StoredValueResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        event EventHandler<MessagePayloadEventArgs<StoredValueResponse>> OnStoredValueResponse;
+
+        /// <summary>
+        /// Fired when a <see cref="BalanceInquiryResponse"/> is received. Subscribing to this event will enable <see cref="IsEventModeEnabled"/>
+        /// </summary>
+        event EventHandler<MessagePayloadEventArgs<BalanceInquiryResponse>> OnBalanceInquiryResponse;
+
         #endregion
     }
 }
