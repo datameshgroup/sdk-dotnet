@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,7 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Returns the first item in StoredValueResult
         /// </summary>
+        [JsonIgnore]
         public StoredValueResult StoredValueResultItem
         {
             get
