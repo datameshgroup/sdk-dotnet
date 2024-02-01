@@ -4,7 +4,7 @@ namespace DataMeshGroup.Fusion.Model
 {
     public class CardAcquisitionTransaction
     {
-        public List<PaymentBrand> AllowedPaymentBrand { get; set; }
+        public List<string> AllowedPaymentBrands { get; set; }
         public ForceEntryMode ForceEntryMode { get; set; }
     }
 

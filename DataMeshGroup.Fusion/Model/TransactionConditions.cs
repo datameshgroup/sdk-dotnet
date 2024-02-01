@@ -4,7 +4,7 @@ namespace DataMeshGroup.Fusion.Model
 {
     public class TransactionConditions
     {
-        public List<PaymentBrand> AllowedPaymentBrands { get; set; }
+        public List<string> AllowedPaymentBrand { get; set; }
         public List<string> AcquirerID { get; set; }
         public bool? DebitPreferredFlag { get; set; }
         //public string AllowedLoyaltyBrand { get; set; }
