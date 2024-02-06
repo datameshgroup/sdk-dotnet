@@ -332,7 +332,19 @@ namespace DataMeshGroup.Fusion.Model
         CaltexStarCard,
 
         [EnumMember(Value = "United Fuel Card")]
-        UnitedFuelCard
+        UnitedFuelCard,
+
+        Flybuys,
+
+        Blackhawk,
+
+        ePay,
+
+        Incomm,
+
+        Vii,
+
+        WEX
     };
 
     /// <summary>
@@ -1326,6 +1338,8 @@ namespace DataMeshGroup.Fusion.Model
         Qantas,
 
         DRC,
+
+        Flybuys,
 
         Other
     };
