@@ -23,6 +23,11 @@ namespace DataMeshGroup.Fusion
         public bool EnableMACValidation { get; set; }
 
         /// <summary>
+        /// Defines if 
+        /// </summary>
+        public bool EnableSecurityTrailer { get; set; }
+
+        /// <summary>
         /// Fired when a log event occurs which is at or above <see cref="LogLevel"/>
         /// </summary>
         public event EventHandler<LogEventArgs> OnLog;
@@ -188,9 +193,11 @@ namespace DataMeshGroup.Fusion
             if (string.IsNullOrEmpty(poiID)) { throw new ArgumentException($"Invalid {nameof(poiID)}. Required length is > 0"); }
             if (requestMessage is null) { throw new ArgumentException($"Invalid request. Message payload must not be null"); }
 
-            kek = kek?.Trim();
-            _ = SecurityTrailerHelper.ValidateKEK(kek); // Throws ArgumentException
-
+            if(EnableSecurityTrailer)
+            { 
+                kek = kek?.Trim();
+                _ = SecurityTrailerHelper.ValidateKEK(kek); // Throws ArgumentException
+            }
 
             // Construct MessageHeader from RequestMessage
             MessageHeader messageHeader = new MessageHeader()
@@ -205,7 +212,7 @@ namespace DataMeshGroup.Fusion
             };
 
             // Create JObject for header and request
-            SecurityTrailer securityTrailer = SecurityTrailerHelper.GenerateSecurityTrailer(kek, messageHeader, requestMessage, UseTestKeyIdentifier);
+            SecurityTrailer securityTrailer = EnableSecurityTrailer ? SecurityTrailerHelper.GenerateSecurityTrailer(kek, messageHeader, requestMessage, UseTestKeyIdentifier) : null;
 
             return new SaleToPOIMessage()
             {
