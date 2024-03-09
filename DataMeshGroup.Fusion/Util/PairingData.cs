@@ -29,10 +29,10 @@ namespace DataMeshGroup.Fusion.Util
     /// <summary>
     /// Indicates if the USB port is connected to the base or terminal
     /// </summary>
-    public enum PortType
+    public enum PortConnectionType
     {
-        SerialModeBaseConnectedUSB = 0,
-        SerialModeTerminalConnectedUSB = 1,
+        SerialPortBaseConnectedUSB = 0,
+        SerialPortTerminalConnectedUSB = 1,
     }
 
 
@@ -48,7 +48,7 @@ namespace DataMeshGroup.Fusion.Util
         /// Indicates if the USB port is connected to the base or terminal. Optional value. 0 (SerialModeBaseConnectedUSB) is the default.
         /// </summary>
         [JsonProperty("u")]
-        public PortType? PortType { get; set; }
+        public PortConnectionType? PortConnectionType { get; set; }
 
         /// <summary>
         /// Baud rate for the serial port. Optional value. 115200 is the default
