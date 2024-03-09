@@ -1,5 +1,6 @@
 ﻿using DataMeshGroup.Fusion.Model;
 using DataMeshGroup.Fusion.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -831,7 +832,13 @@ namespace DataMeshGroup.Fusion
         /// <returns>A json string</returns>
         public string GetPairingDataJson(string posName = null)
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(GetPairingData(posName));
+            JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings() 
+            { 
+                Formatting = Newtonsoft.Json.Formatting.None,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+
+            return JsonConvert.SerializeObject(GetPairingData(posName), jsonSerializerSettings);
         }
 
         /// <summary>

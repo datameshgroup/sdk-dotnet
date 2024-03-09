@@ -24,6 +24,37 @@ namespace DataMeshGroup.Fusion.IntegrationTest
         {
         }
 
+        [Fact]
+        public void MessageParser_EmptySecurityTrailer()
+        {
+            IMessageParser messageParser = new NexoMessageParser()
+            {
+                EnableMACValidation = false,
+                EnableSecurityTrailer = false
+            };
+
+            SaleToPOIMessage saleToPOIMessage = new SaleToPOIMessage()
+            {
+                MessageHeader = new MessageHeader()
+                {
+                    MessageClass = MessageClass.Service,
+                    MessageCategory = MessageCategory.Payment,
+                    MessageType = MessageType.Request,
+                    ServiceID = "B1C96AD",
+                    SaleID = "M00001088 004",
+                    POIID = "50654236"
+                },
+                MessagePayload = new PaymentRequest(transactionID: "", 10L),
+                SecurityTrailer = null
+            };
+
+            string m = messageParser.SaleToPOIMessageToString(saleToPOIMessage);
+            Assert.NotNull(m);
+
+            SaleToPOIMessage saleToPOIMessage1 = messageParser.ParseSaleToPOIMessage(m, null);
+            Assert.NotNull(saleToPOIMessage1);
+        }
+
 
         [Fact]
         public void MessageParser_PaymentRequest()

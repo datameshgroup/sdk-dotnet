@@ -226,23 +226,16 @@ namespace DataMeshGroup.Fusion
         {
             JsonSerializer jsonSerializer = new JsonSerializer() { NullValueHandling = NullValueHandling.Ignore };
 
-            string messageRoot;
-            if (saleToPOIMessage?.MessageHeader?.MessageType == MessageType.Response)
-            {
-                messageRoot = "SaleToPOIResponse";
-            }
-            else
-            {
-                messageRoot = "SaleToPOIRequest";
-            }
-            
+            string messageRoot = (saleToPOIMessage?.MessageHeader?.MessageType == MessageType.Response) ? "SaleToPOIResponse" : "SaleToPOIRequest";
+
+            JObject securityTrailer = EnableSecurityTrailer ? JObject.FromObject(saleToPOIMessage.SecurityTrailer, jsonSerializer) : null;
             JObject root = new JObject
             {
                 { messageRoot, new JObject
                     {
                         { "MessageHeader", JObject.FromObject(saleToPOIMessage.MessageHeader, jsonSerializer) },
                         { saleToPOIMessage.MessagePayload.GetMessageDescription(), JObject.FromObject(saleToPOIMessage.MessagePayload, jsonSerializer) },
-                        { "SecurityTrailer", JObject.FromObject(saleToPOIMessage.SecurityTrailer, jsonSerializer) }
+                        { "SecurityTrailer", securityTrailer }
                     }
                 }
             };
