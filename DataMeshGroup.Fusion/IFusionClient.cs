@@ -1,6 +1,7 @@
 ﻿using DataMeshGroup.Fusion.Model;
 using System;
 using System.Threading.Tasks;
+using DataMeshGroup.Fusion.Util;
 
 namespace DataMeshGroup.Fusion
 {
@@ -117,6 +118,21 @@ namespace DataMeshGroup.Fusion
         Task<T> SendRecvAsync<T>(MessagePayload requestMessage, System.Threading.CancellationToken cancellationToken) where T : MessagePayload;
 
 
+        /// <summary>
+        /// Creates a pairing data JSON string using parameters configued in this Fusion Client instance
+        /// </summary>
+        /// <param name="posName">Name of the POS to display. Max 16 characters</param>
+        /// <returns>A json string</returns>
+        string GetPairingDataJson(string posName = null);
+
+        /// <summary>
+        /// Creates a pairing data using parameters configued in this Fusion Client instance
+        /// </summary>
+        /// <param name="posName">Name of the POS to display. Max 16 characters</param>
+        /// <returns>A json string</returns>
+        PairingData GetPairingData(string posName = null);
+
+
         #region Properties
 
         /// <summary>
@@ -203,7 +219,13 @@ namespace DataMeshGroup.Fusion
         /// </summary>
         bool IsEventModeEnabled { get; }
 
-        bool LoginRequired {get;set;}
+        bool LoginRequired { get; set; }
+
+        /// <summary>
+        /// Copy of the last SaleToPOIMessage recevied. 
+        /// </summary>
+        SaleToPOIMessage LastSaleToPOIResponse { get; }
+        
         #endregion
 
         #region Events

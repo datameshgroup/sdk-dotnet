@@ -7,8 +7,75 @@ using System.Threading.Tasks;
 
 namespace DataMeshGroup.Fusion.Util
 {
+    /// <summary>
+    /// Indicates if the pairing is for cloud, USB, or Bluetooth
+    /// </summary>
+    public enum PairingMode
+    {
+        Cloud = 0,
+        USB = 1,
+        Bluetooth = 2
+    }
+
+    public enum PortParity
+    {
+        None = 0,
+        Odd = 1,
+        Even = 2,
+        Mark = 3,
+        Space = 4
+    }
+
+    /// <summary>
+    /// Indicates if the USB port is connected to the base or terminal
+    /// </summary>
+    public enum PortType
+    {
+        SerialModeBaseConnectedUSB = 0,
+        SerialModeTerminalConnectedUSB = 1,
+    }
+
+
     public class PairingData
     {
+        /// <summary>
+        /// Indicates if the pairing is for cloud, USB, or Bluetooth. Optional value. 0 (Cloud) is the default.
+        /// </summary>
+        [JsonProperty("m")]
+        public PairingMode? Mode { get; set; }
+
+        /// <summary>
+        /// Indicates if the USB port is connected to the base or terminal. Optional value. 0 (SerialModeBaseConnectedUSB) is the default.
+        /// </summary>
+        [JsonProperty("u")]
+        public PortType? PortType { get; set; }
+
+        /// <summary>
+        /// Baud rate for the serial port. Optional value. 115200 is the default
+        /// Supported values: 9600, 19200, 38400, 115200
+        /// </summary>
+        [JsonProperty("sb")]
+        public int? PortParamsBaudRate { get; set; }
+
+        /// <summary>
+        /// Parity for the serial port. Optional value. 0 (None) is the default
+        /// Supported values 0=None, 1=Odd, 2=Even, 3=Mark, 4=Space
+        /// </summary>
+        [JsonProperty("sp")]
+        public PortParity? PortParamsParity { get; set; }
+
+        /// <summary>
+        /// Data bits for the serial port. Optional value. 8 is the default
+        /// </summary>
+        [JsonProperty("sd")]
+        public int PortParamsDataBits { get; set; }
+
+        /// <summary>
+        /// Encryption key used for terminal to pos comms
+        /// </summary>
+        [JsonProperty("k")]
+        public string EncryptionKey { get; set; }
+
         /// <summary>
         /// Sale ID (UUIDv4 formatted)
         /// </summary>
