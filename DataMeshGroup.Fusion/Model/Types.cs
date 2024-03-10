@@ -1654,6 +1654,86 @@ namespace DataMeshGroup.Fusion.Model
     };
 
 
+    
+    /// <summary>
+    /// Supported baud rates for use in serial communication mode
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<BaudRate>))]
+    public enum BaudRate
+    {
+        BaudRate9600 = 9600,
+        BaudRate19200 = 19200,
+        BaudRate38400 = 38400,
+        BaudRate115200 = 115200
+    }
+
+    /// <summary>
+    /// Supported data bits for use in serial communication mode
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<DataBit>))]
+    public enum DataBit
+    {
+        /// <summary>
+        /// Default is <see cref="DataBit8"/>
+        /// </summary>
+        Default = 8,
+        DataBit7 = 7,
+        DataBit8 = 8
+    }
+
+    /// <summary>
+    /// Indicates if the pairing is for cloud, USB, or Bluetooth
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<PairingMode>))]
+    public enum PairingMode
+    {
+        /// <summary>
+        /// Default is <see cref="Cloud"/>
+        /// </summary>
+        Default = 0,
+        Cloud = 0,
+        USB = 1,
+        Bluetooth = 2
+    }
+
+    /// <summary>
+    /// Supported parity for use in serial communication mode
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverterWithDefault<Parity>))]
+    public enum Parity
+    {
+        /// <summary>
+        /// Defualt is <see cref="None"/>
+        /// </summary>
+        Default = 0,
+        None = 0,
+        Odd = 1,
+        Even = 2,
+        Mark = 3,
+        Space = 4
+    }
+
+    /// <summary>
+    /// Indicates how a USB cable is connected to the terminal
+    /// </summary>
+    public enum PortType
+    {
+        /// <summary>
+        /// Default is <see cref="SerialModeBaseConnectedUSB"/>"/>
+        /// </summary>
+        Default = 0,
+        /// <summary>
+        /// Terminal is in serial port emulation mode, 
+        /// connected to a USB port on the dock
+        /// </summary>
+        SerialModeBaseConnectedUSB = 0,
+        /// <summary>
+        /// Terminal is in serial port emulation mode, 
+        /// connected to a USB port on the terminal
+        /// </summary>
+        SerialModeTerminalConnectedUSB = 1,
+    }
+
     //public static class LoyaltyHandling
     //{
     //    public const string Forbidden = "Forbidden";
