@@ -29,7 +29,7 @@ namespace DataMeshGroup.Fusion.Model
         /// Supported values 0=None, 1=Odd, 2=Even, 3=Mark, 4=Space
         /// </summary>
         [JsonProperty("sp")]
-        public PortParity? PortParamsParity { get; set; }
+        public Parity? PortParamsParity { get; set; }
 
         /// <summary>
         /// Data bits for the serial port. Optional value. 8 is the default
