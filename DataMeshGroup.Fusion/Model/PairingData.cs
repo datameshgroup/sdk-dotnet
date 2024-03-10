@@ -22,7 +22,7 @@ namespace DataMeshGroup.Fusion.Model
         /// Supported values: 9600, 19200, 38400, 115200
         /// </summary>
         [JsonProperty("sb")]
-        public int? PortParamsBaudRate { get; set; }
+        public BaudRate? PortParamsBaudRate { get; set; }
 
         /// <summary>
         /// Parity for the serial port. Optional value. 0 (None) is the default
@@ -35,7 +35,7 @@ namespace DataMeshGroup.Fusion.Model
         /// Data bits for the serial port. Optional value. 8 is the default
         /// </summary>
         [JsonProperty("sd")]
-        public int PortParamsDataBits { get; set; }
+        public DataBits? PortParamsDataBits { get; set; }
 
         /// <summary>
         /// Encryption key used for terminal to pos comms

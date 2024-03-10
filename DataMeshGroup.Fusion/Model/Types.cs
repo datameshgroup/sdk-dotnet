@@ -1670,15 +1670,15 @@ namespace DataMeshGroup.Fusion.Model
     /// <summary>
     /// Supported data bits for use in serial communication mode
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverterWithDefault<DataBit>))]
-    public enum DataBit
+    [JsonConverter(typeof(StringEnumConverterWithDefault<DataBits>))]
+    public enum DataBits
     {
         /// <summary>
-        /// Default is <see cref="DataBit8"/>
+        /// Default is <see cref="DataBits8"/>
         /// </summary>
         Default = 8,
-        DataBit7 = 7,
-        DataBit8 = 8
+        DataBits7 = 7,
+        DataBits8 = 8
     }
 
     /// <summary>
