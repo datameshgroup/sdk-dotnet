@@ -40,7 +40,7 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Encryption key used for terminal to pos comms
         /// </summary>
-        [JsonProperty("k")]
+        [JsonProperty("e")]
         public string EncryptionKey { get; set; }
 
         /// <summary>
