@@ -1680,7 +1680,6 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Default is <see cref="DataBits8"/>
         /// </summary>
-        Default = 8,
         DataBits7 = 7,
         DataBits8 = 8
     }
@@ -1696,7 +1695,6 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Default is <see cref="Cloud"/>
         /// </summary>
-        Default = 0,
         Cloud = 0,
         USB = 1,
         Bluetooth = 2
@@ -1713,7 +1711,6 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Defualt is <see cref="None"/>
         /// </summary>
-        Default = 0,
         None = 0,
         Odd = 1,
         Even = 2,
@@ -1729,10 +1726,6 @@ namespace DataMeshGroup.Fusion.Model
     /// </remarks>
     public enum PortType
     {
-        /// <summary>
-        /// Default is <see cref="SerialModeBaseConnectedUSB"/>"/>
-        /// </summary>
-        Default = 0,
         /// <summary>
         /// Terminal is in serial port emulation mode, 
         /// connected to a USB port on the dock
