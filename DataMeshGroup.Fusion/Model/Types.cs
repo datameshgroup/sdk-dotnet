@@ -1654,11 +1654,13 @@ namespace DataMeshGroup.Fusion.Model
     };
 
 
-    
+
     /// <summary>
     /// Supported baud rates for use in serial communication mode
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverterWithDefault<BaudRate>))]
+    /// <remarks>
+    /// <see cref="StringEnumConverterWithDefault"/> is absent as this needs to be serialized as an integer
+    /// </remarks>
     public enum BaudRate
     {
         BaudRate9600 = 9600,
@@ -1670,7 +1672,9 @@ namespace DataMeshGroup.Fusion.Model
     /// <summary>
     /// Supported data bits for use in serial communication mode
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverterWithDefault<DataBits>))]
+    /// <remarks>
+    /// <see cref="StringEnumConverterWithDefault"/> is absent as this needs to be serialized as an integer
+    /// </remarks>
     public enum DataBits
     {
         /// <summary>
@@ -1684,7 +1688,9 @@ namespace DataMeshGroup.Fusion.Model
     /// <summary>
     /// Indicates if the pairing is for cloud, USB, or Bluetooth
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverterWithDefault<PairingMode>))]
+    /// <remarks>
+    /// <see cref="StringEnumConverterWithDefault"/> is absent as this needs to be serialized as an integer
+    /// </remarks>
     public enum PairingMode
     {
         /// <summary>
@@ -1699,7 +1705,9 @@ namespace DataMeshGroup.Fusion.Model
     /// <summary>
     /// Supported parity for use in serial communication mode
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverterWithDefault<Parity>))]
+    /// <remarks>
+    /// <see cref="StringEnumConverterWithDefault"/> is absent as this needs to be serialized as an integer
+    /// </remarks>
     public enum Parity
     {
         /// <summary>
@@ -1716,6 +1724,9 @@ namespace DataMeshGroup.Fusion.Model
     /// <summary>
     /// Indicates how a USB cable is connected to the terminal
     /// </summary>
+    /// <remarks>
+    /// <see cref="StringEnumConverterWithDefault"/> is absent as this needs to be serialized as an integer
+    /// </remarks>
     public enum PortType
     {
         /// <summary>
