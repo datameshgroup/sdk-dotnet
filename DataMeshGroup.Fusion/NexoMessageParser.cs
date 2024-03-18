@@ -35,6 +35,7 @@ namespace DataMeshGroup.Fusion
         public NexoMessageParser()
         {
             EnableMACValidation = true;
+            EnableSecurityTrailer = true;
         }
 
         public bool TryParseSaleToPOIMessage(string saleToPOIMessageString, string kek, out MessageHeader messageHeader, out MessagePayload messagePayload, out SecurityTrailer securityTrailer)
