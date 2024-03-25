@@ -63,7 +63,10 @@ namespace DataMeshGroup.Fusion.Model
         /// </returns>
         public string GetReceiptAsPlainText(DocumentQualifier documentQualifier = DocumentQualifier.SaleReceipt)
         {
-            return PaymentReceipt?.FirstOrDefault(r => r.DocumentQualifier == documentQualifier)?.OutputContent?.GetContentAsPlainText();
+            PaymentReceipt paymentReceipt = PaymentReceipt?.FirstOrDefault(r => r.DocumentQualifier == documentQualifier)
+                ?? PaymentReceipt?.FirstOrDefault(r => r.DocumentQualifier == DocumentQualifier.CustomerReceipt);
+
+            return paymentReceipt?.OutputContent?.GetContentAsPlainText();
         }
 
         public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
