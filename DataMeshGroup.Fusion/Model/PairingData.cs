@@ -48,8 +48,14 @@ namespace DataMeshGroup.Fusion.Model
         /// 0 = None (encryption disabled)
         /// 1 = AES128 | CBC
         /// </summary>
-        [JsonProperty("t")]
+        [JsonProperty("et")]
         public EncryptionType? EncryptionType { get; set; }
+
+        /// <summary>
+        /// Indicates the number of seconds between heartbeats. Optional. Default 25000
+        /// </summary>
+        [JsonProperty("hb")]
+        public int? HeartbeatTimeout { get; set; }
 
         /// <summary>
         /// Sale ID (UUIDv4 formatted)
