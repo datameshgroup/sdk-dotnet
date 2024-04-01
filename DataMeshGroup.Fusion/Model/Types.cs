@@ -1740,9 +1740,9 @@ namespace DataMeshGroup.Fusion.Model
 
 
     /// <summary>
-    /// Enum for PayloadEncryptionType.
+    /// Enum for the supported payload encryption types
     /// </summary>
-    public enum PayloadEncryptionType
+    public enum EncryptionType
     {
         /// <summary>
         /// None (encryption disabled).
