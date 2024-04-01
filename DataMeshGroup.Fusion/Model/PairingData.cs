@@ -44,6 +44,14 @@ namespace DataMeshGroup.Fusion.Model
         public string EncryptionKey { get; set; }
 
         /// <summary>
+        /// Indicates the payload encryption. Optional. Default 1: AES128 | CBC.
+        /// 0 = None (encryption disabled)
+        /// 1 = AES128 | CBC
+        /// </summary>
+        [JsonProperty("t")]
+        public PayloadEncryptionType? PayloadEncryptionType { get; set; }
+
+        /// <summary>
         /// Sale ID (UUIDv4 formatted)
         /// </summary>
         [JsonProperty("s")]

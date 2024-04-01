@@ -1738,6 +1738,26 @@ namespace DataMeshGroup.Fusion.Model
         SerialModeTerminalConnectedUSB = 1,
     }
 
+
+    /// <summary>
+    /// Enum for PayloadEncryptionType.
+    /// </summary>
+    public enum PayloadEncryptionType
+    {
+        /// <summary>
+        /// None (encryption disabled).
+        /// </summary>
+        [Description("None (encryption disabled)")]
+        None = 0,
+
+        /// <summary>
+        /// AES128 | CBC.
+        /// </summary>
+        [Description("AES128 | CBC")]
+        AES128_CBC = 1
+    }
+
+
     //public static class LoyaltyHandling
     //{
     //    public const string Forbidden = "Forbidden";
