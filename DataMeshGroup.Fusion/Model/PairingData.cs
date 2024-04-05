@@ -38,12 +38,6 @@ namespace DataMeshGroup.Fusion.Model
         public DataBits? PortParamsDataBits { get; set; }
 
         /// <summary>
-        /// Encryption key used for terminal to pos comms
-        /// </summary>
-        [JsonProperty("e")]
-        public string EncryptionKey { get; set; }
-
-        /// <summary>
         /// Indicates the encryption type. Optional. Default 1: AES128 | CBC.
         /// 0 = None (encryption disabled)
         /// 1 = AES128 | CBC
@@ -70,7 +64,8 @@ namespace DataMeshGroup.Fusion.Model
         public string PairingPOIID { get; set; }
 
         /// <summary>
-        /// 48 random characters 0-9, A-F
+        /// In cloud mode, 48 random characters (0-9, A-F) used to authenticate the terminal
+        /// In USB mode, the encryption key used to encrypt data
         /// </summary>
         [JsonProperty("k")]
         public string KEK { get; set; }
