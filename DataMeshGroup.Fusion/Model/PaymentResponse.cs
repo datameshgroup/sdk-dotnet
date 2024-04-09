@@ -76,9 +76,9 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// For legacy support. Helper functioun to map CustomerReceipt to SaleReceipt
         /// </summary>
-        private void MapReceiptsToSaleReceipt()
+        public void MapReceiptsToSaleReceipt()
         {
-            PaymentReceipt paymentReceipt = PaymentReceipt?.FirstOrDefault(r => r.DocumentQualifier == DocumentQualifier.CustomerReceipt);
+            PaymentReceipt paymentReceipt = PaymentReceipt?.FirstOrDefault(r => r?.DocumentQualifier == DocumentQualifier.CustomerReceipt);
             if (paymentReceipt != null && PaymentReceipt != null)
             {
                 paymentReceipt.DocumentQualifier = DocumentQualifier.SaleReceipt;

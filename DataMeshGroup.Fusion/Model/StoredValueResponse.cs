@@ -69,6 +69,20 @@ namespace DataMeshGroup.Fusion.Model
             return paymentReceipt?.OutputContent?.GetContentAsPlainText();
         }
 
+        /// <summary>
+        /// For legacy support. Helper functioun to map CustomerReceipt to SaleReceipt
+        /// </summary>
+        public void MapReceiptsToSaleReceipt()
+        {
+            PaymentReceipt paymentReceipt = PaymentReceipt?.FirstOrDefault(r => r?.DocumentQualifier == DocumentQualifier.CustomerReceipt);
+            if (paymentReceipt != null && PaymentReceipt != null)
+            {
+                paymentReceipt.DocumentQualifier = DocumentQualifier.SaleReceipt;
+                PaymentReceipt.Clear();
+                PaymentReceipt.Add(paymentReceipt);
+            }
+        }
+
         public override MessagePayload CreateDefaultResponseMessagePayload(Response response)
         {
             throw new NotImplementedException();
