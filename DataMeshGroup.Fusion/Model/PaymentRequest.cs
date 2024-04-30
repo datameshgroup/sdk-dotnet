@@ -197,7 +197,7 @@ namespace DataMeshGroup.Fusion.Model
 
                 PaymentResult = new PaymentResult()
                 {
-                    PaymentType = this.PaymentData.PaymentType,
+                    PaymentType = this.PaymentData?.PaymentType ?? PaymentType.Normal,
                     PaymentInstrumentData = new PaymentInstrumentData()
                     {
                         PaymentInstrumentType = PaymentInstrumentType.Card,
