@@ -458,9 +458,9 @@ namespace DataMeshGroup.Fusion
                 lastMessageRefServiceID = (requestMessage as TransactionStatusRequest)?.MessageReference?.ServiceID;
                 Log(LogLevel.Trace, $"Request Message Reference ServiceID = {lastMessageRefServiceID}");
             }
-               
-            // Default case for all other message types except AbortRequest            
-            if (!(requestMessage is AbortRequest))
+
+            // Default case for all other message types except AbortRequest, InputResponse, and PrintResponse
+            if (!(requestMessage is AbortRequest) && !(requestMessage is InputResponse) && !(requestMessage is PrintResponse))
             {
                 lastTxnServiceID = serviceID;
                 Log(LogLevel.Trace, $"LastTxnServiceID = {lastTxnServiceID}");
