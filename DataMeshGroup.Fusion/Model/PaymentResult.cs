@@ -21,5 +21,16 @@ namespace DataMeshGroup.Fusion.Model
         /// Data related to the response from the payment acquirer
         /// </summary>
         public PaymentAcquirerData PaymentAcquirerData { get; set; }
+
+        /// <summary>
+        /// Currency of the Balance
+        /// </summary>
+        public string Currency { get; set; }
+
+        /// <summary>
+        /// Balance of the Account
+        /// </summary>
+        [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]
+        public decimal? CurrentBalance { get; set; }
     }
 }
