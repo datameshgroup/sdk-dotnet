@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataMeshGroup.Fusion.Model;
+using System;
 using System.Runtime.Serialization;
 
 namespace DataMeshGroup.Fusion
@@ -18,6 +19,12 @@ namespace DataMeshGroup.Fusion
         /// Text description of the error. Can be used to set AbortRequest.AbortReason during error recovery.
         /// </summary>
         public virtual string ErrorReason => "Other Exception";
+
+
+        /// <summary>
+        /// An error condition code which best describes the error which caused this exception
+        /// </summary>
+        public virtual ErrorCondition ErrorCondition => ErrorCondition.UnreachableHost;
 
         public FusionException()
         {
