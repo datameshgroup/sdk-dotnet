@@ -10,6 +10,14 @@
         public string DeviceID { get; set; }
         public string SaleID { get; set; }
         public string POIID { get; set; }
+
+        public int LibVersion { get; set; }
+
+        public MessageHeader()    
+        {
+            LibVersion = 2;
+        }
+
         public string GetMessageDescription() => MessageCategory.ToString() + MessageType.ToString();
 
         /// <summary>
