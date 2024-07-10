@@ -27,5 +27,10 @@ namespace DataMeshGroup.Fusion.Model.Transit
         /// Contains details of the trip.
         /// </summary>
         public Trip Trip { get; set; }
+
+        // <summary>
+        /// Optional new field specific for SPOTTO and GIRAFFE
+        /// </summary>
+        public string ODBS { get; set; }
     }
 }
