@@ -106,6 +106,7 @@ namespace DataMeshGroup.Fusion.IntegrationTest
                     TransitData = new TransitData()
                     {
                         IsWheelchairEnabled = true,
+                        ODBS = "test"
                         Trip = new Trip()
                         {
                             TotalDistanceTravelled = 29.4M,
