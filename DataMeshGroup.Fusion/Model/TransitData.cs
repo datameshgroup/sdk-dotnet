@@ -32,5 +32,11 @@ namespace DataMeshGroup.Fusion.Model.Transit
         /// Optional new field specific for SPOTTO and GIRAFFE
         /// </summary>
         public string ODBS { get; set; }
+
+        /// <summary>
+        /// Custom tags for managing the behaviour of the transit payment request.
+        /// </summary>
+        /// <example>["NTAllowTSSSubsidy", "NTAllowTSSLift", "QLDAllowTSSSubsidy", "NSWAllowTSSLift", "NSWAllowTSSSubsidy"]</example>
+        public List<string> Tags { get; set; }
     }
 }

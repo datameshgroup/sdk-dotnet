@@ -106,7 +106,11 @@ namespace DataMeshGroup.Fusion.IntegrationTest
                     TransitData = new TransitData()
                     {
                         IsWheelchairEnabled = true,
-                        ODBS = "test"
+                        ODBS = "test",
+                        Tags = new List<string>()
+                        {
+                            "NTAllowTSSSubsidy", "NTAllowTSSLift", "QLDAllowTSSSubsidy", "NSWAllowTSSLift", "NSWAllowTSSSubsidy"
+                        },
                         Trip = new Trip()
                         {
                             TotalDistanceTravelled = 29.4M,
