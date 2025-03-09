@@ -806,7 +806,12 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// When the POI or the Sale System wants to store a message on the journal printer or electronic journal of the Sale Terminal (it is sometimes a Sale Logging/Journal Printer).
         /// </summary>
-        Journal
+        Journal,
+
+        /// <summary>
+        /// Content represents a custom receipt footer
+        /// </summary>
+        CustomFooter
     }
 
     /// <summary>
@@ -1587,6 +1592,11 @@ namespace DataMeshGroup.Fusion.Model
         /// Duplicate the code or number provided by the loading or activation.
         /// </summary>
         Duplicate,
+
+        /// <summary>
+        /// Verify the account or the card.
+        /// </summary>
+        Verify
     }
 
     /// <summary>

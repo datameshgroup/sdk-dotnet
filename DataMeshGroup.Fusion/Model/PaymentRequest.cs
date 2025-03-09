@@ -45,6 +45,12 @@ namespace DataMeshGroup.Fusion.Model
         
         public PaymentData PaymentData { get; set; }
 
+        /// <summary>
+        /// Receipt payload which contains receipt data to print. Used for including custom footer
+        /// </summary>
+        public List<PaymentReceipt> PaymentReceipt { get; set; }
+
+
         //public LoyaltyData LoyaltyData { get; set; }
 
         /// <summary>
