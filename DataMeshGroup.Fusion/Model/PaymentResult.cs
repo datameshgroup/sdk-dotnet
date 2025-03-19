@@ -28,6 +28,11 @@ namespace DataMeshGroup.Fusion.Model
         public string Currency { get; set; }
 
         /// <summary>
+        /// Host RRN for the transaction
+        /// </summary>
+        public string RRN { get; set; }
+
+        /// <summary>
         /// Balance of the Account
         /// </summary>
         [Newtonsoft.Json.JsonConverter(typeof(DecimalJsonConverter))]

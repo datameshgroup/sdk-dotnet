@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,14 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Defines the type of admin function to perform
         /// </summary>
+        /// <example>
+        /// PrintLastCustomerReceipt, PrintLastMerchantReceipt, PrintShiftTotals, PrintShiftTotals, MessageACK
+        /// </example>
         public string ServiceIdentification { get; set; }
+
+        /// <summary>
+        /// If this admin request is linked to a previous message
+        /// </summary>
+        public MessageReference MessageReference { get; set; }
     }
 }

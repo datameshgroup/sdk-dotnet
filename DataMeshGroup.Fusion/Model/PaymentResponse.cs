@@ -59,6 +59,12 @@ namespace DataMeshGroup.Fusion.Model
         /// </summary>
         public List<string> AllowedProductCode { get; set; }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ExtensionData ExtensionData { get; set; }
+
         /// <summary>
         /// Get a plain text version of the specified receipt type
         /// </summary>

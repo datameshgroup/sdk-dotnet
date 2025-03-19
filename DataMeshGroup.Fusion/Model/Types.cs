@@ -150,7 +150,7 @@ namespace DataMeshGroup.Fusion.Model
     public enum UnitOfMeasure { Unknown, Case, Foot, UKGallon, USGallon, Gram, Kilogram, Pound, Meter, Centimetre, Litre, Centilitre, Ounce, Quart, Pint, Mile, Kilometre, Yard, Other, Unit };
 
     [JsonConverter(typeof(StringEnumConverterWithDefault<WeightUnitOfMeasure>))]
-    public enum WeightUnitOfMeasure { Unknown, Gram, Kilogram, Pound, Ounce, Other };
+    public enum WeightUnitOfMeasure { Unknown, Case, Foot, UKGallon, USGallon, Gram, Kilogram, Pound, Meter, Centimetre, Litre, Centilitre, Ounce, Quart, Pint, Mile, Kilometre, Yard, Other, Unit };
 
     /// <summary>
     /// Type of payment instrument
@@ -186,7 +186,12 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// Cash managed by a cash handling system.
         /// </summary>
-        Cash
+        Cash,
+
+        /// <summary>
+        /// The operator has selected to pay for the transaction on a different terminal
+        /// </summary>
+        PayOnOtherTerminal
     };
 
     
@@ -211,13 +216,25 @@ namespace DataMeshGroup.Fusion.Model
         /// <summary>
         /// A cash-out only transaction
         /// </summary>
-        CashAdvance
+        CashAdvance,
 
-        //Completion,
+        /// <summary>
+        /// Pre-authorisation transaction
+        /// </summary>
+        FirstReservation,
+
+        /// <summary>
+        /// Pre-authorisation top-up transaction
+        /// </summary>
+        UpdateReservation,
+
+        /// <summary>
+        /// Pre-authorisation completion transaction
+        /// </summary>
+        Completion
+
         //Instalment,
         //OneTimeReservation,
-        //FirstReservation,
-        //UpdateReservation,
         //Completion,
         //CashDeposit,
         //Recurring,
