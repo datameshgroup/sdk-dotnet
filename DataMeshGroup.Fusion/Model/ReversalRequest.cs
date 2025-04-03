@@ -28,7 +28,12 @@ namespace DataMeshGroup.Fusion.Model
         /// Optional sale data 
         /// </summary>
         public SaleData SaleData { get; set; }
-        
+
+        /// <summary>
+        /// Optional payment data
+        /// </summary>
+        public PaymentData PaymentData { get; set; }
+
         /// <summary>
         /// Identifies the transaction to be reversed
         /// </summary>
