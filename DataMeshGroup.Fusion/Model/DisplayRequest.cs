@@ -58,5 +58,10 @@ namespace DataMeshGroup.Fusion.Model
         }
 
         public DisplayOutput DisplayOutput { get; set; }
+
+        /// <summary>
+        /// Indicates if the abort request option should be disabled on the display
+        /// </summary>
+        public bool? DisableAbortRequestOption { get; set; }
     }
 }

@@ -102,12 +102,15 @@ namespace DataMeshGroup.Fusion.IntegrationTest
         public async Task Login_AutoLogin_Abort()
         {
             string originalSaleID = fusionClientFixture.Client.SaleID;
+            fusionClientFixture.Client.SaleID = "invalid";
 
             // Disconnect to force an auto login 
             await Client.DisconnectAsync();
 
             // Send a payment, this will trigger an auto-login (which will time out), then send AbortRequest
             var saleToPOIMessage = await Client.SendAsync(new PaymentRequest("0", 1.00M));
+
+            await Task.Delay(2000);
 
             // Send abort request
             var abortRequest = new AbortRequest()
@@ -125,7 +128,12 @@ namespace DataMeshGroup.Fusion.IntegrationTest
             _ = await Client.SendAsync(abortRequest);
 
             // We should have received our payment response
-            var r = await Client.RecvAsync(CancellationToken.None) as PaymentResponse;
+            PaymentResponse r = null;
+            do
+            {
+                r = await Client.RecvAsync(CancellationToken.None) as PaymentResponse;
+            }
+            while (r is null);
 
             // Message type
             Assert.True(r.MessageCategory == MessageCategory.Payment);
