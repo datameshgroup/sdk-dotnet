@@ -20,9 +20,13 @@ namespace DataMeshGroup.Fusion
             {
                 var clientWebSocket = new System.Net.WebSockets.ClientWebSocket();
                 clientWebSocket.Options.KeepAliveInterval = keepAliveInterval;
+
                 // Set headers
-                clientWebSocket.Options.SetRequestHeader("User-Agent", headers.UserAgent);
-                if(!string.IsNullOrEmpty(headers.SaleID))
+                if (!string.IsNullOrEmpty(headers.UserAgent))
+                {
+                    clientWebSocket.Options.SetRequestHeader("X-USER-AGENT", headers.UserAgent);
+                }
+                if (!string.IsNullOrEmpty(headers.SaleID))
                 {
                     clientWebSocket.Options.SetRequestHeader("X-SALE-ID", headers.SaleID);
                 }
