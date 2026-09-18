@@ -357,8 +357,8 @@ namespace DataMeshGroup.Fusion.Model
         [EnumMember(Value = "Mobil Fuel Card")]
         MobilFuelCard,
 
-        [EnumMember(Value = "TT Fuel Whitecard")]
-        TTFuelWhitecard,
+        [EnumMember(Value = "Perrys Fuel Card")]
+        PerrysFuelCard,
 
         Flybuys,
 
